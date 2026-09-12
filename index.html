@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio – Ethan GALEA</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --card: #1e293b;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --accent: #38bdf8;
+    --accent2: #a78bfa;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+  .container { max-width: 1100px; margin: 0 auto; padding: 2rem; }
+  header { text-align: center; padding: 4rem 1rem 2rem; }
+  header h1 {
+    font-size: 3rem;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  header p { color: var(--muted); font-size: 1.2rem; margin-top: 0.5rem; }
+  .badge {
+    display: inline-block;
+    background: rgba(56, 189, 248, 0.1);
+    color: var(--accent);
+    padding: 0.3rem 0.8rem;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    margin: 0.3rem;
+  }
+  section { margin: 3rem 0; }
+  h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    border-left: 4px solid var(--accent);
+    padding-left: 0.8rem;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+  }
+  .card {
+    background: var(--card);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    border: 1px solid #334155;
+    transition: transform 0.2s, border-color 0.2s;
+  }
+  .card:hover { transform: translateY(-4px); border-color: var(--accent); }
+  .card h3 { margin-bottom: 0.5rem; color: var(--accent); }
+  .card p, .card li { color: var(--muted); }
+  ul { list-style: none; }
+  ul li::before { content: "▹"; color: var(--accent); margin-right: 0.5rem; }
+  .tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem; }
+  .tag {
+    background: #334155;
+    color: var(--text);
+    padding: 0.2rem 0.6rem;
+    border-radius: 0.5rem;
+    font-size: 0.85rem;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .timeline { border-left: 2px solid #334155; padding-left: 1.5rem; }
+  .timeline-item { margin-bottom: 1.5rem; position: relative; }
+  .timeline-item::before {
+    content: "";
+    position: absolute;
+    left: -1.95rem;
+    top: 0.5rem;
+    width: 0.8rem;
+    height: 0.8rem;
+    background: var(--accent);
+    border-radius: 50%;
+  }
+  footer {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--muted);
+    border-top: 1px solid #334155;
+    margin-top: 3rem;
+  }
+  .contact-links {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+  }
+  .contact-links a {
+    background: var(--card);
+    padding: 0.6rem 1.2rem;
+    border-radius: 0.5rem;
+    border: 1px solid #334155;
+  }
+  .contact-links a:hover { border-color: var(--accent); }
+  @media (max-width: 600px) { header h1 { font-size: 2rem; } }
+</style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Ethan GALEA</h1>
+      <p>Collégien en 3e · Passionné d’IA, cybersécurité et développement durable</p>
+      <div>
+        <span class="badge">Saint-Rémy-de-Provence</span>
+        <span class="badge">13 ans</span>
+        <span class="badge">Objectif : consultant cybersécurité</span>
+      </div>
+    </header>
+
+    <section id="a-propos">
+      <h2>À propos</h2>
+      <p>
+        Je m’appelle Ethan, j’ai 13 ans et je suis en 3e au
+        <a href="https://lasalle84.net/" target="_blank" rel="noopener">Collège Saint Jean Baptiste de La Salle</a>
+        à Avignon. Curieux et autodidacte, j’aime comprendre comment fonctionnent les outils numériques,
+        l’intelligence artificielle et la cybersécurité. Je m’intéresse aussi au développement durable,
+        au Japon et aux mangas.
+      </p>
+    </section>
+
+    <section id="formation">
+      <h2>Formation</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>
+            <a href="https://lasalle84.net/" target="_blank" rel="noopener">
+              Collège Saint Jean Baptiste de La Salle
+            </a>
+          </h3>
+          <p>Avignon · 3e</p>
+        </div>
+        <div class="card">
+          <h3>École primaire La République</h3>
+          <p>Saint-Rémy-de-Provence</p>
+        </div>
+        <div class="card">
+          <h3>Matières préférées</h3>
+          <p>Mathématiques, Physique, Technologie, Histoire</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="competences">
+      <h2>Compétences & outils</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>Outils numériques</h3>
+          <div class="tags">
+            <span class="tag">Canva</span>
+            <span class="tag">PowerPoint</span>
+            <span class="tag">Word</span>
+            <span class="tag">Proton Mail</span>
+            <span class="tag">Proton VPN</span>
+          </div>
+        </div>
+        <div class="card">
+          <h3>IA maîtrisées</h3>
+          <div class="tags">
+            <span class="tag">Copilot</span>
+            <span class="tag">Claude</span>
+            <span class="tag">ChatGPT</span>
+            <span class="tag">Perplexity</span>
+            <span class="tag">Mistral / Le Chat</span>
+            <span class="tag">Canva AI</span>
+            <span class="tag">Notion AI</span>
+            <span class="tag">Suno</span>
+            <span class="tag">GitHub Copilot</span>
+            <span class="tag">Proton AI / Lumo</span>
+            <span class="tag">DeepSeek</span>
+            <span class="tag">Kimi K3</span>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Langues</h3>
+          <ul>
+            <li>Français – langue maternelle</li>
+            <li>Anglais – A2+ (en cours)</li>
+            <li>Espagnol – A2 (en cours)</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="projets">
+      <h2>Projets</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>ContentFlow – Bien-être</h3>
+          <p>
+            Compte Instagram automatisé qui publie des posts sur le bien-être.
+            Développé avec l’aide de Claude.
+          </p>
+          <p>
+            🌐 <a href="https://ethangalea1000-svg.github.io/contentflow-wellbeing/index.html" target="_blank" rel="noopener">
+              Voir le site du projet
+            </a>
+          </p>
+          <p>
+            💻 <a href="https://github.com/ethangalea1000-svg/contentflow-wellbeing" target="_blank" rel="noopener">
+              Voir le dépôt GitHub
+            </a>
+          </p>
+          <div class="tags">
+            <span class="tag">GitHub Pages</span>
+            <span class="tag">Automatisation</span>
+            <span class="tag">Bien-être</span>
+            <span class="tag">Claude</span>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Root-Me</h3>
+          <p>Débuts en cybersécurité : challenges et initiation aux concepts de sécurité.</p>
+          <p>
+            <a href="https://www.root-me.org/Ethan-1130436?lang=fr" target="_blank" rel="noopener">
+              Voir mon profil
+            </a>
+          </p>
+          <div class="tags">
+            <span class="tag">Cybersécurité</span>
+            <span class="tag">Root-Me</span>
+          </div>
+        </div>
+        <div class="card">
+          <h3>TryHackMe</h3>
+          <p>Débuts en cybersécurité : labs et apprentissage pratique.</p>
+          <p>
+            <a href="https://tryhackme.com/p/ethan.galea1000" target="_blank" rel="noopener">
+              Voir mon profil
+            </a>
+          </p>
+          <div class="tags">
+            <span class="tag">Cybersécurité</span>
+            <span class="tag">TryHackMe</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="certification">
+      <h2>Certification</h2>
+      <div class="card">
+        <h3>AI Foundations – SPUR Innovation (2026)</h3>
+        <p>
+          Certification obtenue.
+          <a href="https://learn.spuric.com/verify/SPUR-INTRO-40797EF1" target="_blank" rel="noopener">
+            Vérifier la certification
+          </a>
+        </p>
+      </div>
+    </section>
+
+    <section id="activites">
+      <h2>Activités au collège</h2>
+      <div class="grid">
+        <div class="card"><h3>Club manga</h3></div>
+        <div class="card"><h3>Club japon</h3></div>
+        <div class="card">
+          <h3>E3D</h3>
+          <p>Établissement en Démarche de Développement Durable</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="interets">
+      <h2>Centres d’intérêt</h2>
+      <div class="tags">
+        <span class="tag">Manga</span>
+        <span class="tag">Japon</span>
+        <span class="tag">Développement durable</span>
+        <span class="tag">IA / informatique</span>
+        <span class="tag">Cybersécurité</span>
+        <span class="tag">Automatisation</span>
+        <span class="tag">Bien-être</span>
+      </div>
+    </section>
+
+    <section id="objectifs">
+      <h2>Objectifs</h2>
+      <div class="card">
+        <ul>
+          <li>Finir le projet ContentFlow – Bien-être</li>
+          <li>Continuer à coder et publier sur GitHub</li>
+          <li>Progresser sur Root-Me et TryHackMe</li>
+          <li>Approfondir mes connaissances en cybersécurité</li>
+          <li>Devenir consultant en cybersécurité</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="timeline">
+      <h2>Parcours</h2>
+      <div class="timeline">
+        <div class="timeline-item">
+          <h3>2026 – Certification AI Foundations</h3>
+          <p>SPUR Innovation</p>
+        </div>
+        <div class="timeline-item">
+          <h3>2026 – Débuts Root-Me & TryHackMe</h3>
+          <p>Initiation à la cybersécurité</p>
+        </div>
+        <div class="timeline-item">
+          <h3>2026 – Projet ContentFlow – Bien-être</h3>
+          <p>
+            Site :
+            <a href="https://ethangalea1000-svg.github.io/contentflow-wellbeing/index.html" target="_blank" rel="noopener">
+              ethangalea1000-svg.github.io/contentflow-wellbeing
+            </a>
+            · Code :
+            <a href="https://github.com/ethangalea1000-svg/contentflow-wellbeing" target="_blank" rel="noopener">
+              GitHub
+            </a>
+          </p>
+        </div>
+        <div class="timeline-item">
+          <h3>2026 – 3e</h3>
+          <p>
+            <a href="https://lasalle84.net/" target="_blank" rel="noopener">
+              Collège Saint Jean Baptiste de La Salle, Avignon
+            </a>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <h2>Contact</h2>
+      <div class="contact-links">
+        <a href="mailto:futur.consultant.cyber@proton.me">futur.consultant.cyber@proton.me</a>
+        <a href="https://github.com/ethangalea1000-svg" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.root-me.org/Ethan-1130436?lang=fr" target="_blank" rel="noopener">Root-Me</a>
+        <a href="https://tryhackme.com/p/ethan.galea1000" target="_blank" rel="noopener">TryHackMe</a>
+      </div>
+    </section>
+
+    <footer>
+      <p>© 2026 Ethan GALEA – Portfolio personnel</p>
+    </footer>
+  </div>
+</body>
+</html>

@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Portfolio – Ethan GALEA</title>
+
+<!-- Favicon (icône dans l'onglet) -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><polygon points='50,5 90,27 90,73 50,95 10,73 10,27' fill='none' stroke='%2338bdf8' stroke-width='6'/><path d='M30 35 H70 M30 50 H60 M30 65 H70' stroke='%23a78bfa' stroke-width='8' stroke-linecap='round'/></svg>">
+
 <style>
   :root {
     --bg: #0f172a;
@@ -112,18 +116,37 @@
 <body>
   <div class="container">
     <header>
+      <!-- Logo SVG « Bouclier EG » -->
       <div style="text-align: center; margin-bottom: 1rem;">
-  <svg width="120" height="120" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-    <!-- Hexagone (Cybersécurité) -->
-    <polygon points="50,5 90,27 90,73 50,95 10,73 10,27" fill="none" stroke="#38bdf8" stroke-width="4"/>
-    <!-- Lettre E (Ethan) en circuit -->
-    <path d="M 30 30 H 70 M 30 50 H 60 M 30 70 H 70" fill="none" stroke="#a78bfa" stroke-width="6" stroke-linecap="round"/>
-    <!-- Nœuds (IA / Réseau) -->
-    <circle cx="70" cy="30" r="4" fill="#38bdf8"/>
-    <circle cx="60" cy="50" r="4" fill="#38bdf8"/>
-    <circle cx="70" cy="70" r="4" fill="#38bdf8"/>
-  </svg>
-</div>
+        <svg width="140" height="140" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.3"/>
+              <stop offset="100%" stop-color="#38bdf8" stop-opacity="0"/>
+            </radialGradient>
+            <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#38bdf8"/>
+              <stop offset="100%" stop-color="#a78bfa"/>
+            </linearGradient>
+          </defs>
+          <circle cx="60" cy="60" r="58" fill="url(#glow)"/>
+          <polygon points="60,10 105,32 105,80 60,110 15,80 15,32"
+                   fill="none" stroke="url(#grad)" stroke-width="3" stroke-linejoin="round"/>
+          <polygon points="60,22 95,39 95,76 60,98 25,76 25,39"
+                   fill="#0f172a" stroke="#38bdf8" stroke-width="1.5" opacity="0.6"/>
+          <path d="M 42 40 H 78 M 42 60 H 68 M 42 80 H 78"
+                fill="none" stroke="url(#grad)" stroke-width="5" stroke-linecap="round"/>
+          <path d="M 78 40 Q 88 50 80 62 Q 74 70 68 60"
+                fill="none" stroke="#a78bfa" stroke-width="4" stroke-linecap="round"/>
+          <circle cx="78" cy="40" r="4" fill="#38bdf8"/>
+          <circle cx="68" cy="60" r="3.5" fill="#a78bfa"/>
+          <circle cx="78" cy="80" r="4" fill="#38bdf8"/>
+          <circle cx="42" cy="40" r="3" fill="#38bdf8"/>
+          <circle cx="42" cy="80" r="3" fill="#38bdf8"/>
+          <circle cx="60" cy="60" r="2" fill="#e2e8f0" opacity="0.8"/>
+        </svg>
+      </div>
+
       <h1>Ethan GALEA</h1>
       <p>Collégien en 3e · Passionné d’IA, cybersécurité et développement durable</p>
       <div>
@@ -284,7 +307,7 @@
           <h3>E3D</h3>
           <p>Établissement en Démarche de Développement Durable</p>
         </div>
-      <div class="card"><h3>Club échecs</h3></div>
+      </div>
     </section>
 
     <section id="interets">

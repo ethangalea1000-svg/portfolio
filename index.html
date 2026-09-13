@@ -62,9 +62,7 @@
 
   header p { color: var(--muted); font-size: 1.2rem; margin-top: 0.5rem; }
 
-  .logo-img {
-    animation: pulse 3s ease-in-out infinite;
-  }
+  .logo-img { animation: pulse 3s ease-in-out infinite; }
 
   .badge {
     display: inline-block;
@@ -138,6 +136,40 @@
     border-radius: 50%;
   }
 
+  /* Styles pour les barres de compétences */
+  .skill {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.3rem;
+  }
+
+  .skill-name { color: var(--muted); }
+
+  .skill-percent {
+    color: var(--accent);
+    font-weight: bold;
+    font-size: 0.9rem;
+  }
+
+  .skill-bar {
+    background: #334155;
+    height: 8px;
+    border-radius: 4px;
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+
+  .skill-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 1s ease;
+  }
+
+  .skill-fill-cyber { background: #38bdf8; }
+  .skill-fill-ia { background: #a78bfa; }
+  .skill-fill-code { background: #38bdf8; }
+
   footer {
     text-align: center;
     padding: 3rem 1rem;
@@ -169,7 +201,6 @@
 <body>
   <div class="container">
     <header>
-      <!-- Logo avec fond lumineux + animation pulse -->
       <div style="text-align: center; margin-bottom: 1.5rem;">
         <div style="display: inline-block; background: rgba(56, 189, 248, 0.1); border-radius: 50%; padding: 1.5rem; box-shadow: 0 0 40px rgba(56, 189, 248, 0.2); border: 1px solid rgba(56, 189, 248, 0.3);">
           <img src="logo.png" alt="Logo Ethan GALEA" width="200" class="logo-img" style="filter: drop-shadow(0 0 15px rgba(167, 139, 250, 0.6)) brightness(1.3); display: block;">
@@ -261,17 +292,29 @@
 
         <div class="card">
           <h3>Niveau de compétences</h3>
-          <p>Cybersécurité</p>
-          <div style="background: #334155; height: 8px; border-radius: 4px; margin-bottom: 10px;">
-            <div style="background: #38bdf8; height: 100%; width: 40%; border-radius: 4px;"></div>
+
+          <div class="skill">
+            <span class="skill-name">Cybersécurité</span>
+            <span class="skill-percent" id="cyber-percent">—</span>
           </div>
-          <p>Intelligence Artificielle</p>
-          <div style="background: #334155; height: 8px; border-radius: 4px; margin-bottom: 10px;">
-            <div style="background: #a78bfa; height: 100%; width: 70%; border-radius: 4px;"></div>
+          <div class="skill-bar">
+            <div class="skill-fill skill-fill-cyber" id="cyber-bar" style="width: 0%;"></div>
           </div>
-          <p>Programmation</p>
-          <div style="background: #334155; height: 8px; border-radius: 4px;">
-            <div style="background: #38bdf8; height: 100%; width: 40%; border-radius: 4px;"></div>
+
+          <div class="skill">
+            <span class="skill-name">Intelligence Artificielle</span>
+            <span class="skill-percent" id="ia-percent">—</span>
+          </div>
+          <div class="skill-bar">
+            <div class="skill-fill skill-fill-ia" id="ia-bar" style="width: 0%;"></div>
+          </div>
+
+          <div class="skill">
+            <span class="skill-name">Programmation</span>
+            <span class="skill-percent" id="code-percent">—</span>
+          </div>
+          <div class="skill-bar">
+            <div class="skill-fill skill-fill-code" id="code-bar" style="width: 0%;"></div>
           </div>
         </div>
       </div>
@@ -307,7 +350,7 @@
         <div class="card">
           <h3>Root-Me</h3>
           <p>Débuts en cybersécurité : challenges et initiation aux concepts de sécurité.</p>
-          <p>🏆 5 challenges résolus</p>
+          <p id="rootme-stats">🏆 Voir mon profil pour mes statistiques</p>
           <p>
             <a href="https://www.root-me.org/Ethan-1130436?lang=fr" target="_blank" rel="noopener">
               Voir mon profil
@@ -322,7 +365,7 @@
         <div class="card">
           <h3>TryHackMe</h3>
           <p>Débuts en cybersécurité : labs et apprentissage pratique.</p>
-          <p>🏆 3 labs terminés</p>
+          <p id="thm-stats">🏆 Voir mon profil pour mes statistiques</p>
           <p>
             <a href="https://tryhackme.com/p/ethan.galea1000" target="_blank" rel="noopener">
               Voir mon profil
@@ -445,5 +488,46 @@
       <p>© 2026 Ethan GALEA – Portfolio personnel</p>
     </footer>
   </div>
+
+  <!-- Script : calcul automatique des pourcentages selon le contenu -->
+  <script>
+  function calculerPourcentages() {
+    // ===== CYBERSÉCURITÉ : nombre de projets cyber × 20% =====
+    const tagsProjets = document.querySelectorAll('#projets .tag');
+    let cyberCount = 0;
+    tagsProjets.forEach(tag => {
+      if (tag.textContent.trim() === 'Cybersécurité') cyberCount++;
+    });
+    const pourcentCyber = Math.min(cyberCount * 20, 100);
+
+    // ===== INTELLIGENCE ARTIFICIELLE : nombre d'IA × 6% =====
+    const cartes = document.querySelectorAll('#competences .card');
+    let iaCount = 0;
+    cartes.forEach(carte => {
+      const h3 = carte.querySelector('h3');
+      if (h3 && h3.textContent.includes('IA maîtrisées')) {
+        iaCount = carte.querySelectorAll('.tag').length;
+      }
+    });
+    const pourcentIA = Math.min(iaCount * 6, 100);
+
+    // ===== PROGRAMMATION : nombre de projets GitHub × 40% =====
+    const liensGithub = document.querySelectorAll('#projets a[href*="github.com"]');
+    const projetsGithub = Math.ceil(liensGithub.length / 2);
+    const pourcentCode = Math.min(projetsGithub * 40, 100);
+
+    // ===== AFFICHAGE =====
+    document.getElementById('cyber-percent').textContent = pourcentCyber + '%';
+    document.getElementById('cyber-bar').style.width = pourcentCyber + '%';
+
+    document.getElementById('ia-percent').textContent = pourcentIA + '%';
+    document.getElementById('ia-bar').style.width = pourcentIA + '%';
+
+    document.getElementById('code-percent').textContent = pourcentCode + '%';
+    document.getElementById('code-bar').style.width = pourcentCode + '%';
+  }
+
+  window.addEventListener('DOMContentLoaded', calculerPourcentages);
+  </script>
 </body>
 </html>

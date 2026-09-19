@@ -35,6 +35,28 @@ Supabase est le service qui gère l'authentification et peut ensuite stocker les
 <p class="small">Ce mode n'est pas une authentification sécurisée : il fonctionne seulement sur ce navigateur/appareil. Il ne permet pas de récupérer le profil sur un autre appareil.</p>
 </section>
 
+<section class="card" id="clerk">
+<h2>0.25. Compte CyberLab avec Clerk</h2>
+<div class="notice">
+<strong>Une autre solution d'authentification en ligne.</strong><br>
+Clerk gère les comptes CyberLab et les connexions Google. Ton site n'a pas besoin d'une base de données CyberLab pour cette authentification. Clerk fournit aussi ses propres interfaces de connexion et d'inscription. citeturn596649search0turn596649search1
+</div>
+<p class="muted">Configure une fois la <strong>Publishable Key</strong> de ton application Clerk, puis utilise les boutons ci-dessous.</p>
+<div class="form">
+<input id="clerkKey" placeholder="Clerk Publishable Key — pk_test_... ou pk_live_...">
+<div class="oauth">
+<button class="btn" onclick="saveClerkConfig()">Enregistrer Clerk</button>
+<button class="btn" onclick="clerkSignIn()">Se connecter</button>
+<button class="btn" onclick="clerkSignUp()">Créer un compte CyberLab</button>
+<button class="btn" onclick="clerkOpenUser()">Mon compte</button>
+<button class="btn" onclick="clerkSignOut()">Se déconnecter</button>
+</div>
+<div id="clerkMount" style="margin-top:14px"></div>
+<div id="clerkResult" class="result"></div>
+</div>
+<p class="small"><strong>Dans Clerk :</strong> active Google et l'authentification par email/mot de passe dans les méthodes de connexion. La Publishable Key est une clé publique destinée au frontend ; ne colle jamais de clé secrète ici. citeturn596649search0turn596649search2</p>
+</section>
+
 <section class="card" id="firebase">
 <h2>0.5. Compte CyberLab en ligne — sans base de données</h2>
 <div class="notice">
@@ -65,28 +87,6 @@ Tu peux utiliser Firebase Authentication uniquement : soit avec ton compte Googl
 </div>
 <div id="firebaseResult" class="firebase-status"></div>
 <p class="small"><strong>Configuration :</strong> Firebase Console → Authentication → Sign-in method → active Google et/ou Email/Password. Ajoute aussi ton domaine GitHub Pages dans les domaines autorisés. Aucun Firestore n'est nécessaire pour cette méthode. citeturn489918search6turn489918search1turn489918search4</p>
-</section>
-
-<section class="card" id="clerk">
-<h2>0.25. Compte CyberLab avec Clerk</h2>
-<div class="notice">
-<strong>Une autre solution d'authentification en ligne.</strong><br>
-Clerk gère les comptes CyberLab et les connexions Google. Ton site n'a pas besoin d'une base de données CyberLab pour cette authentification. Clerk fournit aussi ses propres interfaces de connexion et d'inscription. citeturn596649search0turn596649search1
-</div>
-<p class="muted">Configure une fois la <strong>Publishable Key</strong> de ton application Clerk, puis utilise les boutons ci-dessous.</p>
-<div class="form">
-<input id="clerkKey" placeholder="Clerk Publishable Key — pk_test_... ou pk_live_...">
-<div class="oauth">
-<button class="btn" onclick="saveClerkConfig()">Enregistrer Clerk</button>
-<button class="btn" onclick="clerkSignIn()">Se connecter</button>
-<button class="btn" onclick="clerkSignUp()">Créer un compte CyberLab</button>
-<button class="btn" onclick="clerkOpenUser()">Mon compte</button>
-<button class="btn" onclick="clerkSignOut()">Se déconnecter</button>
-</div>
-<div id="clerkMount" style="margin-top:14px"></div>
-<div id="clerkResult" class="result"></div>
-</div>
-<p class="small"><strong>Dans Clerk :</strong> active Google et l'authentification par email/mot de passe dans les méthodes de connexion. La Publishable Key est une clé publique destinée au frontend ; ne colle jamais de clé secrète ici. citeturn596649search0turn596649search2</p>
 </section>
 
 <section class="card">

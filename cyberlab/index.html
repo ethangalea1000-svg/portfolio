@@ -3,154 +3,129 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width">
-<title>CyberLab — projets, cartes et convertisseur</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<title>CyberLab</title>
 <style>
-:root{--bg:#070d18;--bg2:#0d1728;--card:#111e33;--line:#263a5d;--text:#eef5ff;--muted:#9fb0cb;--accent:#67c7ff;--gold:#ffd86b;--green:#6ee7b7;--red:#ff9b9b}
-*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:linear-gradient(180deg,#0a1322,#070d18);color:var(--text)}
-main{max-width:1180px;margin:auto;padding:28px 18px 60px}header{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;flex-wrap:wrap}.brand h1{font-size:3rem;margin:.1rem 0}.brand p{color:var(--muted);margin:0}.tag{display:inline-block;padding:5px 10px;border-radius:99px;background:#17304e;color:#9fdbff;font-size:.8rem;font-weight:700;letter-spacing:.08em}
-nav{display:flex;gap:8px;flex-wrap:wrap;margin:24px 0}nav button,.btn{border:1px solid var(--line);background:#13223a;color:var(--text);padding:10px 14px;border-radius:10px;cursor:pointer}nav button.active,nav button:hover,.btn:hover{border-color:var(--accent);background:#183250}
-section.panel{display:none}.panel.active{display:block}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px}
-.card{background:linear-gradient(160deg,#14233d,#0e182b);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 10px 28px #0004}.repo-card{position:relative;overflow:hidden}.repo-card:before{content:"";position:absolute;inset:0 auto 0 0;width:5px;background:var(--accent)}.repo-icon{font-size:2.4rem}.repo-card h3{margin:10px 0 4px}.repo-card p{color:var(--muted)}.rarity{display:inline-block;border:1px solid #6b5b1f;color:var(--gold);background:#302912;padding:4px 8px;border-radius:99px;font-size:.78rem}.techs{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}.tech{background:#172844;border-radius:8px;padding:4px 8px;font-size:.78rem;color:#bed7f2}.actions{display:flex;gap:8px;flex-wrap:wrap}.link{color:var(--accent);text-decoration:none}
-.collection-head{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}.progress{height:10px;background:#0b1424;border:1px solid var(--line);border-radius:99px;overflow:hidden}.progress>div{height:100%;background:linear-gradient(90deg,#56b8ff,#a77cff);width:0}.collection-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:16px}.collect-card{min-height:180px;border-radius:18px;padding:18px;border:1px solid #3a4661;background:linear-gradient(145deg,#17233b,#0e1626)}.collected{border-color:#56d7a7;box-shadow:0 0 25px #56d7a722}.locked{opacity:.46;filter:saturate(.45)}
-input,select{width:100%;padding:11px;border-radius:10px;border:1px solid var(--line);background:#091321;color:var(--text);font:inherit}.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}.form{display:grid;gap:10px;max-width:600px}.result{margin-top:12px;padding:12px;border-radius:10px;background:#091321;border:1px solid var(--line);white-space:pre-wrap}.small{color:var(--muted);font-size:.9rem}.notice{padding:12px;border-radius:12px;background:#10223a;border:1px solid #284f76;color:#c9e8ff}.ok{color:var(--green)}.err{color:var(--red)}footer{margin-top:30px;color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);padding-top:18px}
-@media(max-width:650px){.brand h1{font-size:2.3rem}.two{grid-template-columns:1fr}}
+:root{--bg:#07101d;--panel:#101c2f;--line:#2a4164;--text:#eef5ff;--muted:#9db0cb;--accent:#69caff;--gold:#ffd76b;--purple:#b89cff}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#0b1729,#07101d);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}main{max-width:1150px;margin:auto;padding:30px 18px 60px}header{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap}h1{font-size:3rem;margin:.1rem 0}.sub{color:var(--muted);margin-top:0}.tag{display:inline-block;padding:5px 9px;border-radius:99px;background:#173252;color:#a8ddff;font-size:.78rem;font-weight:700;letter-spacing:.08em}
+nav{display:flex;gap:8px;flex-wrap:wrap;margin:24px 0}nav button,.btn{padding:10px 14px;border-radius:10px;border:1px solid var(--line);background:#13243d;color:var(--text);cursor:pointer}nav button.active,nav button:hover,.btn:hover{border-color:var(--accent)}.panel{display:none}.panel.active{display:block}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px}.project{background:linear-gradient(145deg,#14243e,#0e192b);border:1px solid var(--line);border-radius:18px;padding:18px}.project h3{margin:10px 0 6px}.project p{color:var(--muted)}.actions{display:flex;gap:8px;flex-wrap:wrap}.link{color:var(--accent);text-decoration:none}.small{font-size:.9rem;color:var(--muted)}.collection{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:15px;margin-top:18px}.math-card{min-height:240px;border-radius:18px;padding:18px;border:2px solid #536581;background:linear-gradient(145deg,#17243a,#0b1423);position:relative;overflow:hidden}.math-card:after{content:"";position:absolute;width:120px;height:120px;border-radius:50%;right:-35px;top:-35px;background:#ffffff0b}.math-card.common{border-color:#7f93ad}.math-card.rare{border-color:#63b5ff}.math-card.epic{border-color:#bb8cff}.math-card.legendary{border-color:#ffd76b;box-shadow:0 0 28px #ffd76b22}.rarity{font-weight:700;font-size:.8rem}.math-type{color:var(--accent);font-size:.8rem}.result{font-size:1.7rem;font-weight:800;margin:12px 0;word-break:break-word}.stats{display:flex;justify-content:space-between;color:var(--muted);font-size:.82rem}.form{display:grid;gap:10px;max-width:620px}.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}input,select{width:100%;padding:11px;background:#091321;border:1px solid var(--line);border-radius:10px;color:var(--text);font:inherit}.resultbox{margin-top:12px;padding:12px;border-radius:10px;background:#091321;border:1px solid var(--line);white-space:pre-wrap}.notice{padding:12px;border:1px solid #2b547a;background:#10253c;border-radius:12px;color:#cfeaff}
+@media(max-width:650px){h1{font-size:2.3rem}.two{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <main>
 <header>
-<div class="brand"><span class="tag">CYBERSÉCURITÉ · COLLECTION</span><h1>CyberLab</h1><p>Projets, cartes à collectionner et outils interactifs.</p></div>
-<div id="authBadge" class="notice">Mode local — collection sauvegardée sur cet appareil.</div>
+<div><span class="tag">CYBERSÉCURITÉ · PROJETS</span><h1>CyberLab</h1><p class="sub">Des mini-applications web, une calculatrice scientifique et une collection de cartes de résultats.</p></div>
+<div class="notice">Tes cartes sont sauvegardées dans le navigateur.</div>
 </header>
 
 <nav>
-<button class="active" data-tab="repos">Dépôts</button>
-<button data-tab="collection">Collection <span id="count">0/5</span></button>
+<button class="active" data-tab="projects">Projets</button>
+<button data-tab="cards">Collection <span id="cardCount">0</span></button>
 <button data-tab="convert">Convertisseur</button>
 <button data-tab="account">Connexion</button>
 </nav>
 
-<section id="repos" class="panel active">
-<h2>Cartes des dépôts</h2>
-<p class="small">Chaque dépôt de ton portfolio a sa propre carte. Clique sur « Collecter » pour l’ajouter à ta collection.</p>
-<div id="repoGrid" class="grid"></div>
-<h2 style="margin-top:30px">Mini-projets CyberLab</h2>
-<div id="projectGrid" class="grid"></div>
+<section id="projects" class="panel active">
+<h2>Mes projets</h2><p class="small">Le bouton « Démo » ouvre l’application. « Code » ouvre uniquement le dépôt GitHub.</p>
+<div class="grid" id="projectGrid"></div>
 </section>
 
-<section id="collection" class="panel">
-<div class="collection-head"><div><h2>Ma collection</h2><p class="small">Progression locale + sauvegarde cloud facultative après connexion.</p></div><strong id="progressText">0/5</strong></div>
-<div class="progress"><div id="progressBar"></div></div>
-<div class="actions" style="margin-top:14px">
-<button class="btn" onclick="exportCollection()">Exporter la collection</button>
-<label class="btn" style="cursor:pointer">Importer <input id="importFile" type="file" accept=".json,application/json" hidden></label>
-<button class="btn" onclick="resetCollection()">Réinitialiser</button>
+<section id="cards" class="panel">
+<h2>Collection de cartes</h2>
+<p class="small">Chaque calcul réussi dans CyberCalc peut donner une carte originale. Les doublons sont ignorés : ta collection s'agrandit avec de nouveaux résultats.</p>
+<div class="actions">
+<button class="btn" onclick="exportCards()">Exporter</button>
+<label class="btn">Importer <input id="importFile" type="file" accept=".json,application/json" hidden></label>
+<button class="btn" onclick="resetCards()">Réinitialiser</button>
 </div>
-<div id="collectionList" class="collection-list"></div>
+<div id="cardsGrid" class="collection"></div>
 </section>
 
 <section id="convert" class="panel">
 <h2>Convertisseur</h2>
 <div class="grid">
-<div class="card">
+<div class="project">
 <h3>Unités</h3>
+<div class="form">
 <label>Catégorie<select id="unitType" onchange="fillUnits()"><option value="length">Longueur</option><option value="mass">Masse</option><option value="temperature">Température</option><option value="data">Données</option><option value="time">Temps</option><option value="angle">Angle</option></select></label>
-<div class="two"><div><label>De<select id="fromUnit"></select></label></div><div><label>Vers<select id="toUnit"></select></label></div></div>
+<div class="two"><label>De<select id="fromUnit"></select></label><label>Vers<select id="toUnit"></select></label></div>
 <label>Valeur<input id="unitValue" type="number" step="any" value="1"></label>
-<button class="btn" onclick="convertUnits()">Convertir</button>
-<div id="unitResult" class="result"></div>
+<button class="btn" onclick="convertUnits()">Convertir</button><div id="unitResult" class="resultbox"></div>
 </div>
-<div class="card">
-<h3>Devises — données Web</h3>
-<p class="small">Le taux est demandé au service Frankfurter au moment de la conversion.</p>
-<div class="two"><div><label>De<select id="fromCurrency"><option>EUR</option><option>USD</option><option>GBP</option><option>CHF</option><option>JPY</option><option>CAD</option><option>AUD</option></select></label></div><div><label>Vers<select id="toCurrency"><option>USD</option><option>EUR</option><option>GBP</option><option>CHF</option><option>JPY</option><option>CAD</option><option>AUD</option></select></label></div></div>
-<label>Montant<input id="currencyValue" type="number" step="any" value="100"></label>
-<button class="btn" onclick="convertCurrency()">Convertir avec le taux Web</button>
-<div id="currencyResult" class="result"></div>
+</div>
+<div class="project">
+<h3>Devises — taux Web</h3><p class="small">Le taux est récupéré au moment de la conversion.</p>
+<div class="form">
+<div class="two"><label>De<select id="fromCurrency"><option>EUR</option><option>USD</option><option>GBP</option><option>CHF</option><option>JPY</option><option>CAD</option><option>AUD</option></select></label><label>Vers<select id="toCurrency"><option>USD</option><option>EUR</option><option>GBP</option><option>CHF</option><option>JPY</option><option>CAD</option><option>AUD</option></select></label></div>
+<label>Montant<input id="currencyValue" type="number" step="any" value="100"></label><button class="btn" onclick="convertCurrency()">Chercher le taux Web</button><div id="currencyResult" class="resultbox"></div>
+</div>
 </div>
 </div>
 </section>
 
 <section id="account" class="panel">
-<h2>Connexion</h2>
-<div class="notice">Pour une vraie sauvegarde multi-appareils, l’application peut utiliser Supabase Auth. La librairie gère les sessions persistantes ; il faut toutefois renseigner ton propre projet Supabase. citeturn270908search4</div>
-<div class="card" style="margin-top:16px">
-<h3>1. Configuration Supabase</h3>
+<h2>Connexion / sauvegarde</h2>
+<p class="small">La collection fonctionne immédiatement sans compte. Pour la retrouver sur plusieurs appareils, configure ton propre projet Supabase avec sa clé publique.</p>
+<div class="project">
 <div class="form">
-<input id="sbUrl" placeholder="URL du projet Supabase">
-<input id="sbKey" placeholder="Publishable key / anon key">
-<button class="btn" onclick="configureSupabase()">Enregistrer la configuration</button>
-<p class="small">Ne mets jamais une clé <code>service_role</code> ici. Cette page ne doit contenir qu'une clé publique/publishable.</p>
+<input id="sbUrl" placeholder="URL Supabase">
+<input id="sbKey" placeholder="Clé publique Supabase">
+<button class="btn" onclick="configureSupabase()">Enregistrer</button>
+<div class="two"><input id="email" type="email" placeholder="Email"><input id="password" type="password" placeholder="Mot de passe"></div>
+<div class="actions"><button class="btn" onclick="signUp()">Créer le compte</button><button class="btn" onclick="signIn()">Se connecter</button><button class="btn" onclick="signOut()">Se déconnecter</button></div>
+<div id="accountResult" class="resultbox"></div>
 </div>
-</div>
-<div class="card" style="margin-top:16px">
-<h3>2. Compte</h3>
-<div class="form">
-<input id="email" type="email" placeholder="Email">
-<input id="password" type="password" placeholder="Mot de passe">
-<div class="actions"><button class="btn" onclick="signUp()">Créer un compte</button><button class="btn" onclick="signIn()">Se connecter</button><button class="btn" onclick="signOut()">Se déconnecter</button></div>
-<div id="accountResult" class="result"></div>
-</div>
-</div>
-<div class="card" style="margin-top:16px">
-<h3>Pourquoi deux sauvegardes ?</h3>
-<p class="small">La collection reste immédiatement dans le stockage local. L'export JSON permet une sauvegarde indépendante. Une fois Supabase configuré et connecté, la collection peut être synchronisée dans les métadonnées du compte.</p>
 </div>
 </section>
-
-<footer>CyberLab — les outils de sécurité sont éducatifs et utilisent uniquement des données fournies volontairement.</footer>
 </main>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const repos=[
-{id:'auto-instagram',icon:'🤖',name:'Auto Instagram',rarity:'Légendaire',desc:'Automatisation et garde-fous de publication.',tech:['Node.js','GitHub Actions','IA'],url:'https://github.com/ethangalea1000-svg/auto-instagram'},
-{id:'contentflow-wellbeing',icon:'🌿',name:'ContentFlow Bien-être',rarity:'Épique',desc:'Projet d’automatisation de contenu et documentation.',tech:['HTML','Automation','Privacy'],url:'https://github.com/ethangalea1000-svg/contentflow-wellbeing'},
-{id:'guide-automatisation-instagram',icon:'📘',name:'Guide Automatisation Instagram',rarity:'Rare',desc:'Guide technique et architecture d’automatisation.',tech:['JavaScript','Cloudflare','GitHub Actions'],url:'https://github.com/ethangalea1000-svg/guide-automatisation-instagram'},
-{id:'portfolio',icon:'💼',name:'Portfolio',rarity:'Rare',desc:'Portfolio personnel et vitrine technique.',tech:['HTML','CSS','GitHub Pages'],url:'https://github.com/ethangalea1000-svg/portfolio'},
-{id:'mon-projet',icon:'🛡️',name:'CyberLab',rarity:'Épique',desc:'Collection de projets cyber et outils interactifs.',tech:['JavaScript','Web Crypto','Cyber'],url:'https://github.com/ethangalea1000-svg/mon-projet'}
-];
 const projects=[
-['01-cybercalc','CyberCalc','Calculatrice scientifique'],['02-password-lab','Password Lab','Analyse locale'],['03-hash-lab','Hash Lab','SHA-256'],['04-integrity-lab','Integrity Lab','Intégrité de fichiers'],['05-log-analyzer','Log Analyzer','Logs fictifs'],['06-headers-lab','Headers Lab','En-têtes HTTP'],['07-crypto-messenger','Crypto Messenger','AES-GCM local'],['08-socialnet-demo','SocialNet Demo','Réseau fictif'],['09-incident-dashboard','Incident Dashboard','Incidents simulés'],['10-security-checklist','Security Checklist','Checklist défensive']
+['01-cybercalc','CyberCalc','Calculatrice scientifique : racine, puissances, trigonométrie, dates, π et cartes de résultats.'],
+['02-password-lab','Password Lab','Analyse locale indicative de robustesse.'],
+['03-hash-lab','Hash Lab','Calcul de SHA-256 dans le navigateur.'],
+['04-integrity-lab','Integrity Lab','Empreinte SHA-256 d’un fichier choisi localement.'],
+['05-log-analyzer','Log Analyzer','Analyse de journaux fictifs.'],
+['06-headers-lab','Headers Lab','Lecture d’en-têtes HTTP fournis volontairement.'],
+['07-crypto-messenger','Crypto Messenger','Démonstration locale d’AES-GCM.'],
+['08-socialnet-demo','SocialNet Demo','Mini réseau social fictif côté navigateur.'],
+['09-incident-dashboard','Incident Dashboard','Tableau de suivi d’incidents simulés.'],
+['10-security-checklist','Security Checklist','Checklist défensive de projet web.']
 ];
-let collection=new Set(JSON.parse(localStorage.getItem('cyberlab_collection')||'[]'));
-let supabase=null;
+const root='https://ethangalea1000-svg.github.io/portfolio/cyberlab/';
+projectGrid.innerHTML=projects.map(p=>'<article class="project"><span class="tag">PROJET</span><h3>'+p[1]+'</h3><p>'+p[2]+'</p><div class="actions"><a class="btn link" href="'+root+p[0]+'/">Ouvrir la démo →</a><a class="btn link" target="_blank" rel="noopener" href="https://github.com/ethangalea1000-svg/mon-projet/tree/master/'+p[0]+'">Voir le code</a></div></article>').join('');
 
-function saveLocal(){localStorage.setItem('cyberlab_collection',JSON.stringify([...collection]));renderCollection();syncCloud();}
-function isCollected(id){return collection.has(id)}
-function toggleCard(id){if(collection.has(id))collection.delete(id);else collection.add(id);saveLocal();renderRepos()}
-function cardHTML(r){const collected=isCollected('repo:'+r.id);return '<article class="card repo-card"><div class="repo-icon">'+r.icon+'</div><span class="rarity">'+r.rarity+'</span><h3>'+r.name+'</h3><p>'+r.desc+'</p><div class="techs">'+r.tech.map(t=>'<span class="tech">'+t+'</span>').join('')+'</div><div class="actions"><button class="btn" onclick="toggleCard(\'repo:'+r.id+'\')">'+(collected?'✓ Dans la collection':'☆ Collecter')+'</button><a class="btn link" target="_blank" rel="noopener" href="'+r.url+'">GitHub</a></div></article>'}
-function renderRepos(){repoGrid.innerHTML=repos.map(cardHTML).join('');projectGrid.innerHTML=projects.map(p=>'<article class="card"><span class="tag">PROJET</span><h3>'+p[1]+'</h3><p>'+p[2]+'</p><a class="link" href="./'+p[0]+'/">Ouvrir la démo →</a></article>').join('')}
-function renderCollection(){const total=repos.length;const got=repos.filter(r=>collection.has('repo:'+r.id)).length;count.textContent=got+'/'+total;progressText.textContent=got+'/'+total;progressBar.style.width=(got/total*100)+'%';collectionList.innerHTML=repos.map(r=>{const ok=isCollected('repo:'+r.id);return '<article class="collect-card '+(ok?'collected':'locked')+'"><div class="repo-icon">'+(ok?r.icon:'❔')+'</div><span class="rarity">'+r.rarity+'</span><h3>'+r.name+'</h3><p>'+ (ok?r.desc:'Carte verrouillée')+'</p></article>'}).join('')}
-function exportCollection(){const data={version:1,date:new Date().toISOString(),collection:[...collection]};const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='cyberlab-collection.json';a.click();URL.revokeObjectURL(a.href)}
-importFile.addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;try{const d=JSON.parse(await f.text());if(!Array.isArray(d.collection))throw new Error('Fichier invalide');collection=new Set(d.collection);saveLocal();accountResult.textContent='Collection importée.'}catch(err){accountResult.textContent='Import impossible : '+err.message}})
-function resetCollection(){if(confirm('Réinitialiser la collection locale ?')){collection=new Set();saveLocal();}}
-function tabs(){document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById(b.dataset.tab).classList.add('active')})}
+function getCards(){try{return JSON.parse(localStorage.getItem('mathcards')||'[]')}catch{return[]}}
+function saveCards(cards){localStorage.setItem('mathcards',JSON.stringify(cards));renderCards()}
+function hashString(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return (h>>>0).toString(16)}
+function addMathCard(expression,result,type){
+ const cards=getCards();const id=hashString(expression+'|'+result);if(cards.some(c=>c.id===id))return;
+ const abs=Math.abs(Number(result));let rarity=abs>=1000000000000?'legendary':abs>=1000000?'epic':abs>=100?'rare':'common';
+ cards.unshift({id,name:'Carte '+type,expression,result:String(result),rarity,type,date:new Date().toISOString()});saveCards(cards)
+}
+function renderCards(){const cards=getCards();cardCount.textContent=cards.length;if(!cards.length){cardsGrid.innerHTML='<div class="notice">Aucune carte pour le moment. Va dans CyberCalc et fais un calcul.</div>';return}cardsGrid.innerHTML=cards.map(c=>'<article class="math-card '+c.rarity+'"><div class="math-type">'+c.type+'</div><h3>'+c.name+'</h3><div class="rarity">'+({common:'Commune',rare:'Rare',epic:'Épique',legendary:'Légendaire'}[c.rarity])+'</div><div class="result">'+c.result+'</div><div class="stats"><span>'+c.expression+'</span><span>'+new Date(c.date).toLocaleDateString('fr-FR')+'</span></div></article>').join('')}
+function exportCards(){const b=new Blob([JSON.stringify({version:1,cards:getCards()},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='cyberlab-cartes.json';a.click();URL.revokeObjectURL(a.href)}
+importFile.addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;try{const d=JSON.parse(await f.text());if(!Array.isArray(d.cards))throw new Error('format invalide');saveCards(d.cards);accountResult.textContent='Collection importée.'}catch(err){accountResult.textContent='Import impossible : '+err.message}})
+function resetCards(){if(confirm('Supprimer toutes les cartes locales ?'))saveCards([])}
 
-const units={
-length:{m:1,km:1000,cm:.01,mm:.001,mi:1609.344,yd:.9144,ft:.3048,in:.0254},
-mass:{kg:1,g:.001,mg:.000001,t:1000,lb:.45359237,oz:.028349523125},
-data:{B:1,KB:1024,MB:1048576,GB:1073741824,TB:1099511627776},
-time:{s:1,min:60,h:3600,day:86400,week:604800},
-angle:{rad:1,deg:Math.PI/180,grad:Math.PI/200}
-};
-const labels={m:'mètre',km:'kilomètre',cm:'centimètre',mm:'millimètre',mi:'mile',yd:'yard',ft:'pied',in:'pouce',kg:'kilogramme',g:'gramme',mg:'milligramme',t:'tonne',lb:'livre',oz:'once',B:'octet',KB:'Ko',MB:'Mo',GB:'Go',TB:'To',s:'seconde',min:'minute',h:'heure',day:'jour',week:'semaine',rad:'radian',deg:'degré',grad:'grade'};
-function fillUnits(){const type=unitType.value;let list=Object.keys(units[type]||{});if(type==='temperature')list=['C','F','K'];fromUnit.innerHTML=list.map(x=>'<option value="'+x+'">'+(labels[x]||x)+'</option>').join('');toUnit.innerHTML=list.map(x=>'<option value="'+x+'">'+(labels[x]||x)+'</option>').join('');if(list[1])toUnit.value=list[1]}
-function convertTemperature(v,f,t){let c=f==='C'?v:f==='F'?(v-32)*5/9:v-273.15;return t==='C'?c:t==='F'?c*9/5+32:c+273.15}
-function convertUnits(){const type=unitType.value,v=Number(unitValue.value),f=fromUnit.value,t=toUnit.value;if(!Number.isFinite(v)){unitResult.textContent='Valeur invalide.';return}let r;if(type==='temperature')r=convertTemperature(v,f,t);else r=v*units[type][f]/units[type][t];unitResult.textContent=v+' '+f+' = '+Number(r.toFixed(12))+' '+t}
-async function convertCurrency(){const v=Number(currencyValue.value),f=fromCurrency.value.toLowerCase(),t=toCurrency.value.toLowerCase();if(!Number.isFinite(v)){currencyResult.textContent='Montant invalide.';return}if(f===t){currencyResult.textContent=v+' '+f.toUpperCase()+' = '+v.toFixed(2)+' '+t.toUpperCase();return}currencyResult.textContent='Recherche du taux sur le Web…';try{const res=await fetch('https://api.frankfurter.dev/v2/rate/'+f+'/'+t,{cache:'no-store'});if(!res.ok)throw new Error('HTTP '+res.status);const d=await res.json();const out=v*d.rate;currencyResult.textContent=v+' '+f.toUpperCase()+' = '+out.toFixed(2)+' '+t.toUpperCase()+'\nTaux : '+d.rate+' · Date : '+(d.date||'non fournie')+'\nSource : Frankfurter'}catch(e){currencyResult.textContent='Conversion impossible : '+e.message}}
-function configureSupabase(){const url=sbUrl.value.trim(),key=sbKey.value.trim();if(!url||!key){accountResult.textContent='URL et clé requises.';return}localStorage.setItem('supabase_url',url);localStorage.setItem('supabase_key',key);initSupabase();accountResult.textContent='Configuration enregistrée.'}
-function initSupabase(){const url=localStorage.getItem('supabase_url'),key=localStorage.getItem('supabase_key');if(!url||!key||!window.supabase)return;supabase=window.supabase.createClient(url,key,{auth:{persistSession:true}});supabase.auth.onAuthStateChange((event,session)=>{updateAuthBadge(session);if(session)loadCloud(session.user)});supabase.auth.getSession().then(({data})=>updateAuthBadge(data.session))}
-async function signUp(){if(!supabase){accountResult.textContent='Configure Supabase d’abord.';return}const {error}=await supabase.auth.signUp({email:email.value.trim(),password:password.value});accountResult.textContent=error?error.message:'Compte créé. Vérifie ton email si la confirmation est activée.'}
-async function signIn(){if(!supabase){accountResult.textContent='Configure Supabase d’abord.';return}const {data,error}=await supabase.auth.signInWithPassword({email:email.value.trim(),password:password.value});accountResult.textContent=error?error.message:'Connexion réussie.';if(data.session)loadCloud(data.session.user)}
-async function signOut(){if(!supabase)return;await supabase.auth.signOut();accountResult.textContent='Déconnecté.';updateAuthBadge(null)}
-function updateAuthBadge(session){authBadge.textContent=session?'Connecté : '+(session.user.email||'compte'):'Mode local — collection sauvegardée sur cet appareil.'}
-async function loadCloud(user){const cloud=user.user_metadata&&Array.isArray(user.user_metadata.cyberlab_collection)?user.user_metadata.cyberlab_collection:[];if(cloud.length){collection=new Set(cloud);localStorage.setItem('cyberlab_collection',JSON.stringify([...collection]));renderCollection();renderRepos()}}
-let syncTimer=null;
-async function syncCloud(){if(!supabase)return;clearTimeout(syncTimer);syncTimer=setTimeout(async()=>{const {data:{session}}=await supabase.auth.getSession();if(!session)return;await supabase.auth.updateUser({data:{cyberlab_collection:[...collection]}})},500)}
-document.getElementById('sbUrl').value=localStorage.getItem('supabase_url')||'';
-document.getElementById('sbKey').value=localStorage.getItem('supabase_key')||'';
-fillUnits();tabs();renderRepos();renderCollection();initSupabase();
+const units={length:{m:1,km:1000,cm:.01,mm:.001,mi:1609.344,ft:.3048,in:.0254},mass:{kg:1,g:.001,mg:.000001,t:1000,lb:.45359237,oz:.028349523125},data:{B:1,KB:1024,MB:1048576,GB:1073741824,TB:1099511627776},time:{s:1,min:60,h:3600,day:86400,week:604800},angle:{rad:1,deg:Math.PI/180,grad:Math.PI/200}};
+function fillUnits(){const t=unitType.value;let l=Object.keys(units[t]||{});if(t==='temperature')l=['C','F','K'];fromUnit.innerHTML=l.map(x=>'<option>'+x+'</option>').join('');toUnit.innerHTML=l.map(x=>'<option>'+x+'</option>').join('');if(l[1])toUnit.value=l[1]}
+function temp(v,f,t){let c=f==='C'?v:f==='F'?(v-32)*5/9:v-273.15;return t==='C'?c:t==='F'?c*9/5+32:c+273.15}
+function convertUnits(){const t=unitType.value,v=Number(unitValue.value),f=fromUnit.value,to=toUnit.value;if(!Number.isFinite(v)){unitResult.textContent='Valeur invalide.';return}const r=t==='temperature'?temp(v,f,to):v*units[t][f]/units[t][to];unitResult.textContent=v+' '+f+' = '+Number(r.toFixed(12))+' '+to}
+async function convertCurrency(){const v=Number(currencyValue.value),f=fromCurrency.value.toLowerCase(),t=toCurrency.value.toLowerCase();if(f===t){currencyResult.textContent=v+' '+f.toUpperCase()+' = '+v.toFixed(2)+' '+t.toUpperCase();return}currencyResult.textContent='Recherche Web…';try{const r=await fetch('https://api.frankfurter.dev/v2/rate/'+f+'/'+t,{cache:'no-store'});if(!r.ok)throw new Error('HTTP '+r.status);const d=await r.json();currencyResult.textContent=v+' '+f.toUpperCase()+' = '+(v*d.rate).toFixed(2)+' '+t.toUpperCase()+'\nTaux '+d.rate+' · '+(d.date||'date non fournie')}catch(e){currencyResult.textContent='Échec : '+e.message}}
+
+const sb={client:null};
+function configureSupabase(){const u=sbUrl.value.trim(),k=sbKey.value.trim();if(!u||!k){accountResult.textContent='URL et clé requises.';return}localStorage.setItem('sb_url',u);localStorage.setItem('sb_key',k);initSupabase();accountResult.textContent='Configuration enregistrée.'}
+function initSupabase(){const u=localStorage.getItem('sb_url'),k=localStorage.getItem('sb_key');if(!u||!k||!window.supabase)return;sb.client=window.supabase.createClient(u,k,{auth:{persistSession:true}})}
+async function signUp(){if(!sb.client){accountResult.textContent='Configure Supabase d’abord.';return}const {error}=await sb.client.auth.signUp({email:email.value.trim(),password:password.value});accountResult.textContent=error?error.message:'Compte créé.'}
+async function signIn(){if(!sb.client){accountResult.textContent='Configure Supabase d’abord.';return}const {error}=await sb.client.auth.signInWithPassword({email:email.value.trim(),password:password.value});accountResult.textContent=error?error.message:'Connecté.'}
+async function signOut(){if(!sb.client)return;await sb.client.auth.signOut();accountResult.textContent='Déconnecté.'}
+
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById(b.dataset.tab).classList.add('active')});
+document.getElementById('sbUrl').value=localStorage.getItem('sb_url')||'';
+document.getElementById('sbKey').value=localStorage.getItem('sb_key')||'';
+fillUnits();renderCards();initSupabase();
 </script>
 </body>
 </html>

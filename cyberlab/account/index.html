@@ -24,6 +24,17 @@ main{max-width:900px;margin:auto}.nav{display:flex;gap:8px;flex-wrap:wrap;margin
 Supabase est le service qui gère l'authentification et peut ensuite stocker les données de ton compte. GitHub Pages affiche CyberLab ; Supabase gère la partie compte. Les méthodes ci-dessous doivent être activées dans ton projet Supabase avant de fonctionner.
 </div>
 
+<section class="card" id="local">
+<h2>0. Mode local — sans compte ni base de données</h2>
+<div class="notice"><strong>Tu peux utiliser CyberLab sans Supabase.</strong><br>Ce mode ne crée aucun compte en ligne et aucune base de données. Ton profil est enregistré uniquement dans le navigateur avec <span class="code">localStorage</span>.</div>
+<div class="form" style="margin-top:12px">
+<input id="localName" maxlength="30" placeholder="Pseudo local (ex. CyberFox)">
+<div class="oauth"><button class="btn" onclick="createLocalProfile()">Créer mon profil local</button><button class="btn" onclick="deleteLocalProfile()">Supprimer le profil local</button></div>
+<div id="localResult" class="result"></div>
+</div>
+<p class="small">Ce mode n'est pas une authentification sécurisée : il fonctionne seulement sur ce navigateur/appareil. Il ne permet pas de récupérer le profil sur un autre appareil.</p>
+</section>
+
 <section class="card">
 <h2>1. Configuration Supabase</h2>
 <p class="muted">Cette étape est faite par le propriétaire du projet CyberLab. Elle ne doit normalement être faite qu'une seule fois.</p>
@@ -173,6 +184,7 @@ async function loginPasskey(){
  catch(e){setResult('passkeyResult',e.message||'Impossible de se connecter avec la passkey.','error')}
 }
 updateLocalUI();
+initLocal();
 init();
 if(client){client.auth.onAuthStateChange((event,session)=>{if(session)setResult('out','Connecté : '+(session.user.email||'compte'), 'success')})}
 </script>

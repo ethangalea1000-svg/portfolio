@@ -1,1 +1,435 @@
-<!doctype html><script>document.addEventListener('DOMContentLoaded',()=>{const n=document.createElement('nav');n.innerHTML='<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:12px;margin:0 0 18px;background:#0b1729;border:1px solid #294366;border-radius:12px;font-family:system-ui"><a href="https://ethangalea1000-svg.github.io/portfolio/cyberlab/" style="color:#dff4ff;text-decoration:none;padding:7px 10px">CyberLab</a><a href="https://ethangalea1000-svg.github.io/portfolio/cyberlab/collection/" style="color:#69caff;text-decoration:none;padding:7px 10px">Ma collection</a><a href="https://ethangalea1000-svg.github.io/portfolio/cyberlab/questionnaire/" style="color:#69caff;text-decoration:none;padding:7px 10px">Questionnaire</a><a href="https://ethangalea1000-svg.github.io/portfolio/cyberlab/account/" style="color:#69caff;text-decoration:none;padding:7px 10px">Connexion</a></div>';document.body.insertBefore(n,document.body.firstChild)});</script><html lang="fr"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>SocialNet Demo</title><style>body{font-family:system-ui;max-width:700px;margin:40px auto;padding:20px}.card{border:1px solid #ddd;border-radius:12px;padding:15px;margin:12px 0}button{padding:8px}</style><h1>SocialNet Demo</h1><p>Prototype local utilisant uniquement des profils fictifs.</p><div id="feed"></div><script>const posts=[['Alex','Premier post sur la sécurité numérique.'],['Sam','Je découvre le chiffrement côté navigateur.'],['Noa','Objectif : apprendre un concept cyber par jour.']];feed.innerHTML=posts.map((p,i)=>'<article class="card"><b>'+p[0]+'</b><p>'+p[1]+'</p><button onclick="this.textContent=\'Aimé ✓\'">J’aime</button></article>').join('')</script></html>
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SocialNet — CyberLab</title>
+<style>
+:root{color-scheme:dark;--bg:#07111f;--panel:#0e1d31;--panel2:#122640;--line:#294866;--text:#eef7ff;--muted:#9eb2c7;--accent:#61cdfd;--good:#62e6a3;--warn:#f4cb69;--bad:#ff8c8c}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#122944 0,#07111f 42%,#050c15 100%);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;min-height:100vh}
+a{color:#8edfff}.wrap{max-width:1200px;margin:auto;padding:18px}.nav{display:flex;align-items:center;gap:7px;flex-wrap:wrap;padding:10px;background:#0b192b;border:1px solid var(--line);border-radius:14px;margin-bottom:16px;position:sticky;top:8px;z-index:20;backdrop-filter:blur(10px)}
+.nav a{padding:8px 10px;border-radius:8px;text-decoration:none}.nav a:hover,.nav a.active{background:#173453}.brand{font-weight:800;margin-right:5px;color:#fff}
+.hero{display:grid;grid-template-columns:2fr 1fr;gap:14px;background:linear-gradient(135deg,#102a46,#0c1a2c);border:1px solid #355675;border-radius:20px;padding:22px;margin-bottom:15px}
+.hero h1{margin:0 0 7px;font-size:clamp(1.9rem,4vw,2.8rem)}.hero p{margin:0;color:var(--muted)}.online{display:flex;align-items:center;justify-content:flex-end;gap:9px}.dot{width:10px;height:10px;border-radius:50%;background:#777}.dot.on{background:var(--good);box-shadow:0 0 15px #62e6a388}
+.grid{display:grid;grid-template-columns:minmax(0,2fr) minmax(260px,1fr);gap:15px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:16px;margin-bottom:15px}.panel h2,.panel h3{margin-top:0}
+.toolbar,.chips,.actions{display:flex;gap:8px;flex-wrap:wrap}.toolbar{margin-bottom:12px}.btn{border:1px solid #3d6387;background:#16324f;color:var(--text);padding:9px 12px;border-radius:10px;font:inherit;cursor:pointer}.btn:hover{border-color:var(--accent)}.btn.active{background:#195172;border-color:#66ccfb}.btn.danger{border-color:#74434b;background:#321b20}.btn.good{border-color:#3e795d;background:#163529}
+.input,.select,textarea{width:100%;padding:11px 12px;border:1px solid #2b4967;border-radius:10px;background:#081321;color:#fff;font:inherit}.composer{display:grid;gap:9px}.composer-row{display:grid;grid-template-columns:150px 1fr auto;gap:8px}
+.post{border:1px solid #29445f;background:#0c1b2d;border-radius:16px;padding:15px;margin:12px 0}.post-head{display:flex;justify-content:space-between;gap:12px}.who{display:flex;align-items:center;gap:10px}.avatar{width:42px;height:42px;border-radius:50%;background:#173957;border:1px solid #416985;display:grid;place-items:center;font-weight:800}.tag{font-size:.78rem;padding:4px 8px;border-radius:999px;border:1px solid #315a78;background:#102c44;color:#9edfff}.muted,.small{color:var(--muted)}.small{font-size:.88rem}.post-body{white-space:pre-wrap;line-height:1.55;margin:12px 0}.post-actions{display:flex;gap:8px;flex-wrap:wrap;border-top:1px solid #1e354c;padding-top:10px}.like.liked{background:#224c61;border-color:#62cdfd}.comment-box{display:flex;gap:8px;margin-top:10px}.comment-box input{flex:1}.comment-list{display:grid;gap:7px;margin-top:9px}.comment{padding:8px 10px;border-radius:10px;background:#091624;border:1px solid #203a55}.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.kpi{padding:12px;border-radius:12px;background:#0a1726;border:1px solid #203b57}.kpi b{display:block;font-size:1.35rem}.progress{height:8px;background:#091522;border-radius:999px;overflow:hidden}.progress>span{display:block;height:100%;background:linear-gradient(90deg,#3ca6d7,#7ae1ff);width:0}
+.spec-grid,.badge-grid,.mission-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:9px}.spec,.badge,.mission{padding:11px;border-radius:12px;background:#0a1726;border:1px solid #223d59}.spec strong,.badge strong,.mission strong{display:block}.locked{opacity:.55}.earned{border-color:#62d79f}.difficulty{color:#f5d17a}
+.quiz-question{font-size:1.08rem;font-weight:700;line-height:1.5}.option{width:100%;text-align:left;margin-top:8px}.option.correct{border-color:#57d596;background:#14382a}.option.wrong{border-color:#e77676;background:#3a1a1f}.feedback{padding:12px;border-radius:10px;margin-top:10px}.feedback.ok{background:#123526;border:1px solid #3f7f61}.feedback.no{background:#351a20;border:1px solid #7b4b51}
+table{width:100%;border-collapse:collapse}th,td{padding:9px;text-align:left;border-bottom:1px solid #20384f}.scroll{overflow:auto}.notice{padding:11px;border-radius:11px;background:#10253d;border:1px solid #355678}.warning{background:#322912;border-color:#7a6531;color:#f5dda0}.hidden{display:none!important}.center{text-align:center}
+@media(max-width:820px){.grid,.hero{grid-template-columns:1fr}.online{justify-content:flex-start}.composer-row{grid-template-columns:1fr}.kpis{grid-template-columns:1fr}.nav{position:static}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav class="nav">
+<a class="brand" href="../">CyberLab</a>
+<a class="active" href="./">SocialNet</a>
+<a href="../collection/">Ma collection</a>
+<a href="../questionnaire/">Questionnaire</a>
+<a href="../account/">Connexion</a>
+<a href="../../">Portfolio</a>
+</nav>
+
+<section class="hero">
+<div><h1>SocialNet</h1><p>Réseau social cyber gamifié : communauté, défis, progression, spécialisations et modération.</p></div>
+<div class="online"><span class="dot" id="statusDot"></span><span id="statusText">Mode local de secours</span></div>
+</section>
+
+<div id="setupNotice" class="panel notice warning hidden"></div>
+
+<div class="grid">
+<main>
+<section class="panel">
+<div class="toolbar">
+<button class="btn active feedBtn" data-feed="for-you">🏠 Pour toi</button>
+<button class="btn feedBtn" data-feed="following">👥 Abonnements</button>
+<button class="btn feedBtn" data-feed="cyber">🛡️ Cyber</button>
+<button class="btn feedBtn" data-feed="challenges">🎯 Défis</button>
+<button class="btn feedBtn" data-feed="trending">🔥 Tendances</button>
+</div>
+<div class="toolbar">
+<input class="input" id="search" placeholder="Rechercher un utilisateur, un sujet ou un post…">
+<button class="btn" id="refreshBtn">Actualiser</button>
+</div>
+<div class="chips" id="customFeedChips"></div>
+</section>
+
+<section class="panel" id="composerPanel">
+<h2>Publier</h2>
+<div class="composer">
+<textarea id="postBody" maxlength="1200" rows="4" placeholder="Partage une idée, un apprentissage ou un conseil cyber…"></textarea>
+<div class="composer-row">
+<select id="postKind" class="select">
+<option value="text">📝 Post</option>
+<option value="quiz">🧠 Mini-questionnaire</option>
+<option value="challenge">🎯 Défi</option>
+<option value="poll">📊 Sondage</option>
+</select>
+<input id="postTag" class="input" maxlength="40" placeholder="#thème (optionnel)">
+<button class="btn good" id="publishBtn">Publier</button>
+</div>
+<div id="composerResult" class="small"></div>
+</div>
+</section>
+
+<section class="panel">
+<h2 id="feedTitle">Fil « Pour toi »</h2>
+<div id="feed"></div>
+</section>
+
+<section class="panel hidden" id="quizPanel">
+<div class="toolbar"><h2 style="margin-right:auto">🧠 Quiz adaptatif</h2><span id="quizMeta" class="tag"></span></div>
+<div id="quizBody"></div>
+</section>
+
+<section class="panel hidden" id="progressPanel">
+<h2>🏆 Progression</h2>
+<div class="kpis" id="progressKpis"></div>
+<div style="margin-top:14px"><strong>XP vers le prochain niveau</strong><div class="progress"><span id="xpBar"></span></div><p class="small" id="xpLabel"></p></div>
+<h3 style="margin-top:18px">Badges</h3><div class="badge-grid" id="badges"></div>
+<h3 style="margin-top:18px">Certifications internes</h3><div id="certificates"></div>
+<h3 style="margin-top:18px">Missions</h3><div class="mission-grid" id="missions"></div>
+<h3 style="margin-top:18px">63 spécialisations</h3><input id="specSearch" class="input" placeholder="Filtrer les spécialisations…"><div class="spec-grid" id="specs" style="margin-top:10px"></div>
+</section>
+
+<section class="panel hidden" id="profilePanel">
+<h2>👤 Mon profil</h2>
+<div id="profileForm"></div>
+</section>
+
+<section class="panel hidden" id="moderationPanel">
+<h2>🛡️ Centre de modération</h2>
+<div id="moderationContent"></div>
+</section>
+</main>
+
+<aside>
+<section class="panel">
+<h3>⚡ Ton tableau de bord</h3>
+<div class="kpis"><div class="kpi"><span class="small">XP</span><b id="xp">0</b></div><div class="kpi"><span class="small">Niveau</span><b id="level">1</b></div><div class="kpi"><span class="small">Grade</span><b id="rank">Novice</b></div></div>
+<p class="small" id="userSummary">Connecte-toi pour avoir un profil persistant.</p>
+<div class="actions"><button class="btn" id="openProgress">Progression</button><button class="btn" id="openProfile">Profil</button><button class="btn" id="openModeration">Modération</button></div>
+</section>
+
+<section class="panel">
+<h3>🔔 Notifications</h3>
+<div id="notifications" class="small">Aucune notification locale.</div>
+</section>
+
+<section class="panel">
+<h3>📊 Classement</h3>
+<div id="leaderboard"></div>
+</section>
+
+<section class="panel">
+<h3>🛡️ Sécurité</h3>
+<p class="small">Tu peux choisir tes fils, bloquer un compte, signaler un contenu et configurer ton profil en privé. Les décisions de modération sont journalisées côté serveur lorsque SocialNet est configuré.</p>
+</section>
+</aside>
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SPEC_BASE=[
+['Défense','Défense opérationnelle','Blue Team'],['Défense','SOC','Security Operations Center'],['Défense','Réponse aux incidents','Incident Response'],['Défense','Modélisation des menaces','Threat Modeling'],['Défense','Gestion des vulnérabilités','Vulnerability Management'],['Défense','Sécurité des terminaux','Endpoint Security'],['Identité','Identité et accès','Identity & Access'],['Identité','Zero Trust','Zero Trust Architecture'],['Défense','Surveillance de sécurité','Security Monitoring'],
+['Crypto','Fondamentaux de la cryptographie','Cryptography Foundations'],['Crypto','Cryptographie symétrique','Symmetric Cryptography'],['Crypto','Cryptographie asymétrique','Asymmetric Cryptography'],['Crypto','Hachage','Hashing'],['Crypto','Signatures numériques','Digital Signatures'],['Crypto','PKI','Public Key Infrastructure'],['Crypto','Gestion des clés','Key Management'],
+['Programmation','Python','Python'],['Programmation','JavaScript','JavaScript'],['Programmation','Algorithmique','Algorithms'],['Programmation','Développement sécurisé','Secure Coding'],['Programmation','Tests','Testing'],['Programmation','Git & GitHub','Git & GitHub'],
+['Web','Sécurité Web','Web Security'],['Web','Sécurité de l’authentification','Authentication Security'],['Web','Sécurité des sessions','Session Security'],['Web','Validation des entrées','Input Validation'],['Web','Défense XSS','XSS Defense'],['Web','Défense CSRF','CSRF Defense'],['Web','Sécurité des API','API Security'],
+['Réseaux','Fondamentaux réseau','Network Fundamentals'],['Réseaux','IP & routage','IP & Routing'],['Réseaux','DNS','DNS'],['Réseaux','HTTP','HTTP'],['Réseaux','TLS','TLS'],['Réseaux','Wi-Fi sécurisé','Wi-Fi Security'],
+['Cloud','Sécurité Cloud','Cloud Security'],['Cloud','Conteneurs','Containers'],['Cloud','Sécurité CI/CD','CI/CD Security'],['Cloud','Gestion des secrets','Secrets Management'],['Cloud','Infrastructure as Code','Infrastructure as Code'],['Cloud','Journalisation Cloud','Cloud Logging'],
+['OSINT','OSINT','OSINT'],['OSINT','Vérification des sources','Source Verification'],['Vie privée','Métadonnées & vie privée','Metadata & Privacy'],['Vie privée','Empreinte numérique','Digital Footprint'],['Vie privée','Sensibilisation au phishing','Phishing Awareness'],['Vie privée','Défense contre l’ingénierie sociale','Social Engineering Defense'],
+['Mobile','Sécurité mobile','Mobile Security'],['Mobile','Vie privée Android','Android Privacy'],['Mobile','Stockage mobile sécurisé','Secure Mobile Storage'],['Mobile','Durcissement des appareils','Device Hardening'],['Mobile','Sécurité des réseaux mobiles','Mobile Network Security'],['Mobile','Analyse des permissions','App Permission Analysis'],
+['Forensique','Forensique numérique','Digital Forensics'],['Forensique','Analyse des logs','Log Analysis'],['Forensique','Analyse chronologique','Timeline Analysis'],['Forensique','Artefacts numériques','File & Artifact Analysis'],['Threat Intel','Renseignement sur les menaces','Threat Intelligence'],['Threat Intel','Indicateurs de compromission','Malware Indicators'],
+['IA','IA & Machine Learning','AI & Machine Learning Security'],['IA','Détection d’anomalies','Anomaly Detection'],['IA','Vie privée des modèles','Model Privacy'],['IA','Tests de sécurité IA','AI Security Testing']
+];
+
+const QUIZ_BANK=[
+{id:1,cat:'Vie privée',diff:1,q:'Quel réflexe réduit le plus le risque après réception d’un lien inattendu ?',o:['Cliquer vite avant expiration','Vérifier l’expéditeur et l’URL par un autre moyen','Transférer le lien à ses contacts','Désactiver l’antivirus'],a:1,e:'Vérifier l’identité de l’expéditeur et la destination du lien réduit le risque de phishing.'},
+{id:2,cat:'Crypto',diff:1,q:'À quoi sert principalement un hash cryptographique ?',o:['Chiffrer un fichier pour le relire','Produire une empreinte difficile à inverser','Accélérer le Wi-Fi','Créer un mot de passe automatiquement'],a:1,e:'Un hash produit une empreinte ; il ne permet pas normalement de retrouver le texte original.'},
+{id:3,cat:'Identité',diff:1,q:'Pourquoi activer l’authentification multifacteur ?',o:['Pour avoir un mot de passe plus long','Pour ajouter une seconde preuve d’identité','Pour désactiver les sauvegardes','Pour rendre un compte public'],a:1,e:'MFA ajoute une autre catégorie de preuve, ce qui réduit l’impact d’un mot de passe compromis.'},
+{id:4,cat:'Web',diff:2,q:'Quelle pratique aide à réduire le risque de XSS côté affichage ?',o:['Insérer directement du HTML utilisateur','Échapper/encoder les données avant affichage','Désactiver HTTPS','Partager les cookies'],a:1,e:'Encoder correctement les données affichées empêche qu’elles soient interprétées comme du code.'},
+{id:5,cat:'Réseaux',diff:1,q:'Quel rôle joue DNS ?',o:['Associer des noms de domaine à des adresses','Chiffrer tous les fichiers','Gérer les mots de passe','Créer des images'],a:0,e:'DNS sert notamment à résoudre les noms de domaine.'},
+{id:6,cat:'Défense',diff:2,q:'Lors d’un incident, quel principe est utile avant de modifier des preuves ?',o:['Tout redémarrer immédiatement','Préserver les éléments utiles et documenter les actions','Supprimer les logs','Changer tous les fichiers'],a:1,e:'La préservation et la traçabilité aident l’analyse et évitent de détruire des indices.'},
+{id:7,cat:'Web',diff:2,q:'Quel est un bon principe pour une API ?',o:['Faire confiance à tout champ envoyé','Valider les entrées et autoriser chaque action explicitement','Retourner les secrets dans les erreurs','Désactiver les contrôles'],a:1,e:'Validation + contrôle d’autorisation sont essentiels sur une API.'},
+{id:8,cat:'Cloud',diff:2,q:'Que signifie le principe du moindre privilège ?',o:['Tout le monde reçoit administrateur','Chaque acteur reçoit uniquement les droits nécessaires','Personne ne reçoit de droits','Les comptes n’expirent jamais'],a:1,e:'Le moindre privilège limite les permissions au strict nécessaire.'},
+{id:9,cat:'Crypto',diff:2,q:'Quel énoncé distingue correctement chiffrement et hash ?',o:['Le hash est conçu pour être réversible','Le chiffrement vise à récupérer le message avec une clé ; le hash produit une empreinte','Ils sont exactement identiques','Aucun n’utilise de mathématiques'],a:1,e:'Le chiffrement est réversible avec la bonne clé ; un hash est une empreinte à sens unique.'},
+{id:10,cat:'Mobile',diff:2,q:'Pourquoi vérifier les permissions d’une application ?',o:['Pour améliorer la couleur de l’écran','Pour limiter l’accès aux données et capteurs au nécessaire','Pour augmenter automatiquement la batterie','Pour supprimer le réseau'],a:1,e:'Les permissions contrôlent l’accès à des ressources sensibles.'},
+{id:11,cat:'OSINT',diff:3,q:'Quelle méthode est la plus solide pour vérifier une affirmation en ligne ?',o:['Se fier uniquement au nombre de partages','Comparer plusieurs sources fiables et chercher la source primaire','Choisir le titre le plus spectaculaire','Se fier à un commentaire anonyme'],a:1,e:'La triangulation et la source primaire sont des réflexes de vérification.'},
+{id:12,cat:'Défense',diff:3,q:'Pourquoi centraliser les logs peut aider un SOC ?',o:['Pour supprimer toute trace','Pour corréler des événements provenant de plusieurs systèmes','Pour rendre les mots de passe publics','Pour désactiver les alertes'],a:1,e:'La centralisation permet de relier des événements et de mieux détecter des comportements anormaux.'},
+{id:13,cat:'Programmation',diff:2,q:'Quel est le bon réflexe pour des secrets d’application ?',o:['Les mettre dans Git public','Utiliser un gestionnaire de secrets et éviter de les versionner','Les écrire dans le HTML public','Les partager dans un commentaire'],a:1,e:'Les secrets doivent rester hors du code public et être gérés de manière appropriée.'},
+{id:14,cat:'Réseaux',diff:3,q:'Pourquoi TLS est-il important pour un site web ?',o:['Il protège la confidentialité et l’intégrité du transport entre client et serveur','Il remplace tous les contrôles d’accès','Il empêche tout phishing','Il stocke les profils'],a:0,e:'TLS sécurise le canal de transport ; il ne résout pas tous les autres problèmes de sécurité.'},
+{id:15,cat:'IA',diff:3,q:'Quel est un bon principe pour une IA de détection de sécurité ?',o:['Ignorer les faux positifs','Mesurer les erreurs, tester les données et prévoir une vérification humaine','Décider sans journalisation','Exposer les données privées'],a:1,e:'Une détection utile doit être évaluée, documentée et contrôlée.'}
+];
+
+const BADGES=[
+['🌱','Premier pas','Créer son premier post',p=>p.posts>=1],['🧠','Curieux','Réussir un quiz',p=>p.quiz>=1],['⚡','100 XP','Atteindre 100 XP',p=>p.xp>=100],['🔥','Série','Réussir 3 quiz',p=>p.quiz>=3],['🛡️','Défenseur','Atteindre 250 XP',p=>p.xp>=250],['🔐','Cryptographe','Maîtriser une branche Crypto',p=>p.cryptoXp>=80],['🌐','Réseaux','Maîtriser une branche Réseaux',p=>p.networkXp>=80],['🤖','Explorateur IA','Réussir un quiz IA',p=>p.aiQuiz>=1],['🔎','Vérificateur','Réussir un quiz OSINT',p=>p.osintQuiz>=1],['🏆','500 XP','Atteindre 500 XP',p=>p.xp>=500],['🚀','1000 XP','Atteindre 1000 XP',p=>p.xp>=1000],['🧩','Polyvalent','Avoir 5 spécialisations actives',p=>p.activeSpecs>=5]
+];
+
+const state={db:null,user:null,profile:null,feed:'for-you',posts:[],blocked:new Set(),quiz:null,quizHistory:[],localStats:JSON.parse(localStorage.getItem('socialnet_stats')||'{"xp":0,"posts":0,"quiz":0,"streak":0,"cryptoXp":0,"networkXp":0,"aiQuiz":0,"osintQuiz":0,"activeSpecs":0}')};
+
+const $=id=>document.getElementById(id);
+function msg(id,t,kind=''){const e=$(id);if(!e)return;e.textContent=t;e.className='small '+kind}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
+function avatar(name){return (name||'?').trim().slice(0,2).toUpperCase()}
+function saveLocal(){localStorage.setItem('socialnet_stats',JSON.stringify(state.localStats))}
+function rankFor(x){if(x>=5000)return 'Maître Cyber';if(x>=2500)return 'Expert';if(x>=1000)return 'Défenseur';if(x>=500)return 'Analyste';if(x>=100)return 'Apprenti';return 'Novice'}
+function levelFor(x){return Math.max(1,Math.floor(x/100)+1)}
+function xpNext(x){const lvl=levelFor(x);return lvl*100}
+function totalLocalProfile(){return {...state.localStats}}
+
+async function init(){
+ try{
+  const u=localStorage.getItem('sb_url'),k=localStorage.getItem('sb_key');
+  if(u&&k){
+   state.db=supabase.createClient(u,k,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+   const {data}=await state.db.auth.getSession();
+   state.user=data?.session?.user||null;
+   state.db.auth.onAuthStateChange((_e,s)=>{state.user=s?.user||null;boot();});
+  }
+ }catch{}
+ await boot();
+}
+async function boot(){
+ if(state.db&&state.user){
+  $('statusDot').classList.add('on');$('statusText').textContent='Connecté en ligne';
+  $('userSummary').textContent='Compte : '+(state.user.email||state.user.id);
+  $('setupNotice').classList.add('hidden');
+  await ensureProfile();
+ }else{
+  $('statusDot').classList.remove('on');$('statusText').textContent='Mode local de secours';
+  $('setupNotice').classList.remove('hidden');
+  $('setupNotice').innerHTML='Mode réel : configure Supabase dans <a href="../account/">Connexion</a>, puis exécute le fichier <a href="./schema.sql">schema.sql</a> dans le SQL Editor de ton projet. Le mode local reste disponible pour tester l’interface.';
+  state.profile=null;
+ }
+ renderStats();await loadFeed();await loadLeaderboard();await renderNotifications();renderSpecs();renderBadges();renderMissions();renderProfile();renderModeration();
+}
+
+async function ensureProfile(){
+ const {data,error}=await state.db.from('profiles').select('*').eq('id',state.user.id).maybeSingle();
+ if(error){msg('composerResult','Schéma SocialNet non installé : utilise le fichier schema.sql.','error');return}
+ if(!data){
+  const base={id:state.user.id,username:('user_'+state.user.id.slice(0,8)).toLowerCase(),display_name:(state.user.email||'CyberUser').split('@')[0].slice(0,30)};
+  const ins=await state.db.from('profiles').insert(base).select().single();state.profile=ins.data||base;
+ }else state.profile=data;
+}
+
+async function loadFeed(){
+ const search=$('search').value.trim().toLowerCase();
+ if(!state.db||!state.user){
+  state.posts=[
+   {id:'local1',user_id:'alex',username:'Alex',display_name:'Alex',body:'Je teste mon premier réflexe anti-phishing : je vérifie toujours le domaine avant de cliquer.',kind:'text',likes:12,liked:false,comments:[{user:'Sam',body:'Bon réflexe !'}]},
+   {id:'local2',user_id:'sam',username:'Sam',display_name:'Sam',body:'Défi du jour : expliquer la différence entre chiffrement et hash en une phrase.',kind:'challenge',likes:18,liked:false,comments:[]},
+   {id:'local3',user_id:'noa',username:'Noa',display_name:'Noa',body:'Objectif : apprendre un concept cyber par jour et gagner un badge.',kind:'text',likes:25,liked:false,comments:[]},
+   {id:'local4',user_id:'iris',username:'Iris',display_name:'Iris',body:'Quiz express : pourquoi activer la double authentification ?',kind:'quiz',likes:31,liked:false,comments:[]}
+  ];
+  renderPosts(search);return;
+ }
+ let q=state.db.from('posts').select('id,user_id,body,kind,visibility,created_at,profiles!posts_user_id_fkey(id,username,display_name,avatar_url,is_private),likes(user_id),comments(id,user_id,body,created_at)').eq('status','visible').order('created_at',{ascending:false}).limit(60);
+ if(state.feed==='challenges')q=q.in('kind',['quiz','challenge']); 
+ if(state.feed==='cyber')q=q.or('body.ilike.%cyber%,body.ilike.%sécurité%,body.ilike.%crypto%,body.ilike.%phishing%,body.ilike.%réseau%');
+ if(state.feed==='following'){
+  const f=await state.db.from('follows').select('following_id').eq('follower_id',state.user.id);
+  const ids=(f.data||[]).map(x=>x.following_id); if(!ids.length){state.posts=[];renderPosts(search);return} q=q.in('user_id',ids);
+ }
+ const {data,error}=await q;
+ if(error){state.posts=[];renderEmpty('Installe schema.sql puis recharge la page.');return}
+ state.posts=(data||[]).map(p=>({id:p.id,user_id:p.user_id,username:p.profiles?.username||'user',display_name:p.profiles?.display_name||'Utilisateur',body:p.body,kind:p.kind,likes:p.likes?.length||0,liked:(p.likes||[]).some(l=>l.user_id===state.user.id),comments:p.comments||[],created_at:p.created_at}));
+ if(state.feed==='trending')state.posts.sort((a,b)=>b.likes-a.likes);
+ renderPosts(search);
+}
+function renderEmpty(t){$('feed').innerHTML='<div class="notice">'+esc(t)+'</div>'}
+function renderPosts(search=''){
+ const list=state.posts.filter(p=>!state.blocked.has(p.user_id)).filter(p=>!search||[p.body,p.username,p.display_name].join(' ').toLowerCase().includes(search));
+ if(!list.length){renderEmpty('Aucun contenu pour ce fil.');return}
+ $('feed').innerHTML=list.map(p=>postHTML(p)).join('');
+}
+function postHTML(p){
+ const liked=p.liked?'liked':'';
+ const tag=p.kind==='quiz'?'🧠 Quiz':p.kind==='challenge'?'🎯 Défi':p.kind==='poll'?'📊 Sondage':'📝 Post';
+ const comments=(p.comments||[]).slice(-5).map(c=>'<div class="comment"><strong>'+esc(c.user_id===state.user?.id?'Toi':'Utilisateur')+'</strong> · '+esc(c.body)+'</div>').join('');
+ return '<article class="post" data-post="'+esc(p.id)+'"><div class="post-head"><div class="who"><div class="avatar">'+esc(avatar(p.display_name||p.username))+'</div><div><strong>'+esc(p.display_name)+'</strong><div class="small">@'+esc(p.username)+'</div></div></div><span class="tag">'+tag+'</span></div><div class="post-body">'+esc(p.body)+'</div><div class="post-actions"><button class="btn like '+liked+'" onclick="toggleLike(\''+esc(p.id)+'\')">👍 '+(p.likes||0)+'</button><button class="btn" onclick="focusComment(\''+esc(p.id)+'\')">💬 '+(p.comments||[]).length+'</button><button class="btn" onclick="followUser(\''+esc(p.user_id)+'\')">👥 Suivre</button><button class="btn" onclick="reportPost(\''+esc(p.id)+'\')">🚩 Signaler</button><button class="btn" onclick="blockUser(\''+esc(p.user_id)+'\')">⛔ Bloquer</button></div><div class="comment-list">'+comments+'</div><div class="comment-box"><input id="comment-'+esc(p.id)+'" placeholder="Écrire un commentaire…"><button class="btn" onclick="addComment(\''+esc(p.id)+'\')">Envoyer</button></div></article>';
+}
+
+async function publish(){
+ const body=$('postBody').value.trim(),kind=$('postKind').value;
+ if(body.length<2){msg('composerResult','Écris quelque chose avant de publier.','error');return}
+ if(!state.user){const local={id:'local-'+Date.now(),user_id:'local-me',username:'moi',display_name:'Moi',body,kind,likes:0,liked:false,comments:[]};state.posts.unshift(local);state.localStats.posts++;state.localStats.xp+=5;saveLocal();$('postBody').value='';renderStats();renderPosts($('search').value.trim().toLowerCase());msg('composerResult','Publié en mode local. Connecte-toi pour publier réellement en ligne.','');return}
+ const {error}=await state.db.from('posts').insert({user_id:state.user.id,body,kind,visibility:'public'});
+ if(error){msg('composerResult,errorMsg(error),'error');return}
+ $('postBody').value='';msg('composerResult','Publication mise en ligne. +5 XP','success');await loadFeed();await renderStats();
+}
+function errorMsg(e){return e?.message||'Une erreur est survenue.'}
+
+async function toggleLike(id){
+ if(!state.user){const p=state.posts.find(x=>x.id===id);if(p){p.liked=!p.liked;p.likes+=p.liked?1:-1;state.localStats.xp+=p.liked?1:0;saveLocal();renderStats();renderPosts($('search').value.trim().toLowerCase())}return}
+ const p=state.posts.find(x=>x.id===id);if(!p)return;
+ if(p.liked){await state.db.from('likes').delete().eq('post_id',id).eq('user_id',state.user.id)}else{await state.db.from('likes').insert({post_id:id,user_id:state.user.id})}
+ await loadFeed();await renderStats();
+}
+function focusComment(id){const el=$('comment-'+id);if(el){el.focus();el.scrollIntoView({behavior:'smooth',block:'center'})}}
+async function addComment(id){
+ const el=$('comment-'+id);const body=el?.value.trim();if(!body)return;
+ if(!state.user){msg('composerResult','Connecte-toi pour commenter réellement.','error');return}
+ const {error}=await state.db.from('comments').insert({post_id:id,user_id:state.user.id,body});
+ if(error)alert(errorMsg(error));else{el.value='';await loadFeed();renderStats()}
+}
+async function followUser(id){
+ if(!state.user){msg('composerResult','Connecte-toi pour suivre un compte.','error');return}
+ if(id===state.user.id)return;
+ const {data}=await state.db.from('follows').select('follower_id').eq('follower_id',state.user.id).eq('following_id',id).maybeSingle();
+ if(data){await state.db.from('follows').delete().eq('follower_id',state.user.id).eq('following_id',id)}else{await state.db.from('follows').insert({follower_id:state.user.id,following_id:id})}
+ msg('composerResult',data?'Abonnement retiré.':'Tu suis maintenant ce compte.','success');
+}
+async function reportPost(id){
+ if(!state.user){msg('composerResult','Connecte-toi pour signaler un contenu.','error');return}
+ const reason=prompt('Motif : spam, harcèlement, phishing, contenu dangereux, autre');if(!reason)return;
+ const details=prompt('Précision facultative :')||'';
+ const {error}=await state.db.from('reports').insert({reporter_id:state.user.id,target_type:'post',target_id:id,reason,details});
+ if(error)alert(errorMsg(error));else msg('composerResult','Signalement transmis à la modération.','success');
+}
+async function blockUser(id){
+ if(!state.user){msg('composerResult','Connecte-toi pour bloquer un compte.','error');return}
+ if(id===state.user.id)return;
+ const {error}=await state.db.from('blocks').upsert({blocker_id:state.user.id,blocked_id:id});
+ if(error)alert(errorMsg(error));else{state.blocked.add(id);renderPosts($('search').value.trim().toLowerCase());msg('composerResult','Compte bloqué sur ton fil.','success')}
+}
+
+const feedNames={'for-you':'Pour toi','following':'Abonnements','cyber':'Cyber','challenges':'Défis','trending':'Tendances'};
+document.querySelectorAll('.feedBtn').forEach(b=>b.addEventListener('click',async()=>{document.querySelectorAll('.feedBtn').forEach(x=>x.classList.remove('active'));b.classList.add('active');state.feed=b.dataset.feed;$('feedTitle').textContent='Fil « '+feedNames[state.feed]+' »';await loadFeed()}));
+$('search').addEventListener('input',()=>renderPosts($('search').value.trim().toLowerCase()));
+$('refreshBtn').onclick=()=>loadFeed();$('publishBtn').onclick=publish;
+
+function showSection(id){
+ ['progressPanel','profilePanel','moderationPanel','quizPanel'].forEach(x=>$(x).classList.add('hidden'));
+ if(id)$(id).classList.remove('hidden');
+}
+$('openProgress').onclick=()=>{showSection('progressPanel');renderProgress()};
+$('openProfile').onclick=()=>{showSection('profilePanel');renderProfile()};
+$('openModeration').onclick=()=>{showSection('moderationPanel');renderModeration()};
+
+function renderStats(){
+ const s=state.user?state.stats||state.localStats:state.localStats;
+ const xp=s.xp||0,level=levelFor(xp);
+ $('xp').textContent=xp;$('level').textContent=level;$('rank').textContent=rankFor(xp);$('userSummary').textContent=state.user?(state.profile?.display_name||state.user.email||'Compte connecté'):'Mode local — aucune donnée envoyée';
+ const next=xpNext(xp),prev=(level-1)*100, pct=Math.min(100,Math.max(0,(xp-prev)/(next-prev)*100));$('xpBar').style.width=pct+'%';$('xpLabel').textContent=xp+' / '+next+' XP pour le niveau '+(level+1);
+}
+async function loadRealStats(){
+ if(!state.db||!state.user){state.stats=state.localStats;renderStats();return}
+ const {data}=await state.db.from('user_stats').select('*').eq('user_id',state.user.id).maybeSingle();
+ state.stats=data||{xp:0,level:1,quiz_completed:0,posts_created:0,streak_days:0};
+ renderStats();
+}
+async function renderStats(){await loadRealStats();}
+
+function badgeStats(){
+ const s=state.user?(state.stats||{}):state.localStats;return {xp:s.xp||0,posts:s.posts_created||s.posts||0,quiz:s.quiz_completed||s.quiz||0,streak:s.streak_days||s.streak||0,cryptoXp:state.localStats.cryptoXp||0,networkXp:state.localStats.networkXp||0,aiQuiz:state.localStats.aiQuiz||0,osintQuiz:state.localStats.osintQuiz||0,activeSpecs:state.localStats.activeSpecs||0};
+}
+function renderBadges(){
+ const p=badgeStats();$('badges').innerHTML=BADGES.map(([icon,name,desc,test])=>'<div class="badge '+(test(p)?'earned':'locked')+'"><strong>'+icon+' '+esc(name)+'</strong><span class="small">'+esc(desc)+'</span></div>').join('');
+}
+function renderMissions(){
+ const p=badgeStats();const ms=[['📝','Publier 1 post',p.posts,1,5],['🧠','Réussir 3 quiz',p.quiz,3,20],['⚡','Atteindre 100 XP',p.xp,100,25],['🛡️','Atteindre 250 XP',p.xp,250,40],['🔎','Réussir un quiz OSINT',p.osintQuiz,1,15],['🤖','Réussir un quiz IA',p.aiQuiz,1,15],['👥','Suivre 3 comptes',0,3,15],['🚩','Faire un signalement utile',0,1,5]];
+ $('missions').innerHTML=ms.map(m=>'<div class="mission"><strong>'+m[0]+' '+esc(m[1])+'</strong><div class="small">'+Math.min(m[2],m[3])+' / '+m[3]+' · Récompense '+m[4]+' XP</div><div class="progress"><span style="width:'+Math.min(100,m[2]/m[3]*100)+'%"></span></div></div>').join('');
+}
+function renderCertificates(){
+ const x=badgeStats().xp;const certs=[['Fondamentaux CyberLab',100,'Concepts de base'],['Défenseur numérique',500,'Hygiène, identité et défense'],['Analyste CyberLab',1000,'Analyse et investigation'],['Expert CyberLab',2500,'Parcours avancé']];
+ $('certificates').innerHTML=certs.map(c=>'<div class="notice '+(x>=c[1]?'':'warning')+'" style="margin:7px 0"><strong>'+((x>=c[1])?'✅':'🔒')+' '+esc(c[0])+'</strong> · '+esc(c[2])+' · '+c[1]+' XP<br><span class="small">Certificat interne CyberLab, non officiel.</span></div>').join('');
+}
+function renderProgress(){
+ renderStats();renderBadges();renderMissions();renderCertificates();renderSpecs();
+}
+function renderSpecs(){
+ const q=($('specSearch')?.value||'').toLowerCase();
+ $('specs').innerHTML=SPEC_BASE.filter(s=>!q||s.join(' ').toLowerCase().includes(q)).map(([fam,name,slug],i)=>{
+  const xp=state.localStats.specs?.[slug]||0;const lvl=Math.min(10,Math.floor(xp/20)+1);
+  return '<div class="spec"><span class="tag">'+esc(fam)+'</span><strong style="margin-top:7px">'+esc(name)+'</strong><div class="small">Niveau '+lvl+' · '+xp+' XP</div><div class="progress"><span style="width:'+Math.min(100,xp/200*100)+'%"></span></div></div>'
+ }).join('');
+}
+if($('specSearch'))$('specSearch').oninput=renderSpecs;
+
+function startQuiz(){
+ showSection('quizPanel');state.quiz={index:0,score:0,correct:0,asked:[],difficulty:1};renderQuizQuestion();
+}
+function chooseQuestion(){
+ const pool=QUIZ_BANK.filter(q=>!state.quiz.asked.includes(q.id));
+ const exact=pool.filter(q=>q.diff===state.quiz.difficulty);
+ const candidates=exact.length?exact:pool;
+ return candidates[Math.floor(Math.random()*candidates.length)];
+}
+function renderQuizQuestion(){
+ if(!state.quiz)return;
+ if(state.quiz.index>=8){finishQuiz();return}
+ const q=chooseQuestion();state.quiz.current=q;state.quiz.asked.push(q.id);$('quizMeta').textContent='Question '+(state.quiz.index+1)+' / 8 · '+q.cat+' · difficulté '+q.diff;
+ $('quizBody').innerHTML='<div class="quiz-question">'+esc(q.q)+'</div>'+q.o.map((o,i)=>'<button class="btn option" onclick="answerQuiz('+i+')">'+esc(o)+'</button>').join('')+'<div id="quizFeedback"></div>';
+}
+async function answerQuiz(i){
+ const q=state.quiz.current;if(!q)return;
+ document.querySelectorAll('.option').forEach((b,idx)=>{b.disabled=true;if(idx===q.a)b.classList.add('correct');if(idx===i&&idx!==q.a)b.classList.add('wrong')});
+ const ok=i===q.a;if(ok){state.quiz.correct++;state.quiz.score+=q.diff===3?15:q.diff===2?10:7;state.quiz.difficulty=Math.min(3,state.quiz.difficulty+1)}else state.quiz.difficulty=Math.max(1,state.quiz.difficulty-1);
+ $('quizFeedback').innerHTML='<div class="feedback '+(ok?'ok':'no')+'"><strong>'+(ok?'Bonne réponse ✅':'Pas tout à fait ❌')+'</strong><br>'+esc(q.e)+'</div><div class="actions"><button class="btn" onclick="nextQuiz()">Continuer</button></div>';
+}
+function nextQuiz(){state.quiz.index++;renderQuizQuestion()}
+async function finishQuiz(){
+ const q=state.quiz,score=Math.round(q.correct/8*100),xp=Math.max(5,Math.round(q.score));
+ state.localStats.xp+=xp;state.localStats.quiz++;state.localStats.streak=(state.localStats.streak||0)+1;state.localStats.activeSpecs=Math.min(12,(state.localStats.activeSpecs||0)+1);
+ const cats=q.asked.map(id=>QUIZ_BANK.find(x=>x.id===id)?.cat||'').filter(Boolean);
+ if(cats.includes('Crypto'))state.localStats.cryptoXp=(state.localStats.cryptoXp||0)+Math.round(xp/2);
+ if(cats.includes('Réseaux'))state.localStats.networkXp=(state.localStats.networkXp||0)+Math.round(xp/2);
+ if(cats.includes('IA'))state.localStats.aiQuiz=(state.localStats.aiQuiz||0)+1;
+ if(cats.includes('OSINT'))state.localStats.osintQuiz=(state.localStats.osintQuiz||0)+1;
+ state.localStats.specs=state.localStats.specs||{};
+ cats.forEach(cat=>{const s=SPEC_BASE.find(x=>x[0]===cat);if(s)state.localStats.specs[s[2]]=(state.localStats.specs[s[2]]||0)+xp});
+ saveLocal();
+ if(state.user&&state.db){
+  await state.db.from('quiz_attempts').insert({user_id:state.user.id,quiz_slug:'adaptive-cyber',score,correct_count:q.correct,total_count:8,specialization:(cats[0]||'Général')});
+ }
+ $('quizMeta').textContent='Terminé';$('quizBody').innerHTML='<div class="center"><h3>🎉 Quiz terminé</h3><p>Score : <strong>'+q.correct+'/8 ('+score+'%)</strong></p><p>Récompense : <strong>+'+xp+' XP</strong></p><button class="btn good" onclick="startQuiz()">Rejouer</button> <button class="btn" onclick="showSection(\'progressPanel\');renderProgress()">Voir mes badges</button></div>';
+ renderStats();renderBadges();renderMissions();renderSpecs();
+}
+document.querySelector('[data-feed="challenges"]').addEventListener('click',()=>{startQuiz()});
+
+async function renderProfile(){
+ if(!state.user){$('profileForm').innerHTML='<div class="notice">Connecte-toi pour créer un vrai profil. <a href="../account/">Ouvrir Connexion</a></div>';return}
+ if(!state.profile)await ensureProfile();const p=state.profile||{};
+ $('profileForm').innerHTML='<div class="form"><label>Pseudo<input id="profUsername" class="input" maxlength="30" value="'+esc(p.username||'')+'"></label><label>Nom affiché<input id="profDisplay" class="input" maxlength="40" value="'+esc(p.display_name||'')+'"></label><label>Bio<textarea id="profBio" class="input" maxlength="160" rows="3">'+esc(p.bio||'')+'</textarea></label><label>Visibilité<select id="profPrivate" class="select"><option value="false" '+(!p.is_private?'selected':'')+'>Profil public</option><option value="true" '+(p.is_private?'selected':'')+'>Profil privé</option></select></label><label><input type="checkbox" id="profStats" '+(p.show_stats!==false?'checked':'')+'> Afficher ma progression dans le classement</label><button class="btn good" onclick="saveProfile()">Enregistrer le profil</button><div id="profileResult" class="small"></div></div>';
+}
+async function saveProfile(){
+ const username=$('profUsername').value.trim().toLowerCase(),display_name=$('profDisplay').value.trim(),bio=$('profBio').value.trim(),is_private=$('profPrivate').value==='true',show_stats=$('profStats').checked;
+ if(!/^[a-z0-9_]{3,30}$/.test(username)){msg('profileResult','Pseudo : 3 à 30 caractères, lettres minuscules, chiffres ou _.','error');return}
+ const {data,error}=await state.db.from('profiles').update({username,display_name,bio,is_private,show_stats}).eq('id',state.user.id).select().single();
+ if(error){msg('profileResult',errorMsg(error),'error');return}state.profile=data;msg('profileResult','Profil enregistré.','success');await loadFeed();
+}
+
+async function loadLeaderboard(){
+ if(!state.db){$('leaderboard').innerHTML='<div class="small">Le classement réel apparaîtra après connexion à Supabase.</div>';return}
+ const {data,error}=await state.db.from('user_stats').select('user_id,xp,level,profiles(username,display_name,show_stats)').order('xp',{ascending:false}).limit(10);
+ if(error){$('leaderboard').innerHTML='<div class="small">Installe schema.sql pour activer le classement.</div>';return}
+ $('leaderboard').innerHTML=(data||[]).filter(x=>x.profiles?.show_stats!==false).map((x,i)=>'<div class="stat"><span>#'+(i+1)+' '+esc(x.profiles?.display_name||x.profiles?.username||'Utilisateur')+'</span><strong>'+x.xp+' XP</strong></div>').join('')||'<div class="small">Pas encore de classement.</div>';
+}
+async function renderNotifications(){
+ if(!state.user||!state.db){$('notifications').textContent='Connecte-toi pour recevoir les notifications.';return}
+ const {data}=await state.db.from('notifications').select('id,type,payload,is_read,created_at').eq('user_id',state.user.id).order('created_at',{ascending:false}).limit(5);
+ $('notifications').innerHTML=(data||[]).map(n=>'<div class="notice" style="margin:6px 0">'+esc(n.payload?.message||n.type)+(n.is_read?'':' · <strong>nouveau</strong>')+'</div>').join('')||'Aucune notification.';
+}
+
+async function renderModeration(){
+ if(!state.user||!state.db){$('moderationContent').innerHTML='<div class="notice">Le centre est réservé aux modérateurs connectés.</div>';return}
+ const {data:mod}=await state.db.from('moderators').select('user_id').eq('user_id',state.user.id).maybeSingle();
+ if(!mod){$('moderationContent').innerHTML='<div class="notice">Tu n’as pas le rôle modérateur.</div>';return}
+ const {data,error}=await state.db.from('reports').select('id,target_type,target_id,reason,details,status,created_at').neq('status','resolved').order('created_at',{ascending:false}).limit(30);
+ if(error){$('moderationContent').innerHTML='<div class="notice">'+esc(errorMsg(error))+'</div>';return}
+ $('moderationContent').innerHTML='<p class="small">Les actions de modération passent par des fonctions SQL réservées au rôle modérateur.</p>'+((data||[]).map(r=>'<div class="card"><strong>'+esc(r.reason)+'</strong><div class="small">'+esc(r.target_type)+' · '+esc(r.target_id)+'</div><p>'+esc(r.details||'Sans précision')+'</p><div class="actions"><button class="btn" onclick="resolveReport(\''+r.id+'\',\'resolved\')">Marquer traité</button><button class="btn danger" onclick="hideReportedPost(\''+r.target_id+'\',\''+r.id+'\')">Masquer le post</button></div></div>').join('')||'<div class="notice">Aucun signalement en attente.</div>');
+}
+async function resolveReport(id,status){const {error}=await state.db.rpc('resolve_report',{p_report_id:id,p_status:status,p_note:'Traité par un modérateur'});if(error)alert(errorMsg(error));else renderModeration()}
+async function hideReportedPost(postId,reportId){const {error}=await state.db.rpc('moderate_post',{p_post_id:postId,p_reason:'Signalement traité par modération'});if(error)alert(errorMsg(error));else{await resolveReport(reportId,'resolved');await loadFeed()}}
+
+$('refreshBtn').addEventListener('click',loadFeed);
+renderStats();
+init();
+window.startQuiz=startQuiz;window.answerQuiz=answerQuiz;window.nextQuiz=nextQuiz;window.toggleLike=toggleLike;window.addComment=addComment;window.focusComment=focusComment;window.followUser=followUser;window.reportPost=reportPost;window.blockUser=blockUser;window.saveProfile=saveProfile;window.resolveReport=resolveReport;window.hideReportedPost=hideReportedPost;
+</script>
+</body>
+</html>

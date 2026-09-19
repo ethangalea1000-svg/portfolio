@@ -1,21 +1,156 @@
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Connexion — CyberLab</title><style>body{margin:0;background:#08111f;color:#eef5ff;font-family:system-ui;padding:30px}main{max-width:650px;margin:auto}.nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:25px}.nav a{color:#dff4ff;background:#132640;border:1px solid #294366;padding:9px 12px;border-radius:9px;text-decoration:none}.card{background:#12213a;border:1px solid #294366;border-radius:18px;padding:20px}.form{display:grid;gap:11px}input{padding:11px;background:#091321;color:white;border:1px solid #294366;border-radius:10px}.btn{padding:11px 15px;border-radius:10px;border:1px solid #42638a;background:#18304d;color:white;cursor:pointer}.notice{padding:12px;background:#10253c;border:1px solid #42638a;border-radius:12px;color:#bdd9f5}</style></head><body><main><nav class="nav"><a href="../">CyberLab</a><a href="../collection/">Ma collection</a><a href="../questionnaire/">Questionnaire</a><a href="./">Connexion</a></nav><h1>Connexion</h1>
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<title>Connexion — CyberLab</title>
+<style>
+body{margin:0;background:#08111f;color:#eef5ff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;padding:28px 16px}
+main{max-width:900px;margin:auto}.nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}.nav a{color:#dff4ff;background:#132640;border:1px solid #294366;padding:9px 12px;border-radius:9px;text-decoration:none}.nav a:hover{border-color:#69caff}
+.card{background:#12213a;border:1px solid #294366;border-radius:18px;padding:20px;margin-top:16px}.notice{padding:14px;background:#10253c;border:1px solid #42638a;border-radius:12px;color:#cfe8ff}.form{display:grid;gap:11px}input{padding:11px;background:#091321;color:white;border:1px solid #294366;border-radius:10px;font:inherit}.btn{padding:11px 15px;border-radius:10px;border:1px solid #42638a;background:#18304d;color:white;cursor:pointer;font:inherit}.btn:hover{border-color:#69caff}.oauth{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:9px}.oauth .btn{background:#172943}.muted{color:#aabbd0}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}.guide{background:#0b1728;border:1px solid #263e61;border-radius:14px;padding:15px}.guide h3{margin-top:0}.guide ol{padding-left:20px}.small{font-size:.88rem;color:#9fb2cc}.code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;background:#07101d;padding:2px 5px;border-radius:5px}.warning{border-color:#846a28;background:#2a2411;color:#f3df9b}.success{color:#70e0b1}.error{color:#ff9d9d}.result{min-height:24px;padding:10px;border-radius:10px;background:#091321;border:1px solid #243b5b}
+@media(max-width:650px){.oauth{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<main>
+<nav class="nav">
+<a href="../">CyberLab</a><a href="../collection/">Ma collection</a><a href="../questionnaire/">Questionnaire</a><a href="./">Connexion</a>
+</nav>
+
+<h1>Connexion CyberLab</h1>
+
 <div class="notice">
-<strong>À quoi sert Supabase ?</strong><br>
-Supabase est le service qui peut stocker ton compte et tes données en ligne. GitHub Pages affiche CyberLab ; Supabase peut gérer la connexion et, plus tard, la sauvegarde de ta collection dans le cloud.
+<strong>Pourquoi Supabase ?</strong><br>
+Supabase est le service qui gère l'authentification et peut ensuite stocker les données de ton compte. GitHub Pages affiche CyberLab ; Supabase gère la partie compte. Les méthodes ci-dessous doivent être activées dans ton projet Supabase avant de fonctionner.
 </div>
-<section class="card" style="margin-top:16px">
-<h2>Comment se connecter ?</h2>
-<ol>
-<li><strong>Créer un projet Supabase :</strong> va sur <a href="https://supabase.com/" target="_blank" rel="noopener" style="color:#69caff">supabase.com</a>, crée un compte puis crée un nouveau projet.</li>
-<li><strong>Récupérer l'URL du projet :</strong> dans Supabase, ouvre les informations API du projet et copie la <strong>Project URL</strong>.</li>
-<li><strong>Récupérer la clé publique :</strong> dans les mêmes informations API, copie la <strong>Publishable key</strong> (ou la clé publique héritée <code>anon</code> si ton projet l'utilise encore).</li>
-<li><strong>Coller les deux informations ci-dessous :</strong> URL Supabase + clé publique, puis clique sur <strong>Enregistrer</strong>.</li>
-<li><strong>Créer ton compte CyberLab :</strong> indique ton email et un mot de passe, puis clique sur <strong>Créer le compte</strong>. Selon la configuration de Supabase, un email de confirmation peut être demandé.</li>
-</ol>
-<div class="notice"><strong>Important :</strong> ne colle jamais ici une clé secrète <code>service_role</code> ou <code>sb_secret_…</code>. La page doit utiliser uniquement une clé publique/publishable.</div>
+
+<section class="card">
+<h2>1. Configuration Supabase</h2>
+<p class="muted">Cette étape est faite par le propriétaire du projet CyberLab. Elle ne doit normalement être faite qu'une seule fois.</p>
+<div class="form">
+<input id="url" placeholder="Project URL — ex. https://xxxx.supabase.co">
+<input id="key" placeholder="Publishable key (ou clé anon héritée)">
+<button class="btn" onclick="saveConfig()">Enregistrer la configuration</button>
+<div id="configResult" class="result"></div>
+</div>
+<p class="small">⚠️ Utilise uniquement une clé publique/publishable. Ne mets jamais une clé <span class="code">sb_secret_…</span> ou <span class="code">service_role</span> dans le navigateur.</p>
 </section>
-<section class="card" style="margin-top:16px">
-<h2>Et ma collection ?</h2>
-<p>Sans connexion, les cartes de CyberCalc sont enregistrées sur cet appareil dans le navigateur.</p>
-<p>La connexion Supabase sert à préparer une sauvegarde liée à ton compte. <strong>La synchronisation complète des cartes dans une base Supabase n'est pas encore activée dans cette version.</strong></p>
-</section><section class="card" style="margin-top:16px"><div class="form"><input id="url" placeholder="URL du projet Supabase"><input id="key" placeholder="Clé publique / publishable key"><button class="btn" onclick="saveConfig()">Enregistrer la configuration</button><input id="email" type="email" placeholder="Email"><input id="password" type="password" placeholder="Mot de passe"><button class="btn" onclick="signup()">Créer un compte</button><button class="btn" onclick="login()">Se connecter</button><button class="btn" onclick="logout()">Se déconnecter</button><div id="out"></div></div></section></main><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>let client=null;function init(){const u=localStorage.getItem('sb_url'),k=localStorage.getItem('sb_key');if(u&&k){url.value=u;key.value=k;client=supabase.createClient(u,k,{auth:{persistSession:true}})}}function saveConfig(){localStorage.setItem('sb_url',url.value.trim());localStorage.setItem('sb_key',key.value.trim());init();out.textContent='Configuration enregistrée.'}async function signup(){if(!client){out.textContent='Configure Supabase d’abord.';return}const {error}=await client.auth.signUp({email:email.value.trim(),password:password.value});out.textContent=error?error.message:'Compte créé. Vérifie ton email si nécessaire.'}async function login(){if(!client){out.textContent='Configure Supabase d’abord.';return}const {error}=await client.auth.signInWithPassword({email:email.value.trim(),password:password.value});out.textContent=error?error.message:'Connexion réussie.'}async function logout(){if(client)await client.auth.signOut();out.textContent='Déconnecté.'}init()</script></body></html>
+
+<section class="card">
+<h2>2. Connexion rapide</h2>
+<p class="muted">Tu peux garder l'email + mot de passe et ajouter les autres méthodes. Chaque bouton utilise le fournisseur correspondant dans Supabase.</p>
+<div class="oauth">
+<button class="btn" onclick="oauth('google')">Continuer avec Google</button>
+<button class="btn" onclick="oauth('github')">Continuer avec GitHub</button>
+<button class="btn" onclick="oauth('discord')">Continuer avec Discord</button>
+<button class="btn" onclick="oauth('apple')">Continuer avec Apple</button>
+<button class="btn" onclick="oauth('azure')">Continuer avec Microsoft</button>
+<button class="btn" onclick="oauth('gitlab')">Continuer avec GitLab</button>
+</div>
+<div class="result" id="oauthResult" style="margin-top:12px">Configure d'abord Supabase et active les fournisseurs que tu souhaites.</div>
+</section>
+
+<section class="card">
+<h2>3. Email + mot de passe</h2>
+<div class="form">
+<input id="email" type="email" placeholder="Email">
+<input id="password" type="password" placeholder="Mot de passe">
+<div class="oauth"><button class="btn" onclick="signup()">Créer un compte</button><button class="btn" onclick="login()">Se connecter</button><button class="btn" onclick="logout()">Se déconnecter</button></div>
+<div id="out" class="result"></div>
+</div>
+</section>
+
+<section class="card">
+<h2>4. Sans mot de passe</h2>
+<div class="form">
+<p class="muted">Entre ton email, puis CyberLab demande à Supabase d'envoyer un lien de connexion. Avec un <strong>Magic Link</strong>, tu cliques sur le lien reçu et tu reviens connecté sur CyberLab.</p>
+<input id="magicEmail" type="email" placeholder="Email pour le Magic Link">
+<div class="oauth"><button class="btn" onclick="magicLink()">📩 Envoyer un Magic Link</button><button class="btn" onclick="emailOtp()">🔢 Envoyer un code email</button></div>
+<div id="passwordlessResult" class="result"></div>
+</div>
+</section>
+
+<section class="card">
+<h2>5. Passkey</h2>
+<div class="notice warning"><strong>Fonction avancée :</strong> les passkeys de Supabase sont actuellement indiquées comme expérimentales. Elles nécessitent une configuration spéciale et une version récente de la bibliothèque Supabase. citeturn501658search16</div>
+<p class="muted">Une passkey peut utiliser le mécanisme de sécurité de ton appareil ou un gestionnaire de mots de passe compatible (par exemple biométrie, code de l'appareil ou clé de sécurité). Le principe est de ne pas saisir un mot de passe partagé. citeturn501658search16</p>
+<div class="oauth">
+<button class="btn" onclick="registerPasskey()">Enregistrer une passkey</button>
+<button class="btn" onclick="loginPasskey()">Se connecter avec une passkey</button>
+</div>
+<div id="passkeyResult" class="result" style="margin-top:12px"></div>
+</section>
+
+<section class="card">
+<h2>Mode d'emploi : activer les méthodes</h2>
+<p class="muted">Les boutons existent déjà sur cette page, mais Supabase doit connaître chaque fournisseur. Le principe OAuth est : CyberLab envoie l'utilisateur vers Google/GitHub/etc., le fournisseur l'authentifie, puis il redirige vers CyberLab. citeturn921001search0</p>
+<div class="grid">
+<details class="guide"><summary><strong>Google</strong></summary><p>Dans Supabase : Authentication → Providers → Google. Puis configure ton projet Google Cloud / Google Auth Platform, récupère les identifiants OAuth et reporte-les dans Supabase. citeturn921001search3</p></details>
+<details class="guide"><summary><strong>GitHub</strong></summary><p>Crée une GitHub OAuth App, récupère son Client ID et son Client Secret, puis active GitHub dans Supabase. Supabase fournit une Callback URL du type <span class="code">https://TON-PROJET.supabase.co/auth/v1/callback</span>. citeturn921001search5</p></details>
+<details class="guide"><summary><strong>Discord</strong></summary><p>Crée une application Discord dans le Developer Portal, récupère les identifiants OAuth, puis active Discord dans Authentication → Providers de Supabase. citeturn921001search10</p></details>
+<details class="guide"><summary><strong>Apple</strong></summary><p>Active Apple dans le tableau de bord Supabase et configure le fournisseur Apple selon le flux Web choisi. citeturn921001search7</p></details>
+<details class="guide"><summary><strong>Microsoft</strong></summary><p>Supabase utilise le fournisseur Azure pour Microsoft. Active Azure dans Supabase et configure le Tenant URL / les identifiants de ton application Microsoft. Le scope <span class="code">email</span> est requis. citeturn921001search15</p></details>
+<details class="guide"><summary><strong>GitLab</strong></summary><p>Crée une application OAuth GitLab, récupère son Application ID et son Secret, puis active GitLab dans Supabase. citeturn921001search11</p></details>
+<details class="guide"><summary><strong>Magic Link</strong></summary><p>Le Magic Link utilise <span class="code">signInWithOtp()</span> avec une adresse email. Supabase envoie ensuite le lien de connexion. La configuration du template email détermine le lien ou un code OTP. citeturn501658search0turn501658search17</p></details>
+<details class="guide"><summary><strong>Passkey</strong></summary><p>Active Passkeys dans Authentication → Passkeys, active l'option expérimentale dans le client Supabase et inscris une passkey après qu'un utilisateur est connecté. citeturn501658search16turn501658search4</p></details>
+</div>
+</section>
+
+<section class="card">
+<h2>6. Ma collection</h2>
+<p>Sans connexion, tes cartes restent enregistrées sur cet appareil. Une fois l'authentification et la base de données correctement configurées, la prochaine étape est de synchroniser ces cartes dans Supabase pour les retrouver sur plusieurs appareils.</p>
+<a class="btn" href="../collection/">Voir ma collection →</a>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+let client=null;
+const REDIRECT=window.location.origin+window.location.pathname;
+
+function setResult(id,text,type){const e=document.getElementById(id);e.textContent=text;e.className='result '+(type||'')}
+function init(){
+ const u=localStorage.getItem('sb_url'),k=localStorage.getItem('sb_key');
+ if(u&&k){document.getElementById('url').value=u;document.getElementById('key').value=k;client=supabase.createClient(u,k,{auth:{persistSession:true},experimental:{passkey:true}})}
+}
+function saveConfig(){
+ const u=document.getElementById('url').value.trim(),k=document.getElementById('key').value.trim();
+ if(!u||!k){setResult('configResult','URL et clé requises.','error');return}
+ localStorage.setItem('sb_url',u);localStorage.setItem('sb_key',k);init();setResult('configResult','Configuration enregistrée.','success')
+}
+function needClient(target='out'){if(!client){setResult(target,'Configure Supabase d’abord avec la Project URL et la clé publique.','error');return false}return true}
+async function signup(){if(!needClient())return;const {error}=await client.auth.signUp({email:email.value.trim(),password:password.value});setResult('out',error?error.message:'Compte créé. Vérifie ton email si la confirmation est activée.',error?'error':'success')}
+async function login(){if(!needClient())return;const {error}=await client.auth.signInWithPassword({email:email.value.trim(),password:password.value});setResult('out',error?error.message:'Connexion réussie.',error?'error':'success')}
+async function logout(){if(!client){setResult('out','Tu n’es pas connecté via Supabase.','error');return}const {error}=await client.auth.signOut();setResult('out',error?error.message:'Déconnecté.',error?'error':'success')}
+async function oauth(provider){
+ if(!needClient('oauthResult'))return;
+ setResult('oauthResult','Redirection vers '+provider+'…');
+ const {error}=await client.auth.signInWithOAuth({provider,options:{redirectTo:REDIRECT}});
+ if(error)setResult('oauthResult',error.message,'error')
+}
+async function magicLink(){
+ if(!needClient('passwordlessResult'))return;
+ const e=document.getElementById('magicEmail').value.trim();if(!e){setResult('passwordlessResult','Entre ton email.','error');return}
+ const {error}=await client.auth.signInWithOtp({email:e,options:{emailRedirectTo:REDIRECT}});
+ setResult('passwordlessResult',error?error.message:'Lien envoyé. Vérifie ta boîte mail.',error?'error':'success')
+}
+async function emailOtp(){
+ if(!needClient('passwordlessResult'))return;
+ const e=document.getElementById('magicEmail').value.trim();if(!e){setResult('passwordlessResult','Entre ton email.','error');return}
+ const {error}=await client.auth.signInWithOtp({email:e,options:{emailRedirectTo:REDIRECT}});
+ setResult('passwordlessResult',error?error.message:'Email envoyé. Selon le template Supabase, tu recevras un lien ou un code.',error?'error':'success')
+}
+async function registerPasskey(){
+ if(!needClient('passkeyResult'))return;
+ try{const {data,error}=await client.auth.registerPasskey();setResult('passkeyResult',error?error.message:'Passkey enregistrée. '+(data?'':'') ,error?'error':'success')}
+ catch(e){setResult('passkeyResult',e.message||'Impossible d’enregistrer la passkey.','error')}
+}
+async function loginPasskey(){
+ if(!needClient('passkeyResult'))return;
+ try{const {data,error}=await client.auth.signInWithPasskey();setResult('passkeyResult',error?error.message:'Connexion par passkey réussie.',error?'error':'success')}
+ catch(e){setResult('passkeyResult',e.message||'Impossible de se connecter avec la passkey.','error')}
+}
+init();
+if(client){client.auth.onAuthStateChange((event,session)=>{if(session)setResult('out','Connecté : '+(session.user.email||'compte'), 'success')})}
+</script>
+</body>
+</html>

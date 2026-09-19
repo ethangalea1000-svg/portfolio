@@ -1,1 +1,124 @@
-<!doctype html><html lang="fr"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>CyberCalc</title><style>body{font-family:system-ui;max-width:600px;margin:40px auto;padding:20px}input,button{font-size:1.1rem;padding:10px;margin:4px}#out{font-size:1.5rem}</style><h1>CyberCalc</h1><p>Calculatrice scientifique simple.</p><input id="a" type="number" value="12"><select id="op"><option>+</option><option>-</option><option>*</option><option>/</option><option>^</option></select><input id="b" type="number" value="4"><button onclick="calc()">Calculer</button><p id="out"></p><script>function calc(){const a=+document.querySelector('#a').value,b=+document.querySelector('#b').value,o=document.querySelector('#op').value;let r=o==='+'?a+b:o==='-'?a-b:o==='*'?a*b:o==='/'?(b===0?'Division impossible':a/b):Math.pow(a,b);document.querySelector('#out').textContent=r}</script></html>
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<title>CyberCalc — calculatrice scientifique</title>
+<style>
+:root{--bg:#08111f;--card:#111d32;--line:#2a3b5c;--text:#eef4ff;--muted:#a9b7cf;--accent:#66c7ff}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#13294a 0,#08111f 45%);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}main{max-width:1050px;margin:auto;padding:28px 18px 50px}h1{margin-bottom:6px;font-size:2.4rem}h2{font-size:1.2rem}.sub{color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px}.card{background:rgba(17,29,50,.95);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 12px 35px #0003}.calc{display:grid;gap:10px}.display{background:#050b14;border:1px solid var(--line);border-radius:14px;padding:16px;font-size:2rem;min-height:32px;overflow:auto;text-align:right}.row{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.row5{grid-template-columns:repeat(5,1fr)}button,select,input{font:inherit}button{padding:12px;border:1px solid var(--line);border-radius:10px;background:#172844;color:var(--text);cursor:pointer}button:hover{border-color:var(--accent)}input,select{width:100%;padding:10px;border-radius:10px;border:1px solid var(--line);background:#091321;color:var(--text)}label{display:block;color:var(--muted);font-size:.9rem;margin-bottom:4px}.out{margin-top:10px;padding:12px;border-radius:10px;background:#091321;white-space:pre-wrap;word-break:break-word}.accent{color:var(--accent)}.record{font-size:1.25rem}.source{font-size:.82rem;color:var(--muted)}a{color:var(--accent)}.small{font-size:.9rem;color:var(--muted)}.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media(max-width:600px){.row5{grid-template-columns:repeat(3,1fr)}.two{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<main>
+<h1>CyberCalc</h1>
+<p class="sub">Calculatrice scientifique, fonctions numériques, dates et informations sur π.</p>
+
+<div class="grid">
+<section class="card">
+<h2>Calculatrice scientifique</h2>
+<div class="calc">
+<div id="display" class="display">0</div>
+<select id="angle"><option value="DEG">Degrés (DEG)</option><option value="RAD">Radians (RAD)</option></select>
+<div class="row">
+<button onclick="clearAll()">C</button><button onclick="back()">⌫</button><button onclick="append('(')">(</button><button onclick="append(')')">)</button>
+</div>
+<div class="row">
+<button onclick="append('7')">7</button><button onclick="append('8')">8</button><button onclick="append('9')">9</button><button onclick="append('/')">÷</button>
+<button onclick="append('4')">4</button><button onclick="append('5')">5</button><button onclick="append('6')">6</button><button onclick="append('*')">×</button>
+<button onclick="append('1')">1</button><button onclick="append('2')">2</button><button onclick="append('3')">3</button><button onclick="append('-')">−</button>
+<button onclick="append('0')">0</button><button onclick="append('.')">.</button><button onclick="calculate()">=</button><button onclick="append('+')">+</button>
+</div>
+<div class="row5">
+<button onclick="unary('sqrt')">√x</button><button onclick="unary('square')">x²</button><button onclick="unary('cube')">x³</button><button onclick="unary('reciprocal')">1/x</button><button onclick="unary('abs')">|x|</button>
+<button onclick="unary('sin')">sin</button><button onclick="unary('cos')">cos</button><button onclick="unary('tan')">tan</button><button onclick="unary('ln')">ln</button><button onclick="unary('log')">log</button>
+<button onclick="unary('exp')">eˣ</button><button onclick="insertConst('Math.PI')">π</button><button onclick="insertConst('Math.E')">e</button><button onclick="unary('floor')">⌊x⌋</button><button onclick="unary('ceil')">⌈x⌉</button>
+</div>
+</div>
+</section>
+
+<section class="card">
+<h2>Dates & temps</h2>
+<div class="two">
+<div><label>Date 1</label><input id="date1" type="date"></div>
+<div><label>Date 2</label><input id="date2" type="date"></div>
+</div>
+<button onclick="dateDiff()">Calculer l'écart entre les dates</button>
+<div id="dateOut" class="out"></div>
+<button onclick="now()">Date et heure actuelles</button>
+<div id="nowOut" class="out"></div>
+</section>
+
+<section class="card">
+<h2>Calculs rapides</h2>
+<label>Nombre</label><input id="quickN" type="number" step="any" value="144">
+<div class="row">
+<button onclick="quick('sqrt')">√</button><button onclick="quick('fact')">n!</button><button onclick="quick('pct')">%</button><button onclick="quick('sign')">±</button>
+</div>
+<div id="quickOut" class="out"></div>
+<p class="small">La factorielle est limitée à 170 pour éviter les valeurs infinies en JavaScript.</p>
+</section>
+
+<section class="card">
+<h2>π — record de calcul</h2>
+<p class="record"><span class="accent">314 000 000 000 000</span> chiffres de π</p>
+<p>Soit <strong>314 000 milliards</strong> de chiffres calculés et vérifiés.</p>
+<p class="source">Record annoncé par Guinness World Records le 1er juin 2026. Calcul terminé le 19 novembre 2025 selon y-cruncher.</p>
+<p><a href="https://www.guinnessworldrecords.com/news/commercial/2026/6/pi-high-computing-achievement-technology-companies-calculate-pi-to-340-trillionth-digit" target="_blank" rel="noopener">Source Guinness World Records →</a></p>
+<p><a href="https://www.numberworld.org/y-cruncher/records.html" target="_blank" rel="noopener">Détails techniques y-cruncher →</a></p>
+</section>
+</div>
+</main>
+<script>
+let expr='';
+const display=document.getElementById('display');
+function render(v=expr||'0'){display.textContent=v}
+function append(v){expr+=v;render()}
+function clearAll(){expr='';render()}
+function back(){expr=expr.slice(0,-1);render()}
+function safeEval(s){if(!/^[0-9+\-*/%().\s]+$/.test(s))throw new Error('Expression invalide');return Function('return ('+s+')')()}
+function calculate(){try{const r=safeEval(expr);expr=String(r);render()}catch{render('Erreur')}}
+function lastValue(){return safeEval(expr||'0')}
+function replaceLast(v){expr=String(v);render()}
+function unary(type){
+ try{
+  const x=lastValue();let r;
+  if(type==='sqrt')r=Math.sqrt(x);
+  if(type==='square')r=x*x;
+  if(type==='cube')r=x*x*x;
+  if(type==='reciprocal')r=1/x;
+  if(type==='abs')r=Math.abs(x);
+  if(type==='floor')r=Math.floor(x);
+  if(type==='ceil')r=Math.ceil(x);
+  if(type==='ln')r=Math.log(x);
+  if(type==='log')r=Math.log10(x);
+  if(type==='exp')r=Math.exp(x);
+  if(['sin','cos','tan'].includes(type)){const a=document.getElementById('angle').value==='DEG'?x*Math.PI/180:x;r=Math[type](a)}
+  replaceLast(r);
+ }catch{render('Erreur')}
+}
+function insertConst(c){try{expr+=String(Function('return '+c)());render()}catch{render('Erreur')}}
+function dateDiff(){
+ const a=new Date(document.getElementById('date1').value),b=new Date(document.getElementById('date2').value);
+ if(Number.isNaN(a.getTime())||Number.isNaN(b.getTime())){dateOut.textContent='Choisis les deux dates.';return}
+ const days=Math.round(Math.abs(b-a)/86400000);
+ dateOut.textContent=days+' jour'+(days>1?'s':'')+' d’écart'+(a<=b?' (date 1 → date 2)':' (date 2 → date 1)');
+}
+function now(){nowOut.textContent=new Intl.DateTimeFormat('fr-FR',{dateStyle:'full',timeStyle:'medium'}).format(new Date())}
+function quick(type){
+ const x=Number(document.getElementById('quickN').value);let r;
+ try{
+  if(type==='sqrt')r=Math.sqrt(x);
+  if(type==='fact'){if(x<0||x>170||!Number.isInteger(x))throw 0; r=1;for(let i=2;i<=x;i++)r*=i}
+  if(type==='pct')r=x/100;
+  if(type==='sign')r=-x;
+  quickOut.textContent=String(r)
+ }catch{quickOut.textContent='Valeur invalide.'}
+}
+const today=new Date().toISOString().slice(0,10);
+document.getElementById('date1').value=today;
+document.getElementById('date2').value=today;
+render();
+</script>
+</body>
+</html>

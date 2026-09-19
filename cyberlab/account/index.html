@@ -67,6 +67,28 @@ Tu peux utiliser Firebase Authentication uniquement : soit avec ton compte Googl
 <p class="small"><strong>Configuration :</strong> Firebase Console → Authentication → Sign-in method → active Google et/ou Email/Password. Ajoute aussi ton domaine GitHub Pages dans les domaines autorisés. Aucun Firestore n'est nécessaire pour cette méthode. citeturn489918search6turn489918search1turn489918search4</p>
 </section>
 
+<section class="card" id="clerk">
+<h2>0.25. Compte CyberLab avec Clerk</h2>
+<div class="notice">
+<strong>Une autre solution d'authentification en ligne.</strong><br>
+Clerk gère les comptes CyberLab et les connexions Google. Ton site n'a pas besoin d'une base de données CyberLab pour cette authentification. Clerk fournit aussi ses propres interfaces de connexion et d'inscription. citeturn596649search0turn596649search1
+</div>
+<p class="muted">Configure une fois la <strong>Publishable Key</strong> de ton application Clerk, puis utilise les boutons ci-dessous.</p>
+<div class="form">
+<input id="clerkKey" placeholder="Clerk Publishable Key — pk_test_... ou pk_live_...">
+<div class="oauth">
+<button class="btn" onclick="saveClerkConfig()">Enregistrer Clerk</button>
+<button class="btn" onclick="clerkSignIn()">Se connecter</button>
+<button class="btn" onclick="clerkSignUp()">Créer un compte CyberLab</button>
+<button class="btn" onclick="clerkOpenUser()">Mon compte</button>
+<button class="btn" onclick="clerkSignOut()">Se déconnecter</button>
+</div>
+<div id="clerkMount" style="margin-top:14px"></div>
+<div id="clerkResult" class="result"></div>
+</div>
+<p class="small"><strong>Dans Clerk :</strong> active Google et l'authentification par email/mot de passe dans les méthodes de connexion. La Publishable Key est une clé publique destinée au frontend ; ne colle jamais de clé secrète ici. citeturn596649search0turn596649search2</p>
+</section>
+
 <section class="card">
 <h2>1. Configuration Supabase</h2>
 <p class="muted">Cette étape est faite par le propriétaire du projet CyberLab. Elle ne doit normalement être faite qu'une seule fois.</p>
@@ -145,7 +167,63 @@ Tu peux utiliser Firebase Authentication uniquement : soit avec ton compte Googl
 <a class="btn" href="../collection/">Voir ma collection →</a>
 </section>
 
-<script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-compat.js"></script>
+<script>let clerkClient=null;
+let clerkUiLoaded=false;
+
+function loadClerk(){
+ return new Promise(async (resolve,reject)=>{
+  const key=localStorage.getItem('cyberlab_clerk_key');
+  if(!key){setResult('clerkResult','Enregistre d’abord ta Publishable Key Clerk.','error');reject(new Error('missing key'));return}
+  if(window.Clerk && clerkClient){resolve();return}
+  try{
+   const part=key.split('_')[2];
+   if(!part)throw new Error('Publishable Key Clerk invalide.');
+   const domain=atob(part).slice(0,-1);
+   if(!clerkUiLoaded){
+    await new Promise((res,rej)=>{
+     const ui=document.createElement('script');
+     ui.src='https://'+domain+'/npm/@clerk/ui@1/dist/ui.browser.js';
+     ui.async=true;ui.crossOrigin='anonymous';ui.onload=res;ui.onerror=()=>rej(new Error('Impossible de charger Clerk UI'));
+     document.head.appendChild(ui);
+    });
+    await new Promise((res,rej)=>{
+     const s=document.createElement('script');
+     s.src='https://'+domain+'/npm/@clerk/clerk-js@6/dist/clerk.browser.js';
+     s.async=true;s.crossOrigin='anonymous';s.setAttribute('data-clerk-publishable-key',key);
+     s.onload=res;s.onerror=()=>rej(new Error('Impossible de charger ClerkJS'));
+     document.head.appendChild(s);
+    });
+    clerkUiLoaded=true;
+   }
+   await Clerk.load({ui:{ClerkUI:window.__internal_ClerkUICtor}});
+   clerkClient=Clerk;
+   resolve();
+  }catch(e){setResult('clerkResult',e.message||'Erreur de chargement Clerk.','error');reject(e)}
+ });
+}
+function saveClerkConfig(){
+ const key=document.getElementById('clerkKey').value.trim();
+ if(!key||!key.startsWith('pk_')){setResult('clerkResult','Utilise une Publishable Key Clerk commençant par pk_.','error');return}
+ localStorage.setItem('cyberlab_clerk_key',key);
+ setResult('clerkResult','Clerk enregistré. Tu peux maintenant te connecter ou créer ton compte.','success');
+}
+async function clerkSignIn(){
+ try{await loadClerk();document.getElementById('clerkMount').innerHTML='';clerkClient.mountSignIn(document.getElementById('clerkMount'),{routing:'hash'})}catch{}
+}
+async function clerkSignUp(){
+ try{await loadClerk();document.getElementById('clerkMount').innerHTML='';clerkClient.mountSignUp(document.getElementById('clerkMount'),{routing:'hash'})}catch{}
+}
+async function clerkOpenUser(){
+ try{await loadClerk();document.getElementById('clerkMount').innerHTML='';clerkClient.mountUserProfile(document.getElementById('clerkMount'))}catch{}
+}
+async function clerkSignOut(){
+ try{await loadClerk();await clerkClient.signOut();setResult('clerkResult','Déconnecté de Clerk.','success');document.getElementById('clerkMount').innerHTML=''}catch{}
+}
+(function(){
+ const key=localStorage.getItem('cyberlab_clerk_key');
+ if(key)document.getElementById('clerkKey').value=key;
+})();
+</script><script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-auth-compat.js"></script>
 <script>
 let fbAuth=null;

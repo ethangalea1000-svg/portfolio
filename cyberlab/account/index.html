@@ -36,7 +36,7 @@ Supabase est le service qui gère l'authentification et peut ensuite stocker les
 <p class="small">⚠️ Utilise uniquement une clé publique/publishable. Ne mets jamais une clé <span class="code">sb_secret_…</span> ou <span class="code">service_role</span> dans le navigateur.</p>
 </section>
 
-<section class="card">
+<section class="card" id="oauth">
 <h2>2. Connexion rapide</h2>
 <p class="muted">Tu peux garder l'email + mot de passe et ajouter les autres méthodes. Chaque bouton utilise le fournisseur correspondant dans Supabase.</p>
 <div class="oauth">
@@ -50,7 +50,7 @@ Supabase est le service qui gère l'authentification et peut ensuite stocker les
 <div class="result" id="oauthResult" style="margin-top:12px">Configure d'abord Supabase et active les fournisseurs que tu souhaites.</div>
 </section>
 
-<section class="card">
+<section class="card" id="email">
 <h2>3. Email + mot de passe</h2>
 <div class="form">
 <input id="email" type="email" placeholder="Email">
@@ -60,7 +60,7 @@ Supabase est le service qui gère l'authentification et peut ensuite stocker les
 </div>
 </section>
 
-<section class="card">
+<section class="card" id="more">
 <h2>4. Sans mot de passe</h2>
 <div class="form">
 <p class="muted">Entre ton email, puis CyberLab demande à Supabase d'envoyer un lien de connexion. Avec un <strong>Magic Link</strong>, tu cliques sur le lien reçu et tu reviens connecté sur CyberLab.</p>

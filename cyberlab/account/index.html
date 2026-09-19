@@ -9,7 +9,7 @@ body{margin:0;background:#08111f;color:#eef5ff;font-family:system-ui,-apple-syst
 main{max-width:900px;margin:auto}.nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}.nav a{color:#dff4ff;background:#132640;border:1px solid #294366;padding:9px 12px;border-radius:9px;text-decoration:none}.nav a:hover{border-color:#69caff}
 .card{background:#12213a;border:1px solid #294366;border-radius:18px;padding:20px;margin-top:16px}.notice{padding:14px;background:#10253c;border:1px solid #42638a;border-radius:12px;color:#cfe8ff}.form{display:grid;gap:11px}input{padding:11px;background:#091321;color:white;border:1px solid #294366;border-radius:10px;font:inherit}.btn{padding:11px 15px;border-radius:10px;border:1px solid #42638a;background:#18304d;color:white;cursor:pointer;font:inherit}.btn:hover{border-color:#69caff}.oauth{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:9px}.oauth .btn{background:#172943}.muted{color:#aabbd0}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}.guide{background:#0b1728;border:1px solid #263e61;border-radius:14px;padding:15px}.guide h3{margin-top:0}.guide ol{padding-left:20px}.small{font-size:.88rem;color:#9fb2cc}.code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;background:#07101d;padding:2px 5px;border-radius:5px}.warning{border-color:#846a28;background:#2a2411;color:#f3df9b}.success{color:#70e0b1}.error{color:#ff9d9d}.result{min-height:24px;padding:10px;border-radius:10px;background:#091321;border:1px solid #243b5b}
 @media(max-width:650px){.oauth{grid-template-columns:1fr}}
-</style>
+.firebase-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:9px}.firebase-status{padding:10px;border-radius:10px;background:#091321;border:1px solid #243b5b;margin-top:10px}</style>
 </head>
 <body>
 <main>
@@ -33,6 +33,38 @@ Supabase est le service qui gère l'authentification et peut ensuite stocker les
 <div id="localResult" class="result"></div>
 </div>
 <p class="small">Ce mode n'est pas une authentification sécurisée : il fonctionne seulement sur ce navigateur/appareil. Il ne permet pas de récupérer le profil sur un autre appareil.</p>
+</section>
+
+<section class="card" id="firebase">
+<h2>0.5. Compte CyberLab en ligne — sans base de données</h2>
+<div class="notice">
+<strong>Une vraie connexion en ligne, mais sans Firestore.</strong><br>
+Tu peux utiliser Firebase Authentication uniquement : soit avec ton compte Google, soit en créant un compte CyberLab avec email + mot de passe. Les cartes/données de CyberLab ne sont pas enregistrées dans une base Firebase par cette option.
+</div>
+<p class="muted">Il faut créer/configurer un projet Firebase une seule fois. La configuration Web ci-dessous est prévue pour être utilisée côté navigateur.</p>
+<div class="firebase-grid">
+<input id="fbApiKey" placeholder="apiKey">
+<input id="fbAuthDomain" placeholder="authDomain (ex. projet.firebaseapp.com)">
+<input id="fbProjectId" placeholder="projectId">
+<input id="fbAppId" placeholder="appId">
+<input id="fbStorageBucket" placeholder="storageBucket (optionnel)">
+<input id="fbMessagingSenderId" placeholder="messagingSenderId (optionnel)">
+</div>
+<div class="oauth" style="margin-top:10px">
+<button class="btn" onclick="saveFirebaseConfig()">Enregistrer Firebase</button>
+<button class="btn" onclick="firebaseGoogle()">Continuer avec Google</button>
+</div>
+<div class="form" style="margin-top:12px">
+<input id="fbEmail" type="email" placeholder="Email">
+<input id="fbPassword" type="password" minlength="6" placeholder="Mot de passe (6 caractères minimum)">
+<div class="oauth">
+<button class="btn" onclick="firebaseSignup()">Créer mon compte CyberLab</button>
+<button class="btn" onclick="firebaseLogin()">Se connecter</button>
+<button class="btn" onclick="firebaseLogout()">Se déconnecter</button>
+</div>
+</div>
+<div id="firebaseResult" class="firebase-status"></div>
+<p class="small"><strong>Configuration :</strong> Firebase Console → Authentication → Sign-in method → active Google et/ou Email/Password. Ajoute aussi ton domaine GitHub Pages dans les domaines autorisés. Aucun Firestore n'est nécessaire pour cette méthode. citeturn489918search6turn489918search1turn489918search4</p>
 </section>
 
 <section class="card">
@@ -113,6 +145,89 @@ Supabase est le service qui gère l'authentification et peut ensuite stocker les
 <a class="btn" href="../collection/">Voir ma collection →</a>
 </section>
 
+<script src="https://www.gstatic.com/firebasejs/12.1.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.1.0/firebase-auth-compat.js"></script>
+<script>
+let fbAuth=null;
+let fbApp=null;
+
+function fbConfig(){
+ return {
+  apiKey:document.getElementById('fbApiKey').value.trim(),
+  authDomain:document.getElementById('fbAuthDomain').value.trim(),
+  projectId:document.getElementById('fbProjectId').value.trim(),
+  appId:document.getElementById('fbAppId').value.trim(),
+  ...(document.getElementById('fbStorageBucket').value.trim()?{storageBucket:document.getElementById('fbStorageBucket').value.trim()}:{}),
+  ...(document.getElementById('fbMessagingSenderId').value.trim()?{messagingSenderId:document.getElementById('fbMessagingSenderId').value.trim()}:{} )
+ };
+}
+function initFirebase(){
+ const raw=localStorage.getItem('cyberlab_firebase_config');
+ if(!raw)return;
+ try{
+  const cfg=JSON.parse(raw);
+  for(const id of ['fbApiKey','fbAuthDomain','fbProjectId','fbAppId','fbStorageBucket','fbMessagingSenderId']) if(cfg[id]) document.getElementById(id).value=cfg[id];
+  if(cfg.apiKey&&cfg.authDomain&&cfg.projectId&&cfg.appId){
+   fbApp=firebase.apps.length?firebase.app():firebase.initializeApp(cfg);
+   fbAuth=firebase.auth();
+   fbAuth.onAuthStateChanged(user=>{
+    if(user)setResult('firebaseResult','Connecté : '+(user.displayName||user.email||'compte Google'),'success');
+   });
+  }
+ }catch(e){setResult('firebaseResult','Configuration Firebase invalide.','error')}
+}
+function saveFirebaseConfig(){
+ const cfg=fbConfig();
+ if(!cfg.apiKey||!cfg.authDomain||!cfg.projectId||!cfg.appId){
+  setResult('firebaseResult','apiKey, authDomain, projectId et appId sont requis.','error');return;
+ }
+ localStorage.setItem('cyberlab_firebase_config',JSON.stringify(cfg));
+ try{
+  fbApp=firebase.apps.length?firebase.app():firebase.initializeApp(cfg);
+  fbAuth=firebase.auth();
+  fbAuth.onAuthStateChanged(user=>{
+   if(user)setResult('firebaseResult','Connecté : '+(user.displayName||user.email||'compte'),'success');
+  });
+  setResult('firebaseResult','Firebase configuré sur ce navigateur.','success');
+ }catch(e){setResult('firebaseResult',e.message||'Erreur Firebase.','error')}
+}
+function needFirebase(){
+ if(!fbAuth){setResult('firebaseResult','Configure Firebase avec la configuration Web avant de te connecter.','error');return false}
+ return true;
+}
+async function firebaseGoogle(){
+ if(!needFirebase())return;
+ try{
+  const provider=new firebase.auth.GoogleAuthProvider();
+  await fbAuth.signInWithPopup(provider);
+ }catch(e){setResult('firebaseResult',e.message||'Connexion Google impossible.','error')}
+}
+async function firebaseSignup(){
+ if(!needFirebase())return;
+ const email=document.getElementById('fbEmail').value.trim();
+ const pass=document.getElementById('fbPassword').value;
+ if(!email||pass.length<6){setResult('firebaseResult','Entre un email et un mot de passe d’au moins 6 caractères.','error');return}
+ try{
+  const cred=await fbAuth.createUserWithEmailAndPassword(email,pass);
+  setResult('firebaseResult','Compte CyberLab créé : '+cred.user.email,'success');
+ }catch(e){setResult('firebaseResult',e.message||'Création du compte impossible.','error')}
+}
+async function firebaseLogin(){
+ if(!needFirebase())return;
+ const email=document.getElementById('fbEmail').value.trim();
+ const pass=document.getElementById('fbPassword').value;
+ try{
+  const cred=await fbAuth.signInWithEmailAndPassword(email,pass);
+  setResult('firebaseResult','Connexion réussie : '+cred.user.email,'success');
+ }catch(e){setResult('firebaseResult',e.message||'Connexion impossible.','error')}
+}
+async function firebaseLogout(){
+ if(!needFirebase())return;
+ try{await fbAuth.signOut();setResult('firebaseResult','Déconnecté de Firebase.','success')}
+ catch(e){setResult('firebaseResult',e.message||'Déconnexion impossible.','error')}
+}
+initFirebase();
+</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 let client=null;

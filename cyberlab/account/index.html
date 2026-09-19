@@ -108,6 +108,29 @@ let client=null;
 const REDIRECT=window.location.origin+window.location.pathname;
 
 function setResult(id,text,type){const e=document.getElementById(id);e.textContent=text;e.className='result '+(type||'')}
+function createLocalProfile(){
+ const name=document.getElementById('localName').value.trim();
+ if(!name){setResult('localResult','Choisis un pseudo.','error');return}
+ const profile={id:'local-'+crypto.randomUUID(),name,createdAt:new Date().toISOString()};
+ localStorage.setItem('cyberlab_local_profile',JSON.stringify(profile));
+ setResult('localResult','Profil local créé pour « '+name+' ». Aucun compte en ligne n’a été créé.','success');
+ updateLocalUI();
+}
+function deleteLocalProfile(){
+ localStorage.removeItem('cyberlab_local_profile');
+ document.getElementById('localName').value='';
+ setResult('localResult','Profil local supprimé de ce navigateur.','success');
+ updateLocalUI();
+}
+function updateLocalUI(){
+ const raw=localStorage.getItem('cyberlab_local_profile');
+ if(!raw)return;
+ try{
+  const p=JSON.parse(raw);
+  document.getElementById('localName').value=p.name||'';
+  setResult('localResult','Profil local actif : '+(p.name||'')+' · '+p.id,'success');
+ }catch{}
+}
 function init(){
  const u=localStorage.getItem('sb_url'),k=localStorage.getItem('sb_key');
  if(u&&k){document.getElementById('url').value=u;document.getElementById('key').value=k;client=supabase.createClient(u,k,{auth:{persistSession:true},experimental:{passkey:true}})}
@@ -149,6 +172,7 @@ async function loginPasskey(){
  try{const {data,error}=await client.auth.signInWithPasskey();setResult('passkeyResult',error?error.message:'Connexion par passkey réussie.',error?'error':'success')}
  catch(e){setResult('passkeyResult',e.message||'Impossible de se connecter avec la passkey.','error')}
 }
+updateLocalUI();
 init();
 if(client){client.auth.onAuthStateChange((event,session)=>{if(session)setResult('out','Connecté : '+(session.user.email||'compte'), 'success')})}
 </script>

@@ -258,7 +258,7 @@ async function publish(){
  if(body.length<2){msg('composerResult','Écris quelque chose avant de publier.','error');return}
  if(!state.user){const local={id:'local-'+Date.now(),user_id:'local-me',username:'moi',display_name:'Moi',body,kind,likes:0,liked:false,comments:[]};state.posts.unshift(local);state.localStats.posts++;state.localStats.xp+=5;saveLocal();$('postBody').value='';renderStats();renderPosts($('search').value.trim().toLowerCase());msg('composerResult','Publié en mode local. Connecte-toi pour publier réellement en ligne.','');return}
  const {error}=await state.db.from('posts').insert({user_id:state.user.id,body,kind,visibility:'public'});
- if(error){msg('composerResult,errorMsg(error),'error');return}
+ if(error){msg('composerResult',errorMsg(error),'error');return}
  $('postBody').value='';msg('composerResult','Publication mise en ligne. +5 XP','success');await loadFeed();await renderStats();
 }
 function errorMsg(e){return e?.message||'Une erreur est survenue.'}
@@ -310,20 +310,21 @@ $('openProgress').onclick=()=>{showSection('progressPanel');renderProgress()};
 $('openProfile').onclick=()=>{showSection('profilePanel');renderProfile()};
 $('openModeration').onclick=()=>{showSection('moderationPanel');renderModeration()};
 
-function renderStats(){
- const s=state.user?state.stats||state.localStats:state.localStats;
+function renderBasicStats(){
+ const s=state.user?(state.stats||{}):state.localStats;
  const xp=s.xp||0,level=levelFor(xp);
- $('xp').textContent=xp;$('level').textContent=level;$('rank').textContent=rankFor(xp);$('userSummary').textContent=state.user?(state.profile?.display_name||state.user.email||'Compte connecté'):'Mode local — aucune donnée envoyée';
- const next=xpNext(xp),prev=(level-1)*100, pct=Math.min(100,Math.max(0,(xp-prev)/(next-prev)*100));$('xpBar').style.width=pct+'%';$('xpLabel').textContent=xp+' / '+next+' XP pour le niveau '+(level+1);
+ $('xp').textContent=xp;$('level').textContent=level;$('rank').textContent=rankFor(xp);
+ $('userSummary').textContent=state.user?(state.profile?.display_name||state.user.email||'Compte connecté'):'Mode local — aucune donnée envoyée';
+ const next=xpNext(xp),prev=(level-1)*100,pct=Math.min(100,Math.max(0,(xp-prev)/(next-prev)*100));
+ $('xpBar').style.width=pct+'%';$('xpLabel').textContent=xp+' / '+next+' XP pour le niveau '+(level+1);
 }
 async function loadRealStats(){
- if(!state.db||!state.user){state.stats=state.localStats;renderStats();return}
+ if(!state.db||!state.user){state.stats=state.localStats;renderBasicStats();return}
  const {data}=await state.db.from('user_stats').select('*').eq('user_id',state.user.id).maybeSingle();
  state.stats=data||{xp:0,level:1,quiz_completed:0,posts_created:0,streak_days:0};
- renderStats();
+ renderBasicStats();
 }
-async function renderStats(){await loadRealStats();}
-
+async function renderStats(){await loadRealStats()}
 function badgeStats(){
  const s=state.user?(state.stats||{}):state.localStats;return {xp:s.xp||0,posts:s.posts_created||s.posts||0,quiz:s.quiz_completed||s.quiz||0,streak:s.streak_days||s.streak||0,cryptoXp:state.localStats.cryptoXp||0,networkXp:state.localStats.networkXp||0,aiQuiz:state.localStats.aiQuiz||0,osintQuiz:state.localStats.osintQuiz||0,activeSpecs:state.localStats.activeSpecs||0};
 }

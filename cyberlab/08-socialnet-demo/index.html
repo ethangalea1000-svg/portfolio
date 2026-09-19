@@ -375,17 +375,17 @@ async function answerQuiz(i){
 function nextQuiz(){state.quiz.index++;renderQuizQuestion()}
 async function finishQuiz(){
  const q=state.quiz,score=Math.round(q.correct/8*100),xp=Math.max(5,Math.round(q.score));
- state.localStats.xp+=xp;state.localStats.quiz++;state.localStats.streak=(state.localStats.streak||0)+1;state.localStats.activeSpecs=Math.min(12,(state.localStats.activeSpecs||0)+1);
+ if(!state.user){state.localStats.xp+=xp;state.localStats.quiz++;}if(!state.user)state.localStats.streak=(state.localStats.streak||0)+1;state.localStats.activeSpecs=Math.min(12,(state.localStats.activeSpecs||0)+1);
  const cats=q.asked.map(id=>QUIZ_BANK.find(x=>x.id===id)?.cat||'').filter(Boolean);
- if(cats.includes('Crypto'))state.localStats.cryptoXp=(state.localStats.cryptoXp||0)+Math.round(xp/2);
- if(cats.includes('Réseaux'))state.localStats.networkXp=(state.localStats.networkXp||0)+Math.round(xp/2);
- if(cats.includes('IA'))state.localStats.aiQuiz=(state.localStats.aiQuiz||0)+1;
- if(cats.includes('OSINT'))state.localStats.osintQuiz=(state.localStats.osintQuiz||0)+1;
+ if(!state.user&&cats.includes('Crypto'))state.localStats.cryptoXp=(state.localStats.cryptoXp||0)+Math.round(xp/2);
+ if(!state.user&&cats.includes('Réseaux'))state.localStats.networkXp=(state.localStats.networkXp||0)+Math.round(xp/2);
+ if(!state.user&&cats.includes('IA'))state.localStats.aiQuiz=(state.localStats.aiQuiz||0)+1;
+ if(!state.user&&cats.includes('OSINT'))state.localStats.osintQuiz=(state.localStats.osintQuiz||0)+1;
  state.localStats.specs=state.localStats.specs||{};
  cats.forEach(cat=>{const s=SPEC_BASE.find(x=>x[0]===cat);if(s)state.localStats.specs[s[2]]=(state.localStats.specs[s[2]]||0)+xp});
  saveLocal();
  if(state.user&&state.db){
-  await state.db.from('quiz_attempts').insert({user_id:state.user.id,quiz_slug:'adaptive-cyber',score,correct_count:q.correct,total_count:8,specialization:(cats[0]||'Général')});
+  await state.db.from('quiz_attempts').insert({user_id:state.user.id,quiz_slug:'adaptive-cyber',score,correct_count:q.correct,total_count:8,specialization_slug:(QUIZ_BANK.find(x=>x.id===q.asked[0])?.cat==='Crypto'?'crypto-foundations':QUIZ_BANK.find(x=>x.id===q.asked[0])?.cat==='Réseaux'?'network-fundamentals':QUIZ_BANK.find(x=>x.id===q.asked[0])?.cat==='OSINT'?'osint':QUIZ_BANK.find(x=>x.id===q.asked[0])?.cat==='IA'?'ai-ml-security':null)});
  }
  $('quizMeta').textContent='Terminé';$('quizBody').innerHTML='<div class="center"><h3>🎉 Quiz terminé</h3><p>Score : <strong>'+q.correct+'/8 ('+score+'%)</strong></p><p>Récompense : <strong>+'+xp+' XP</strong></p><button class="btn good" onclick="startQuiz()">Rejouer</button> <button class="btn" onclick="showSection(\'progressPanel\');renderProgress()">Voir mes badges</button></div>';
  renderStats();renderBadges();renderMissions();renderSpecs();

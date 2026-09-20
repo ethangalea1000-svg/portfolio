@@ -50,7 +50,7 @@
 <button onclick="append('7')">7</button><button onclick="append('8')">8</button><button onclick="append('9')">9</button><button onclick="append('/')">÷</button>
 <button onclick="append('4')">4</button><button onclick="append('5')">5</button><button onclick="append('6')">6</button><button onclick="append('*')">×</button>
 <button onclick="append('1')">1</button><button onclick="append('2')">2</button><button onclick="append('3')">3</button><button onclick="append('-')">−</button>
-<button onclick="append('0')">0</button><button onclick="append('.')">.</button><button onclick="calculate()">=</button><button onclick="append('+')">+</button>
+<button onclick="append('0')">0</button><button onclick="append('.')">.</button><button class="equals-btn" onclick="calculate()" aria-label="Calculer le résultat">=</button><button onclick="append('+')">+</button>
 </div>
 <div class="row5">
 <button onclick="unary('sqrt')">√x</button><button onclick="unary('square')">x²</button><button onclick="unary('cube')">x³</button><button onclick="unary('reciprocal')">1/x</button><button onclick="unary('abs')">|x|</button>
@@ -123,7 +123,19 @@ function showResultCard(expression,result,type,rarity){
  document.getElementById('earnedResult').textContent=String(result);
  document.getElementById('earnedExpr').textContent=expression;
 }
-function calculate(){try{const before=expr;const r=safeEval(expr);expr=String(r);render();addResultCard(before, r, 'Calcul')}catch{render('Erreur')}}
+function calculate(){
+ try{
+  const before=expr.trim();
+  if(!before||/[+\-*/.]$/.test(before))throw new Error('Expression incomplète');
+  const r=safeEval(before);
+  if(!Number.isFinite(r))throw new Error('Résultat non fini');
+  expr=String(r);render();addResultCard(before,r,'Calcul');
+  const b=document.querySelector('.equals-btn');
+  if(b&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    b.classList.remove('equals-flash');void b.offsetWidth;b.classList.add('equals-flash');
+  }
+ }catch{render('Erreur')}}
+
 function lastValue(){return safeEval(expr||'0')}
 function replaceLast(v){expr=String(v);render()}
 function unary(type){
@@ -195,6 +207,11 @@ async function fetchPiRecord(manual=false){
 }
 fetchPiRecord();
 render();
+document.addEventListener('keydown',e=>{
+ if(e.key==='Enter'||e.key==='='){e.preventDefault();calculate();}
+ else if(e.key==='Escape'){e.preventDefault();clearAll();}
+ else if(e.key==='Backspace'){e.preventDefault();back();}
+});
 </script>
 <script src="../ui.js"></script>
 </body>

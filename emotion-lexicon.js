@@ -395,7 +395,7 @@
           let value = positiveEmotions.has(emotion) ? 0.80 : -0.82;
           const negated = isNegated(tokens, index);
 
-          if (negated) value = value > 0 ? -0.88 : 0.72;
+          if (negated) value = value > 0 ? -1.00 : 0.78;
           value *= multiplierFromContext(tokens, index);
 
           addEmotion(emotionScores, emotion, value);
@@ -409,7 +409,10 @@
     const explicitNegative = [
       "tout sauf bien","tout sauf bon","tout sauf genial","tout sauf génial",
       "complètement nul","completement nul","vraiment nul","c'est nul",
-      "c est nul","c'est mauvais","c est mauvais","je deteste","je déteste"
+      "c est nul","c'est mauvais","c est mauvais","je deteste","je déteste",
+      "je ne comprends rien","je comprends rien","ça ne marche pas","ca ne marche pas",
+      "ça ne fonctionne pas","ca ne fonctionne pas","je suis perdu","je suis perdue",
+      "aucun intérêt","aucun interet","aucune utilité","aucune utilite","pas terrible"
     ];
     const explicitPositive = [
       "tout sauf mauvais","tout sauf nul","c'est génial","c est genial",
@@ -461,17 +464,17 @@
     let dominant = Object.entries(emotionScores)
       .sort((a,b) => Math.abs(b[1]) - Math.abs(a[1]))[0];
 
-    if (!maxAbs || Math.abs(score) < 0.05) {
+    if (Math.abs(score) < 0.05) {
       dominant = ["neutral", 0];
-    } else if (Math.abs(dominant?.[1] || 0) < 0.08) {
-      dominant = [score > 0 ? "positive" : score < 0 ? "negative" : "neutral", score];
+    } else if (!maxAbs || Math.abs(dominant?.[1] || 0) < 0.08) {
+      dominant = [score > 0 ? "positive" : "negative", score];
     }
 
     const confidence = Math.min(1, Math.abs(score) / 3 + maxAbs / 5);
 
     let mood = "neutral";
-    if (score >= 0.55) mood = "positive";
-    if (score <= -0.55) mood = "negative";
+    if (score >= 0.40) mood = "positive";
+    if (score <= -0.40) mood = "negative";
 
     return {
       polarity: score,
@@ -525,8 +528,8 @@
     const score = weighted / totalWeight;
 
     let mood = "neutral";
-    if (score >= 0.55) mood = "positive";
-    else if (score <= -0.55) mood = "negative";
+    if (score >= 0.40) mood = "positive";
+    else if (score <= -0.40) mood = "negative";
 
     const emotionTotals = {};
     usable.forEach(item => {

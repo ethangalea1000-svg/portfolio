@@ -3,208 +3,185 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SocialNet — CyberLab</title>
+<meta name="theme-color" content="#060b15">
+<meta name="description" content="SocialNet — communauté cyber du CyberLab">
+<link rel="icon" href="../../logo.png" type="image/png">
+<meta property="og:image" content="https://ethangalea1000-svg.github.io/portfolio/logo.png">
+<title>SocialNet · CyberLab</title>
 <style>
-:root{
-  color-scheme:dark;
-  --bg:#050914;--bg2:#08111f;--panel:rgba(12,22,39,.86);--panel2:#101e34;
-  --line:rgba(111,151,194,.22);--line2:rgba(91,206,255,.35);
-  --text:#f4f8ff;--muted:#91a5bc;--accent:#38bdf8;--accent2:#a78bfa;
-  --good:#4ade80;--warn:#fbbf24;--bad:#fb7185;--shadow:0 18px 55px rgba(0,0,0,.28)
-}
+:root{color-scheme:dark;--bg:#050811;--bg2:#08111f;--surface:#0b1423;--surface2:#0e1b2f;--surface3:#111f35;--line:rgba(132,164,199,.18);--line2:rgba(64,201,255,.36);--text:#f4f8ff;--muted:#8fa4bb;--accent:#38bdf8;--accent2:#a78bfa;--good:#4ade80;--warn:#fbbf24;--bad:#fb7185;--shadow:0 18px 60px rgba(0,0,0,.3)}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{
- margin:0;min-height:100vh;color:var(--text);
- font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
- background:
- radial-gradient(circle at 8% 0%,rgba(56,189,248,.13),transparent 30rem),
- radial-gradient(circle at 92% 12%,rgba(167,139,250,.13),transparent 28rem),
- linear-gradient(180deg,#07101e 0%,#050914 55%,#03060d 100%);
-}
-body:before{content:"";position:fixed;inset:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);background-size:42px 42px;mask-image:linear-gradient(to bottom,black,transparent 80%);z-index:-1}
-a{color:#7dd3fc;text-decoration:none}a:hover{text-decoration:none;color:#c4f1ff}
-button,input,textarea,select{font:inherit}
-.wrap{max-width:1380px;margin:auto;padding:18px 22px 50px}
-.nav{
- display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:8px;
- background:rgba(7,15,28,.78);border:1px solid var(--line);border-radius:18px;
- margin-bottom:18px;position:sticky;top:10px;z-index:50;backdrop-filter:blur(18px);
- box-shadow:0 10px 35px rgba(0,0,0,.18)
-}
-.nav a{padding:9px 12px;border-radius:11px;color:#aebfd2;font-size:.9rem}
-.nav a:hover,.nav a.active{background:rgba(56,189,248,.12);color:#fff}
-.nav .brand{display:flex;align-items:center;gap:9px;margin-right:auto;font-weight:800;color:#fff;font-size:1rem}
-.brand-logo{width:34px;height:34px;border-radius:10px;object-fit:contain;background:#0d1728;border:1px solid rgba(56,189,248,.28);padding:4px}
-.hero{
- position:relative;overflow:hidden;display:grid;grid-template-columns:minmax(0,1.7fr) minmax(250px,.8fr);gap:22px;
- background:linear-gradient(135deg,rgba(15,35,61,.94),rgba(10,17,32,.88));
- border:1px solid rgba(100,180,230,.25);border-radius:28px;padding:30px;margin-bottom:18px;
- box-shadow:var(--shadow)
-}
-.hero:after{content:"";position:absolute;width:280px;height:280px;right:-100px;top:-120px;border-radius:50%;background:rgba(167,139,250,.16);filter:blur(12px)}
-.hero-brand{display:flex;gap:16px;align-items:center;position:relative;z-index:1}
-.hero-logo{width:72px;height:72px;border-radius:20px;object-fit:contain;background:rgba(4,10,20,.75);border:1px solid rgba(56,189,248,.35);padding:9px;box-shadow:0 0 40px rgba(56,189,248,.16)}
-.hero h1{margin:0 0 7px;font-size:clamp(2rem,4vw,3.2rem);letter-spacing:-.04em;background:linear-gradient(90deg,#fff,#9fe7ff 55%,#c4b5fd);-webkit-background-clip:text;color:transparent}
-.hero p{margin:0;color:var(--muted);max-width:760px;line-height:1.65}
-.hero-kicker{font-size:.76rem;letter-spacing:.14em;text-transform:uppercase;color:#7dd3fc;font-weight:800;margin-bottom:5px}
-.online{display:flex;align-items:center;justify-content:flex-end;gap:9px;position:relative;z-index:1}
-.status-card{padding:14px 16px;border:1px solid var(--line);border-radius:16px;background:rgba(3,9,18,.45);min-width:220px}
-.dot{width:9px;height:9px;border-radius:50%;background:#64748b;display:inline-block}.dot.on{background:var(--good);box-shadow:0 0 18px rgba(74,222,128,.7)}
-.grid{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:18px;align-items:start}
-.panel{
- background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:18px;margin-bottom:16px;
- box-shadow:0 12px 35px rgba(0,0,0,.14);backdrop-filter:blur(12px)
-}
-.panel h2,.panel h3{margin-top:0;letter-spacing:-.02em}.panel h2{font-size:1.15rem}.panel h3{font-size:1rem}
-.toolbar,.chips,.actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.toolbar{margin-bottom:12px}
-.btn{
- border:1px solid rgba(112,158,198,.3);background:linear-gradient(180deg,#142842,#0e1d31);color:#edf7ff;
- padding:9px 12px;border-radius:11px;cursor:pointer;transition:.18s transform,.18s border-color,.18s background
-}
-.btn:hover{transform:translateY(-1px);border-color:var(--line2);background:#183552}.btn.active{background:linear-gradient(135deg,#123e5d,#252052);border-color:#58c8f5}
-.btn.good{border-color:rgba(74,222,128,.35);background:linear-gradient(135deg,#123b2a,#103028)}.btn.danger{border-color:rgba(251,113,133,.35);background:#301824}
-.input,.select,textarea{width:100%;padding:11px 12px;border:1px solid rgba(93,137,175,.3);border-radius:12px;background:#07111e;color:#fff;outline:none}
-.input:focus,.select:focus,textarea:focus{border-color:#50c7f4;box-shadow:0 0 0 3px rgba(56,189,248,.08)}
-.composer{display:grid;gap:10px}.composer-row{display:grid;grid-template-columns:180px 1fr auto;gap:8px}
-.post{border:1px solid var(--line);background:linear-gradient(180deg,rgba(14,29,49,.94),rgba(8,17,29,.92));border-radius:18px;padding:16px;margin:12px 0;transition:.2s border-color,.2s transform}
-.post:hover{border-color:rgba(93,200,244,.32);transform:translateY(-1px)}
-.post-head{display:flex;justify-content:space-between;gap:12px}.who{display:flex;align-items:center;gap:11px}
-.avatar{width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,#163c5a,#29204e);border:1px solid #406786;display:grid;place-items:center;font-weight:850}
-.tag{font-size:.74rem;padding:5px 9px;border-radius:999px;border:1px solid rgba(91,173,218,.28);background:rgba(24,65,93,.35);color:#a8e7ff}
-.muted,.small{color:var(--muted)}.small{font-size:.86rem}.post-body{white-space:pre-wrap;line-height:1.65;margin:13px 0}
-.post-actions{display:flex;gap:7px;flex-wrap:wrap;border-top:1px solid rgba(83,126,163,.17);padding-top:11px}
-.like.liked{background:#17465a;border-color:#62d6ff}.comment-box{display:flex;gap:8px;margin-top:10px}.comment-box input{flex:1}
-.comment-list{display:grid;gap:7px;margin-top:9px}.comment{padding:9px 11px;border-radius:11px;background:#06101c;border:1px solid rgba(76,116,151,.2)}
-.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.kpi{padding:13px;border-radius:14px;background:rgba(5,14,25,.65);border:1px solid rgba(76,118,153,.22)}
-.kpi b{display:block;font-size:1.45rem;margin-top:2px}.progress{height:8px;background:#050d17;border-radius:999px;overflow:hidden}.progress>span{display:block;height:100%;background:linear-gradient(90deg,#38bdf8,#a78bfa);width:0;border-radius:999px}
-.spec-grid,.badge-grid,.mission-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:9px}
-.spec,.badge,.mission{padding:12px;border-radius:14px;background:rgba(5,14,25,.62);border:1px solid rgba(76,118,153,.22)}
-.spec strong,.badge strong,.mission strong{display:block}.locked{opacity:.5}.earned{border-color:rgba(74,222,128,.4);background:rgba(19,55,39,.32)}.difficulty{color:#f5d17a}
-.quiz-question{font-size:1.12rem;font-weight:750;line-height:1.55}.option{width:100%;text-align:left;margin-top:8px}.option.correct{border-color:#57d596;background:#14382a}.option.wrong{border-color:#e77676;background:#3a1a1f}
-.feedback{padding:12px;border-radius:12px;margin-top:10px}.feedback.ok{background:#123526;border:1px solid #3f7f61}.feedback.no{background:#351a20;border:1px solid #7b4b51}
-table{width:100%;border-collapse:collapse}th,td{padding:9px;text-align:left;border-bottom:1px solid rgba(75,116,150,.2)}.scroll{overflow:auto}
-.notice{padding:12px 13px;border-radius:12px;background:rgba(16,37,61,.75);border:1px solid rgba(86,138,180,.3)}.warning{background:rgba(61,48,16,.55);border-color:#7a6531;color:#f5dda0}
-.hidden{display:none!important}.center{text-align:center}
-.stat{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid rgba(76,118,153,.18)}
-.form{display:grid;gap:11px}.form label{display:grid;gap:6px;color:#c8d6e5}
-@media(max-width:900px){.grid{grid-template-columns:1fr}.hero{grid-template-columns:1fr}.online{justify-content:flex-start}}
-@media(max-width:650px){.wrap{padding:10px}.nav{position:static;border-radius:14px}.nav .brand{width:100%;margin-right:0}.hero{padding:22px;border-radius:22px}.hero-brand{align-items:flex-start}.hero-logo{width:58px;height:58px}.composer-row{grid-template-columns:1fr}.kpis{grid-template-columns:1fr}.panel{padding:14px}}
+body{margin:0;min-height:100vh;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text);background:radial-gradient(circle at 15% -5%,rgba(56,189,248,.14),transparent 30rem),radial-gradient(circle at 90% 10%,rgba(167,139,250,.13),transparent 28rem),linear-gradient(180deg,#07101c,#050811 58%,#03050a)}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.4;background-image:linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);background-size:44px 44px;mask-image:linear-gradient(to bottom,black,transparent 85%);z-index:-1}
+button,input,select,textarea{font:inherit}button{cursor:pointer}a{color:#8bdcff;text-decoration:none}
+.app-shell{max-width:1540px;margin:auto;padding:18px 18px 86px;display:grid;grid-template-columns:235px minmax(0,760px) 310px;gap:18px}
+.sidebar{position:sticky;top:14px;height:calc(100vh - 28px);display:flex;flex-direction:column;padding:12px;border:1px solid var(--line);border-radius:24px;background:rgba(7,14,26,.78);backdrop-filter:blur(20px);box-shadow:var(--shadow)}
+.brand{display:flex;align-items:center;gap:11px;padding:12px 10px 18px}
+.brand img{width:42px;height:42px;object-fit:contain;padding:5px;border-radius:13px;background:#0b1525;border:1px solid rgba(56,189,248,.35);box-shadow:0 0 26px rgba(56,189,248,.14)}
+.brand strong{display:block;font-size:1rem}.brand small{color:#7291ad}
+.side-label{padding:12px 10px 7px;color:#647a92;text-transform:uppercase;letter-spacing:.12em;font-size:.68rem;font-weight:800}
+.side-nav{display:grid;gap:5px}.side-btn{width:100%;border:1px solid transparent;background:transparent;color:#a7b9cb;text-align:left;padding:11px 12px;border-radius:12px;display:flex;gap:10px;align-items:center}.side-btn:hover,.side-btn.active{background:rgba(56,189,248,.1);border-color:rgba(56,189,248,.15);color:#fff}
+.side-bottom{margin-top:auto;display:grid;gap:8px}.mini-profile{padding:12px;border-radius:16px;background:linear-gradient(135deg,rgba(56,189,248,.09),rgba(167,139,250,.07));border:1px solid var(--line)}
+.main{min-width:0}
+.topbar{position:sticky;top:14px;z-index:45;display:flex;align-items:center;gap:10px;margin-bottom:14px;padding:10px;border:1px solid var(--line);border-radius:18px;background:rgba(7,14,26,.82);backdrop-filter:blur(18px);box-shadow:0 12px 32px rgba(0,0,0,.2)}
+.mobile-brand{display:none;align-items:center;gap:8px;font-weight:850}.mobile-brand img{width:34px;height:34px;padding:4px;border-radius:10px;background:#0b1525;border:1px solid rgba(56,189,248,.3)}
+.searchbox{display:flex;align-items:center;gap:9px;flex:1;min-width:0;padding:0 12px;border:1px solid var(--line);background:#07101d;border-radius:12px}.searchbox input{width:100%;border:0;outline:0;background:transparent;color:#fff;padding:10px 0}.top-action{border:1px solid var(--line);background:#0c1930;color:#dcecff;padding:10px 12px;border-radius:11px}.top-action:hover{border-color:var(--line2);background:#112742}
+.hero{margin-bottom:14px;border:1px solid rgba(94,185,237,.23);border-radius:24px;padding:22px 24px;background:linear-gradient(135deg,rgba(16,42,69,.9),rgba(11,18,33,.95));position:relative;overflow:hidden;box-shadow:var(--shadow)}
+.hero:after{content:"";position:absolute;right:-90px;top:-120px;width:300px;height:300px;border-radius:50%;background:rgba(167,139,250,.14);filter:blur(12px)}
+.hero-row{display:flex;align-items:center;justify-content:space-between;gap:18px;position:relative;z-index:1}.hero-id{display:flex;gap:14px;align-items:center}.hero-logo{width:58px;height:58px;padding:8px;border-radius:17px;object-fit:contain;background:#07101d;border:1px solid rgba(56,189,248,.33);box-shadow:0 0 32px rgba(56,189,248,.16)}
+.kicker{margin:0 0 4px;text-transform:uppercase;letter-spacing:.16em;color:#75d7ff;font-size:.66rem;font-weight:850}.hero h1{margin:0;letter-spacing:-.04em;font-size:clamp(1.8rem,4vw,2.65rem);background:linear-gradient(90deg,#fff,#9edfff 55%,#c8b7ff);-webkit-background-clip:text;color:transparent}.hero p{margin:5px 0 0;color:var(--muted);line-height:1.5}.platform-state{min-width:190px;padding:12px 14px;border-radius:15px;border:1px solid var(--line);background:rgba(3,8,16,.45)}.state-line{display:flex;align-items:center;gap:8px;margin-top:5px}.dot{width:9px;height:9px;border-radius:50%;background:#64748b}.dot.on{background:var(--good);box-shadow:0 0 18px rgba(74,222,128,.7)}
+.feed-switch{display:flex;gap:6px;overflow:auto;padding:4px;margin-bottom:10px}.feed-switch::-webkit-scrollbar{height:0}.feedBtn{flex:0 0 auto;border:1px solid var(--line);background:rgba(9,19,34,.82);color:#9fb3c7;padding:9px 13px;border-radius:11px}.feedBtn:hover,.feedBtn.active{color:#fff;border-color:rgba(56,189,248,.38);background:linear-gradient(135deg,rgba(30,78,111,.7),rgba(54,36,96,.68))}
+.panel{background:rgba(9,18,32,.84);border:1px solid var(--line);border-radius:20px;padding:16px;margin-bottom:14px;box-shadow:0 12px 38px rgba(0,0,0,.13);backdrop-filter:blur(15px)}
+.panel h2,.panel h3{margin-top:0}.panel h2{font-size:1.08rem;letter-spacing:-.02em}.panel h3{font-size:.98rem}
+.composer-head{display:flex;align-items:center;gap:11px;margin-bottom:12px}.user-avatar{width:42px;height:42px;display:grid;place-items:center;border-radius:14px;background:linear-gradient(135deg,#143d59,#2a2151);border:1px solid #396581;font-weight:850}.composer-title strong{display:block}.composer-title span{color:var(--muted);font-size:.82rem}
+.composer{display:grid;gap:10px}.composer textarea{min-height:105px;resize:vertical}.composer-tools{display:flex;gap:8px;align-items:center;justify-content:space-between}.composer-left{display:flex;gap:7px;flex-wrap:wrap}.tool-chip{padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:#091426;color:#a9bdd1;font-size:.83rem}.composer-row{display:grid;grid-template-columns:155px 1fr auto;gap:8px}
+.input,.select,textarea{width:100%;padding:11px 12px;border:1px solid rgba(103,144,180,.27);border-radius:12px;background:#06101c;color:#fff;outline:0}.input:focus,.select:focus,textarea:focus{border-color:#47c8f7;box-shadow:0 0 0 3px rgba(56,189,248,.08)}
+.btn{border:1px solid rgba(112,158,198,.28);background:linear-gradient(180deg,#132742,#0c1930);color:#eef7ff;padding:9px 12px;border-radius:11px;transition:.18s}.btn:hover{transform:translateY(-1px);border-color:var(--line2);background:#153352}.btn.good{border-color:rgba(74,222,128,.35);background:linear-gradient(135deg,#123a2a,#102d2e)}.btn.danger{border-color:rgba(251,113,133,.35);background:#2d1720}
+.post{border:1px solid var(--line);background:linear-gradient(180deg,rgba(13,27,47,.95),rgba(7,14,25,.94));border-radius:18px;padding:16px;margin:11px 0}.post:hover{border-color:rgba(83,197,246,.3)}
+.post-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.who{display:flex;align-items:center;gap:10px}.avatar{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;font-weight:850;background:linear-gradient(135deg,#143d59,#2a2151);border:1px solid #3b6882}.tag{font-size:.7rem;padding:5px 9px;border-radius:999px;border:1px solid rgba(91,173,218,.28);background:rgba(24,65,93,.34);color:#a9e7ff}
+.post-body{white-space:pre-wrap;line-height:1.65;margin:13px 0;color:#e9f2fb}.post-actions{display:flex;gap:7px;flex-wrap:wrap;border-top:1px solid rgba(83,126,163,.17);padding-top:11px}.like.liked{background:#17495c;border-color:#62d6ff}.comment-box{display:flex;gap:8px;margin-top:10px}.comment-box input{flex:1}.comment-list{display:grid;gap:7px;margin-top:9px}.comment{padding:9px 11px;border-radius:11px;background:#06101b;border:1px solid rgba(76,116,151,.2)}
+.rail{min-width:0}.rail-card{background:rgba(9,18,32,.84);border:1px solid var(--line);border-radius:20px;padding:15px;margin-bottom:14px;box-shadow:0 12px 38px rgba(0,0,0,.13)}.rail-card h3{margin:0 0 10px;font-size:.98rem}.rail-links{display:grid;gap:7px}.rail-link{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px;border-radius:12px;background:#081323;border:1px solid rgba(81,122,156,.18);color:#c1d1e1}.rail-link:hover{border-color:rgba(56,189,248,.3)}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.kpi{padding:12px;border-radius:14px;background:#06101c;border:1px solid rgba(76,118,153,.21)}.kpi b{display:block;font-size:1.38rem;margin-top:2px}.progress{height:8px;background:#040b14;border-radius:999px;overflow:hidden}.progress>span{display:block;height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,#38bdf8,#a78bfa)}
+.stat{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid rgba(76,118,153,.17)}.notice{padding:12px;border-radius:12px;background:rgba(16,37,61,.7);border:1px solid rgba(86,138,180,.28)}.warning{background:rgba(61,48,16,.55);border-color:#7a6531;color:#f5dda0}
+.spec-grid,.badge-grid,.mission-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:9px}.spec,.badge,.mission{padding:12px;border-radius:14px;background:rgba(5,14,25,.62);border:1px solid rgba(76,118,153,.22)}.spec strong,.badge strong,.mission strong{display:block}.locked{opacity:.5}.earned{border-color:rgba(74,222,128,.4);background:rgba(19,55,39,.32)}
+.quiz-question{font-size:1.1rem;font-weight:760;line-height:1.55}.option{width:100%;text-align:left;margin-top:8px}.option.correct{border-color:#57d596;background:#14382a}.option.wrong{border-color:#e77676;background:#3a1a1f}.feedback{padding:12px;border-radius:12px;margin-top:10px}.feedback.ok{background:#123526;border:1px solid #3f7f61}.feedback.no{background:#351a20;border:1px solid #7b4b51}
+.form{display:grid;gap:11px}.form label{display:grid;gap:6px;color:#c8d6e5}.small{font-size:.84rem;color:var(--muted)}.hidden{display:none!important}.center{text-align:center}
+.mobile-nav{display:none}
+@media(max-width:1150px){.app-shell{grid-template-columns:215px minmax(0,1fr)}.rail{display:none}}
+@media(max-width:760px){.app-shell{display:block;padding:8px 8px 76px}.sidebar{display:none}.topbar{top:8px}.mobile-brand{display:flex}.hero{padding:18px}.hero-row{align-items:flex-start}.platform-state{display:none}.composer-row{grid-template-columns:1fr}.composer-tools{align-items:flex-start;flex-direction:column}.kpis{grid-template-columns:1fr 1fr}.mobile-nav{position:fixed;display:grid;grid-template-columns:repeat(5,1fr);left:8px;right:8px;bottom:8px;z-index:80;padding:6px;border:1px solid var(--line);border-radius:16px;background:rgba(7,14,26,.9);backdrop-filter:blur(18px);box-shadow:0 18px 45px rgba(0,0,0,.35)}.mobile-nav button{border:0;background:transparent;color:#8fa4bb;padding:8px 4px;border-radius:10px;font-size:.72rem}.mobile-nav button:hover{background:rgba(56,189,248,.1);color:#fff}}
+@media(max-width:500px){.topbar{padding:7px}.top-action{padding:9px}.feed-switch{margin-bottom:6px}.panel{padding:13px;border-radius:17px}.hero-logo{width:50px;height:50px}.hero h1{font-size:1.8rem}.kpis{grid-template-columns:1fr}.post-actions .btn{font-size:.78rem;padding:8px 9px}}
 </style>
 </head>
 <body>
-<div class="wrap">
-<nav class="nav">
-<a class="brand" href="../"><img class="brand-logo" src="../../logo.png" alt="Logo Ethan GALEA">CyberLab</a>
-<a class="active" href="./">SocialNet</a>
-<a href="../collection/">Collection</a>
-<a href="../questionnaire/">Questionnaire</a>
-<a href="../account/">Connexion</a>
-<a href="../../">Portfolio</a>
-</nav>
+<div class="app-shell">
+<aside class="sidebar">
+  <div class="brand"><img src="../../logo.png" alt="Logo Ethan GALEA"><div><strong>SocialNet</strong><small>CyberLab Community</small></div></div>
+  <div class="side-label">Explorer</div>
+  <div class="side-nav">
+    <button class="side-btn active" onclick="document.querySelector('[data-feed=&quot;for-you&quot;]').click()">⌂ <span>Pour toi</span></button>
+    <button class="side-btn" onclick="document.querySelector('[data-feed=&quot;following&quot;]').click()">◉ <span>Abonnements</span></button>
+    <button class="side-btn" onclick="document.querySelector('[data-feed=&quot;cyber&quot;]').click()">◈ <span>Cyber</span></button>
+    <button class="side-btn" onclick="document.querySelector('[data-feed=&quot;challenges&quot;]').click()">◇ <span>Défis</span></button>
+    <button class="side-btn" onclick="document.querySelector('[data-feed=&quot;trending&quot;]').click()">↗ <span>Tendances</span></button>
+  </div>
+  <div class="side-label">Ton espace</div>
+  <div class="side-nav">
+    <button class="side-btn" onclick="document.getElementById('openProgress').click()">✦ <span>Progression</span></button>
+    <button class="side-btn" onclick="document.getElementById('openProfile').click()">◎ <span>Profil</span></button>
+    <button class="side-btn" onclick="document.getElementById('openModeration').click()">◉ <span>Modération</span></button>
+  </div>
+  <div class="side-bottom">
+    <a class="side-btn" href="../account/">⇥ <span>Connexion</span></a>
+    <div class="mini-profile"><strong>CyberLab</strong><div class="small" style="margin-top:4px">Apprendre · partager · progresser</div></div>
+  </div>
+</aside>
 
-<section class="hero">
-<div class="hero-brand">
-<img class="hero-logo" src="../../logo.png" alt="Logo Ethan GALEA">
-<div><div class="hero-kicker">CyberLab · Community</div><h1>SocialNet</h1><p>Le réseau social cyber du CyberLab : publier, apprendre, relever des défis, progresser et participer à une communauté modérée.</p></div>
-</div>
-<div class="online"><div class="status-card"><div class="small">État de la plateforme</div><div style="display:flex;align-items:center;gap:9px;margin-top:5px"><span class="dot" id="statusDot"></span><strong id="statusText">Mode local de secours</strong></div></div></div>
-</section>
+<main class="main">
+  <div class="topbar">
+    <a class="mobile-brand" href="../"><img src="../../logo.png" alt="Ethan GALEA"><span>SocialNet</span></a>
+    <div class="searchbox"><span>⌕</span><input id="search" placeholder="Rechercher une publication ou un sujet…"></div>
+    <button class="top-action" id="refreshBtn" title="Actualiser">↻</button>
+    <button class="top-action" onclick="document.getElementById('notifications').scrollIntoView({behavior:'smooth',block:'center'})" title="Notifications">♢</button>
+  </div>
 
-<div id="setupNotice" class="panel notice warning hidden"></div>
+  <section class="hero">
+    <div class="hero-row">
+      <div class="hero-id"><img class="hero-logo" src="../../logo.png" alt="Logo Ethan GALEA"><div><div class="kicker">CyberLab · réseau communautaire</div><h1>SocialNet</h1><p>Un espace pour partager, apprendre la cybersécurité et construire sa progression.</p></div></div>
+      <div class="platform-state"><div class="small">État de la plateforme</div><div class="state-line"><span class="dot" id="statusDot"></span><strong id="statusText">Mode local de secours</strong></div></div>
+    </div>
+  </section>
 
-<div class="grid">
-<main>
-<section class="panel">
-<div class="toolbar">
-<button class="btn active feedBtn" data-feed="for-you">🏠 Pour toi</button>
-<button class="btn feedBtn" data-feed="following">👥 Abonnements</button>
-<button class="btn feedBtn" data-feed="cyber">🛡️ Cyber</button>
-<button class="btn feedBtn" data-feed="challenges">🎯 Défis</button>
-<button class="btn feedBtn" data-feed="trending">🔥 Tendances</button>
-</div>
-<div class="toolbar">
-<input class="input" id="search" placeholder="Rechercher un utilisateur, un sujet ou un post…">
-<button class="btn" id="refreshBtn">Actualiser</button>
-</div>
-<div class="chips" id="customFeedChips"></div>
-</section>
+  <div id="setupNotice" class="panel notice warning hidden"></div>
 
-<section class="panel" id="composerPanel">
-<h2>Publier</h2>
-<div class="composer">
-<textarea id="postBody" maxlength="1200" rows="4" placeholder="Partage une idée, un apprentissage ou un conseil cyber…"></textarea>
-<div class="composer-row">
-<select id="postKind" class="select">
-<option value="text">📝 Post</option>
-<option value="quiz">🧠 Mini-questionnaire</option>
-<option value="challenge">🎯 Défi</option>
-<option value="poll">📊 Sondage</option>
-</select>
-<input id="postTag" class="input" maxlength="40" placeholder="#thème (optionnel)">
-<button class="btn good" id="publishBtn">Publier</button>
-</div>
-<div id="composerResult" class="small"></div>
-</div>
-</section>
+  <div class="feed-switch">
+    <button class="feedBtn active" data-feed="for-you">Pour toi</button>
+    <button class="feedBtn" data-feed="following">Abonnements</button>
+    <button class="feedBtn" data-feed="cyber">Cyber</button>
+    <button class="feedBtn" data-feed="challenges">Défis</button>
+    <button class="feedBtn" data-feed="trending">Tendances</button>
+  </div>
 
-<section class="panel">
-<h2 id="feedTitle">Fil « Pour toi »</h2>
-<div id="feed"></div>
-</section>
+  <section class="panel" id="composerPanel">
+    <div class="composer-head"><div class="user-avatar">E</div><div class="composer-title"><strong>Qu’est-ce que tu veux partager ?</strong><span>Une idée, une découverte ou un conseil cyber.</span></div></div>
+    <div class="composer">
+      <textarea id="postBody" maxlength="1200" rows="4" placeholder="Écris quelque chose…"></textarea>
+      <div class="composer-tools"><div class="composer-left"><span class="tool-chip">✦ Publication</span><span class="tool-chip">🛡️ Sécurité</span><span class="tool-chip">⚡ Progression</span></div><span class="small">1200 caractères max.</span></div>
+      <div class="composer-row">
+        <select id="postKind" class="select"><option value="text">📝 Post</option><option value="quiz">🧠 Mini-questionnaire</option><option value="challenge">🎯 Défi</option><option value="poll">📊 Sondage</option></select>
+        <input id="postTag" class="input" maxlength="40" placeholder="#thème (optionnel)">
+        <button class="btn good" id="publishBtn">Publier</button>
+      </div>
+      <div id="composerResult" class="small"></div>
+    </div>
+  </section>
 
-<section class="panel hidden" id="quizPanel">
-<div class="toolbar"><h2 style="margin-right:auto">🧠 Quiz adaptatif</h2><span id="quizMeta" class="tag"></span></div>
-<div id="quizBody"></div>
-</section>
+  <section class="panel">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><div><h2 id="feedTitle" style="margin-bottom:2px">Fil « Pour toi »</h2><div class="small">Les publications de la communauté apparaissent ici.</div></div><span class="tag">LIVE</span></div>
+    <div id="feed"></div>
+  </section>
 
-<section class="panel hidden" id="progressPanel">
-<h2>🏆 Progression</h2>
-<div class="kpis" id="progressKpis"></div>
-<div style="margin-top:14px"><strong>XP vers le prochain niveau</strong><div class="progress"><span id="xpBar"></span></div><p class="small" id="xpLabel"></p></div>
-<h3 style="margin-top:18px">Badges</h3><div class="badge-grid" id="badges"></div>
-<h3 style="margin-top:18px">Certifications internes</h3><div id="certificates"></div>
-<h3 style="margin-top:18px">Missions</h3><div class="mission-grid" id="missions"></div>
-<h3 style="margin-top:18px">63 spécialisations</h3><input id="specSearch" class="input" placeholder="Filtrer les spécialisations…"><div class="spec-grid" id="specs" style="margin-top:10px"></div>
-</section>
+  <section class="panel hidden" id="quizPanel">
+    <div style="display:flex;align-items:center;gap:10px"><h2 style="margin-right:auto">Quiz adaptatif</h2><span id="quizMeta" class="tag"></span></div>
+    <div id="quizBody"></div>
+  </section>
 
-<section class="panel hidden" id="profilePanel">
-<h2>👤 Mon profil</h2>
-<div id="profileForm"></div>
-</section>
+  <section class="panel hidden" id="progressPanel">
+    <h2>Progression</h2>
+    <div class="kpis" id="progressKpis"></div>
+    <div style="margin-top:14px"><strong>XP vers le prochain niveau</strong><div class="progress"><span id="xpBar"></span></div><p class="small" id="xpLabel"></p></div>
+    <h3 style="margin-top:18px">Badges</h3><div class="badge-grid" id="badges"></div>
+    <h3 style="margin-top:18px">Certifications internes</h3><div id="certificates"></div>
+    <h3 style="margin-top:18px">Missions</h3><div class="mission-grid" id="missions"></div>
+    <h3 style="margin-top:18px">63 spécialisations</h3><input id="specSearch" class="input" placeholder="Filtrer les spécialisations…"><div class="spec-grid" id="specs" style="margin-top:10px"></div>
+  </section>
 
-<section class="panel hidden" id="moderationPanel">
-<h2>🛡️ Centre de modération</h2>
-<div id="moderationContent"></div>
-</section>
+  <section class="panel hidden" id="profilePanel">
+    <h2>Profil</h2><div id="profileForm"></div>
+  </section>
+
+  <section class="panel hidden" id="moderationPanel">
+    <h2>Centre de modération</h2><div id="moderationContent"></div>
+  </section>
 </main>
 
-<aside>
-<section class="panel">
-<h3>⚡ Ton tableau de bord</h3>
-<div class="kpis"><div class="kpi"><span class="small">XP</span><b id="xp">0</b></div><div class="kpi"><span class="small">Niveau</span><b id="level">1</b></div><div class="kpi"><span class="small">Grade</span><b id="rank">Novice</b></div></div>
-<p class="small" id="userSummary">Connecte-toi pour avoir un profil persistant.</p>
-<div class="actions"><button class="btn" id="openProgress">Progression</button><button class="btn" id="openProfile">Profil</button><button class="btn" id="openModeration">Modération</button></div>
-</section>
-
-<section class="panel">
-<h3>🔔 Notifications</h3>
-<div id="notifications" class="small">Aucune notification locale.</div>
-</section>
-
-<section class="panel">
-<h3>📊 Classement</h3>
-<div id="leaderboard"></div>
-</section>
-
-<section class="panel">
-<h3>🛡️ Sécurité</h3>
-<p class="small">Tu peux choisir tes fils, bloquer un compte, signaler un contenu et configurer ton profil en privé. Les décisions de modération sont journalisées côté serveur lorsque SocialNet est configuré.</p>
-</section>
+<aside class="rail">
+  <section class="rail-card">
+    <h3>Ton tableau de bord</h3>
+    <div class="kpis"><div class="kpi"><span class="small">XP</span><b id="xp">0</b></div><div class="kpi"><span class="small">Niveau</span><b id="level">1</b></div><div class="kpi"><span class="small">Grade</span><b id="rank">Novice</b></div></div>
+    <p class="small" id="userSummary">Connecte-toi pour avoir un profil persistant.</p>
+    <div class="actions" style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn" id="openProgress">Progression</button><button class="btn" id="openProfile">Profil</button><button class="btn" id="openModeration">Modération</button></div>
+  </section>
+  <section class="rail-card">
+    <h3>Notifications</h3>
+    <div id="notifications" class="small">Aucune notification locale.</div>
+  </section>
+  <section class="rail-card">
+    <h3>Classement</h3>
+    <div id="leaderboard"></div>
+  </section>
+  <section class="rail-card">
+    <h3>Accès rapides</h3>
+    <div class="rail-links">
+      <a class="rail-link" href="../questionnaire/"><span>Questionnaire</span><span>›</span></a>
+      <a class="rail-link" href="../collection/"><span>Collection</span><span>›</span></a>
+      <a class="rail-link" href="../account/"><span>Connexion</span><span>›</span></a>
+    </div>
+  </section>
+  <section class="rail-card">
+    <h3>Sécurité</h3>
+    <p class="small">Profils privés, blocage, signalement et modération peuvent être gérés côté serveur lorsque SocialNet est configuré.</p>
+  </section>
 </aside>
 </div>
-</div>
 
+<nav class="mobile-nav">
+  <button onclick="document.querySelector('[data-feed=&quot;for-you&quot;]').click()">⌂<br>Accueil</button>
+  <button onclick="document.querySelector('[data-feed=&quot;trending&quot;]').click()">↗<br>Tendances</button>
+  <button onclick="document.getElementById('composerPanel').scrollIntoView({behavior:'smooth',block:'center'})">＋<br>Publier</button>
+  <button onclick="document.getElementById('openProgress').click()">✦<br>XP</button>
+  <button onclick="document.getElementById('openProfile').click()">◎<br>Profil</button>
+</nav>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const SPEC_BASE=[
@@ -506,5 +483,4 @@ renderStats();
 init();
 window.startQuiz=startQuiz;window.answerQuiz=answerQuiz;window.nextQuiz=nextQuiz;window.toggleLike=toggleLike;window.addComment=addComment;window.focusComment=focusComment;window.followUser=followUser;window.reportPost=reportPost;window.blockUser=blockUser;window.saveProfile=saveProfile;window.resolveReport=resolveReport;window.hideReportedPost=hideReportedPost;
 </script>
-</body>
-</html>
+</body></html>

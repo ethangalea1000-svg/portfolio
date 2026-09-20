@@ -53,7 +53,7 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}a{color:#8bdcff;
 @media(max-width:500px){.topbar{padding:7px}.top-action{padding:9px}.feed-switch{margin-bottom:6px}.panel{padding:13px;border-radius:17px}.hero-logo{width:50px;height:50px}.hero h1{font-size:1.8rem}.kpis{grid-template-columns:1fr}.post-actions .btn{font-size:.78rem;padding:8px 9px}}
 </style>
 <link rel="stylesheet" href="../ui.css">
-</head>
+<style id="cyberlab-footer-style">.cyberlab-footer{max-width:1180px;margin:38px auto 20px;padding:16px 18px;display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap;border:1px solid rgba(132,164,199,.18);border-radius:18px;background:rgba(7,14,26,.76);box-shadow:0 14px 35px rgba(0,0,0,.18);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}.cyberlab-footer-brand{display:flex;align-items:center;gap:10px}.cyberlab-footer-brand img{width:38px;height:38px;object-fit:contain;padding:4px;border-radius:11px;background:#0b1525;border:1px solid rgba(56,189,248,.28)}.cyberlab-footer-brand strong,.cyberlab-footer-brand span{display:block}.cyberlab-footer-brand span{font-size:.78rem;color:#7890a8;margin-top:2px}.cyberlab-footer-links{display:flex;gap:7px;flex-wrap:wrap}.cyberlab-footer-links a{padding:8px 10px;border-radius:10px;color:#9fb3c7;text-decoration:none;border:1px solid transparent}.cyberlab-footer-links a:hover{color:#fff;background:rgba(56,189,248,.08);border-color:rgba(56,189,248,.15)}@media(max-width:650px){.cyberlab-footer{align-items:flex-start}.cyberlab-footer-links{width:100%}.cyberlab-footer-links a{font-size:.82rem}}</style></head>
 <body>
 <div class="app-shell">
 <aside class="sidebar">
@@ -73,7 +73,7 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}a{color:#8bdcff;
     <button class="side-btn" onclick="document.getElementById('openModeration').click()">◉ <span>Modération</span></button>
   </div>
   <div class="side-bottom">
-    <a class="side-btn" href="../account/">⇥ <span>Connexion</span></a>
+    <div class="side-btn" style="cursor:default;opacity:.7">⇥ <span>Connexion</span></div>
     <div class="mini-profile"><strong>CyberLab</strong><div class="small" style="margin-top:4px">Apprendre · partager · progresser</div></div>
   </div>
 </aside>
@@ -161,14 +161,7 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}a{color:#8bdcff;
     <h3>Classement</h3>
     <div id="leaderboard"></div>
   </section>
-  <section class="rail-card">
-    <h3>Accès rapides</h3>
-    <div class="rail-links">
-      <a class="rail-link" href="../questionnaire/"><span>Questionnaire</span><span>›</span></a>
-      <a class="rail-link" href="../collection/"><span>Collection</span><span>›</span></a>
-      <a class="rail-link" href="../account/"><span>Connexion</span><span>›</span></a>
-    </div>
-  </section>
+  
   <section class="rail-card">
     <h3>Sécurité</h3>
     <p class="small">Profils privés, blocage, signalement et modération peuvent être gérés côté serveur lorsque SocialNet est configuré.</p>

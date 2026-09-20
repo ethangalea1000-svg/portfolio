@@ -83,65 +83,138 @@
     transition: background 1.2s ease;
   }
 
-  /* ===== THÈME GLOBAL DYNAMIQUE ===== */
+  /* ===== THÈMES D'AMBIANCE ===== */
   body[data-mood="positive"] {
-    --bg: #061814;
-    --bg2: #08251f;
-    --bg3: #07352c;
-    --bg4: #062f35;
-    --card: #0d2b24;
-    --card2: #0a211c;
-    --text: #ecfdf5;
-    --muted: #a7f3d0;
-    --accent: #34d399;
-    --accent2: #22d3ee;
-    --accent-soft: rgba(52, 211, 153, 0.12);
-    --border: rgba(110, 231, 183, 0.20);
-    --mood-a: rgba(52, 211, 153, 0.22);
-    --mood-b: rgba(34, 211, 238, 0.14);
-    --mood-glow: rgba(52, 211, 153, 0.30);
-    --orb-a: rgba(52, 211, 153, 0.30);
-    --orb-b: rgba(34, 211, 238, 0.24);
+    --bg:#061814; --bg2:#08251f; --bg3:#07352c; --bg4:#062f35;
+    --card:#0d2b24; --card2:#0a211c; --text:#ecfdf5; --muted:#a7f3d0;
+    --accent:#34d399; --accent2:#22d3ee; --accent-soft:rgba(52,211,153,.12); --border:rgba(110,231,183,.20);
+    --mood-a:rgba(52,211,153,.22); --mood-b:rgba(34,211,238,.14); --mood-glow:rgba(52,211,153,.30); --orb-a:rgba(52,211,153,.30); --orb-b:rgba(34,211,238,.24);
   }
 
   body[data-mood="neutral"] {
-    --bg: #0b1020;
-    --bg2: #0f172a;
-    --bg3: #111a33;
-    --bg4: #1e1b4b;
-    --card: #162033;
-    --card2: #101827;
-    --text: #e2e8f0;
-    --muted: #94a3b8;
-    --accent: #38bdf8;
-    --accent2: #a78bfa;
-    --accent-soft: rgba(56, 189, 248, 0.10);
-    --border: rgba(148, 163, 184, 0.16);
-    --mood-a: rgba(56, 189, 248, 0.12);
-    --mood-b: rgba(167, 139, 250, 0.10);
-    --mood-glow: rgba(56, 189, 248, 0.18);
-    --orb-a: rgba(56, 189, 248, 0.32);
-    --orb-b: rgba(167, 139, 250, 0.28);
+    --bg:#0b1020; --bg2:#0f172a; --bg3:#111a33; --bg4:#1e1b4b;
+    --card:#162033; --card2:#101827; --text:#e2e8f0; --muted:#94a3b8;
+    --accent:#38bdf8; --accent2:#a78bfa; --accent-soft:rgba(56,189,248,.10); --border:rgba(148,163,184,.16);
+    --mood-a:rgba(56,189,248,.12); --mood-b:rgba(167,139,250,.10); --mood-glow:rgba(56,189,248,.18); --orb-a:rgba(56,189,248,.32); --orb-b:rgba(167,139,250,.28);
   }
 
-  body[data-mood="negative"] {
-    --bg: #1a0a12;
-    --bg2: #24101a;
-    --bg3: #35131d;
-    --bg4: #29152d;
-    --card: #321622;
-    --card2: #241119;
-    --text: #fff1f2;
-    --muted: #fecdd3;
-    --accent: #fb7185;
-    --accent2: #f59e0b;
-    --accent-soft: rgba(251, 113, 133, 0.11);
-    --border: rgba(251, 113, 133, 0.20);
-    --mood-a: rgba(251, 113, 133, 0.23);
-    --mood-b: rgba(245, 158, 11, 0.12);
-    --mood-glow: rgba(251, 113, 133, 0.30);
-    --orb-a: rgba(251, 113, 133, 0.27);
-    --orb-b: rgba(245, 158, 11, 0.22);
+  body[data-mood="joy"] {
+    --bg:#201a05; --bg2:#2b2306; --bg3:#3b2e08; --bg4:#26340a;
+    --card:#352b08; --card2:#221d05; --text:#fffbea; --muted:#fde68a;
+    --accent:#facc15; --accent2:#84cc16; --accent-soft:rgba(250,204,21,.12); --border:rgba(250,204,21,.24);
+    --mood-a:rgba(250,204,21,.20); --mood-b:rgba(132,204,22,.13); --mood-glow:rgba(250,204,21,.30); --orb-a:rgba(250,204,21,.30); --orb-b:rgba(132,204,22,.23);
+  }
+
+  body[data-mood="love"] {
+    --bg:#200914; --bg2:#2a0b1c; --bg3:#3a0d26; --bg4:#28113b;
+    --card:#351126; --card2:#241020; --text:#fff1f2; --muted:#fbcfe8;
+    --accent:#f472b6; --accent2:#c084fc; --accent-soft:rgba(244,114,182,.12); --border:rgba(244,114,182,.22);
+    --mood-a:rgba(244,114,182,.22); --mood-b:rgba(192,132,252,.14); --mood-glow:rgba(244,114,182,.30); --orb-a:rgba(244,114,182,.30); --orb-b:rgba(192,132,252,.24);
+  }
+
+  body[data-mood="excitement"] {
+    --bg:#241006; --bg2:#361407; --bg3:#4a1b08; --bg4:#132b36;
+    --card:#3a180b; --card2:#281107; --text:#fff7ed; --muted:#fdba74;
+    --accent:#fb923c; --accent2:#22d3ee; --accent-soft:rgba(251,146,60,.12); --border:rgba(251,146,60,.22);
+    --mood-a:rgba(251,146,60,.22); --mood-b:rgba(34,211,238,.14); --mood-glow:rgba(251,146,60,.30); --orb-a:rgba(251,146,60,.30); --orb-b:rgba(34,211,238,.24);
+  }
+
+  body[data-mood="admiration"] {
+    --bg:#150d25; --bg2:#211039; --bg3:#2e1450; --bg4:#18224a;
+    --card:#26153d; --card2:#19102a; --text:#f5f3ff; --muted:#ddd6fe;
+    --accent:#a78bfa; --accent2:#c4b5fd; --accent-soft:rgba(167,139,250,.12); --border:rgba(167,139,250,.22);
+    --mood-a:rgba(167,139,250,.22); --mood-b:rgba(196,181,253,.14); --mood-glow:rgba(167,139,250,.30); --orb-a:rgba(167,139,250,.30); --orb-b:rgba(196,181,253,.24);
+  }
+
+  body[data-mood="gratitude"] {
+    --bg:#061d1a; --bg2:#082b28; --bg3:#0b3b36; --bg4:#082c35;
+    --card:#0d312c; --card2:#0a241f; --text:#ecfeff; --muted:#99f6e4;
+    --accent:#2dd4bf; --accent2:#22d3ee; --accent-soft:rgba(45,212,191,.12); --border:rgba(45,212,191,.22);
+    --mood-a:rgba(45,212,191,.22); --mood-b:rgba(34,211,238,.14); --mood-glow:rgba(45,212,191,.30); --orb-a:rgba(45,212,191,.30); --orb-b:rgba(34,211,238,.24);
+  }
+
+  body[data-mood="optimism"] {
+    --bg:#111b05; --bg2:#182508; --bg3:#22330a; --bg4:#13311b;
+    --card:#23330d; --card2:#19260a; --text:#f7fee7; --muted:#bef264;
+    --accent:#a3e635; --accent2:#22c55e; --accent-soft:rgba(163,230,53,.12); --border:rgba(163,230,53,.22);
+    --mood-a:rgba(163,230,53,.20); --mood-b:rgba(34,197,94,.14); --mood-glow:rgba(163,230,53,.30); --orb-a:rgba(163,230,53,.30); --orb-b:rgba(34,197,94,.24);
+  }
+
+  body[data-mood="relief"] {
+    --bg:#06161d; --bg2:#08252e; --bg3:#0a3440; --bg4:#092e3a;
+    --card:#0d2c35; --card2:#0a2028; --text:#ecfeff; --muted:#a5f3fc;
+    --accent:#22d3ee; --accent2:#38bdf8; --accent-soft:rgba(34,211,238,.12); --border:rgba(34,211,238,.22);
+    --mood-a:rgba(34,211,238,.22); --mood-b:rgba(56,189,248,.14); --mood-glow:rgba(34,211,238,.30); --orb-a:rgba(34,211,238,.30); --orb-b:rgba(56,189,248,.24);
+  }
+
+  body[data-mood="sadness"] {
+    --bg:#0b1025; --bg2:#11183a; --bg3:#17224d; --bg4:#181433;
+    --card:#17213a; --card2:#10182a; --text:#e0e7ff; --muted:#a5b4fc;
+    --accent:#818cf8; --accent2:#6366f1; --accent-soft:rgba(129,140,248,.11); --border:rgba(129,140,248,.22);
+    --mood-a:rgba(129,140,248,.22); --mood-b:rgba(99,102,241,.14); --mood-glow:rgba(129,140,248,.30); --orb-a:rgba(129,140,248,.30); --orb-b:rgba(99,102,241,.24);
+  }
+
+  body[data-mood="jealousy"] {
+    --bg:#07170d; --bg2:#0a2314; --bg3:#0b311b; --bg4:#10261d;
+    --card:#102c1a; --card2:#0b1f12; --text:#ecfdf5; --muted:#bbf7d0;
+    --accent:#22c55e; --accent2:#84cc16; --accent-soft:rgba(34,197,94,.11); --border:rgba(34,197,94,.22);
+    --mood-a:rgba(34,197,94,.22); --mood-b:rgba(132,204,22,.14); --mood-glow:rgba(34,197,94,.30); --orb-a:rgba(34,197,94,.30); --orb-b:rgba(132,204,22,.24);
+  }
+
+  body[data-mood="anger"] {
+    --bg:#210709; --bg2:#30090e; --bg3:#480d13; --bg4:#2d0b1f;
+    --card:#3c1017; --card2:#28090e; --text:#fff1f2; --muted:#fecaca;
+    --accent:#ef4444; --accent2:#f97316; --accent-soft:rgba(239,68,68,.12); --border:rgba(239,68,68,.24);
+    --mood-a:rgba(239,68,68,.22); --mood-b:rgba(249,115,22,.14); --mood-glow:rgba(239,68,68,.32); --orb-a:rgba(239,68,68,.32); --orb-b:rgba(249,115,22,.24);
+  }
+
+  body[data-mood="fear"] {
+    --bg:#100b1f; --bg2:#18102f; --bg3:#241742; --bg4:#161f3a;
+    --card:#211735; --card2:#130f26; --text:#f5f3ff; --muted:#ddd6fe;
+    --accent:#8b5cf6; --accent2:#6366f1; --accent-soft:rgba(139,92,246,.12); --border:rgba(139,92,246,.22);
+    --mood-a:rgba(139,92,246,.22); --mood-b:rgba(99,102,241,.14); --mood-glow:rgba(139,92,246,.30); --orb-a:rgba(139,92,246,.30); --orb-b:rgba(99,102,241,.24);
+  }
+
+  body[data-mood="disgust"] {
+    --bg:#11140a; --bg2:#1b200b; --bg3:#272c0d; --bg4:#253016;
+    --card:#25280f; --card2:#191c0b; --text:#f7fee7; --muted:#bef264;
+    --accent:#a3a91f; --accent2:#84cc16; --accent-soft:rgba(163,169,31,.11); --border:rgba(163,169,31,.22);
+    --mood-a:rgba(163,169,31,.22); --mood-b:rgba(132,204,22,.14); --mood-glow:rgba(163,169,31,.30); --orb-a:rgba(163,169,31,.30); --orb-b:rgba(132,204,22,.24);
+  }
+
+  body[data-mood="frustration"] {
+    --bg:#1f1005; --bg2:#301806; --bg3:#451f08; --bg4:#38210b;
+    --card:#35170a; --card2:#251107; --text:#fff7ed; --muted:#fed7aa;
+    --accent:#f97316; --accent2:#ef4444; --accent-soft:rgba(249,115,22,.12); --border:rgba(249,115,22,.22);
+    --mood-a:rgba(249,115,22,.22); --mood-b:rgba(239,68,68,.14); --mood-glow:rgba(249,115,22,.30); --orb-a:rgba(249,115,22,.30); --orb-b:rgba(239,68,68,.24);
+  }
+
+  body[data-mood="confusion"] {
+    --bg:#11101b; --bg2:#18172a; --bg3:#211e36; --bg4:#231b3a;
+    --card:#211d31; --card2:#171522; --text:#f5f3ff; --muted:#c4b5fd;
+    --accent:#a78bfa; --accent2:#60a5fa; --accent-soft:rgba(167,139,250,.11); --border:rgba(167,139,250,.22);
+    --mood-a:rgba(167,139,250,.22); --mood-b:rgba(96,165,250,.14); --mood-glow:rgba(167,139,250,.30); --orb-a:rgba(167,139,250,.30); --orb-b:rgba(96,165,250,.24);
+  }
+
+  body[data-mood="boredom"] {
+    --bg:#11151b; --bg2:#182027; --bg3:#202a33; --bg4:#20242d;
+    --card:#202932; --card2:#181d23; --text:#f1f5f9; --muted:#cbd5e1;
+    --accent:#94a3b8; --accent2:#64748b; --accent-soft:rgba(148,163,184,.10); --border:rgba(148,163,184,.18);
+    --mood-a:rgba(148,163,184,.18); --mood-b:rgba(100,116,139,.12); --mood-glow:rgba(148,163,184,.25); --orb-a:rgba(148,163,184,.25); --orb-b:rgba(100,116,139,.20);
+  }
+
+  body[data-mood="disappointment"] {
+    --bg:#1a0d16; --bg2:#281321; --bg3:#351a2b; --bg4:#25152e;
+    --card:#311827; --card2:#21101b; --text:#fce7f3; --muted:#f5b4d8;
+    --accent:#e879a8; --accent2:#a78bfa; --accent-soft:rgba(232,121,168,.11); --border:rgba(232,121,168,.21);
+    --mood-a:rgba(232,121,168,.21); --mood-b:rgba(167,139,250,.13); --mood-glow:rgba(232,121,168,.29); --orb-a:rgba(232,121,168,.29); --orb-b:rgba(167,139,250,.23);
+  }
+
+  body[data-mood="surprise"] {
+    --bg:#06151a; --bg2:#08242d; --bg3:#0b3440; --bg4:#10213d;
+    --card:#0b2f38; --card2:#081d25; --text:#ecfeff; --muted:#a5f3fc;
+    --accent:#06b6d4; --accent2:#38bdf8; --accent-soft:rgba(6,182,212,.12); --border:rgba(6,182,212,.22);
+    --mood-a:rgba(6,182,212,.22); --mood-b:rgba(56,189,248,.14); --mood-glow:rgba(6,182,212,.30); --orb-a:rgba(6,182,212,.30); --orb-b:rgba(56,189,248,.24);
   }
 
   body[data-mood] .card,
@@ -152,12 +225,9 @@
   body[data-mood] .comments-shell,
   body[data-mood] .contact-links a,
   body[data-mood] .contact-email {
-    transition:
-      background 1.2s ease,
-      border-color 1s ease,
-      color 0.9s ease,
-      box-shadow 1s ease;
+    transition: background 1.2s ease, border-color 1s ease, color 0.9s ease, box-shadow 1s ease;
   }
+
 
   .page-effects {
     position: fixed;
@@ -1683,6 +1753,23 @@
         const labels = {
           positive: 'Ambiance positive',
           neutral: 'Ambiance neutre',
+          joy: 'Ambiance joyeuse',
+          love: 'Ambiance affectueuse',
+          excitement: 'Ambiance enthousiaste',
+          admiration: 'Ambiance admirative',
+          gratitude: 'Ambiance reconnaissante',
+          optimism: 'Ambiance optimiste',
+          relief: 'Ambiance soulagée',
+          sadness: 'Ambiance triste',
+          jealousy: 'Ambiance jalouse',
+          anger: 'Ambiance en colère',
+          fear: 'Ambiance anxieuse',
+          disgust: 'Ambiance dégoûtée',
+          frustration: 'Ambiance frustrée',
+          confusion: 'Ambiance confuse',
+          boredom: 'Ambiance ennuyée',
+          disappointment: 'Ambiance déçue',
+          surprise: 'Ambiance surprise',
           negative: 'Ambiance critique'
         };
         label.textContent = labels[result.mood];
@@ -1724,11 +1811,12 @@
           ' analysé' + (result.analyzed > 1 ? 's' : '') +
           ' · émotion dominante : ' + emotion +
           ' · confiance : ' + Math.round(result.confidence * 100) + '%' +
+          ' · ambiance : ' + (labels[result.mood] || result.mood) +
           ' · ' + sourceLabel + sizeLabel + '.';
 
         badge.textContent = result.lexiconSource === 'ready'
-          ? 'Analyse locale · FEEL + contexte + négation'
-          : 'Analyse locale · moteur de secours';
+          ? 'Analyse locale · FEEL + contexte + négation · thème ' + emotion
+          : 'Analyse locale · moteur de secours · thème ' + emotion;
       } catch (error) {
         document.body.dataset.mood = 'neutral';
         dot.className = 'mood-dot neutral';

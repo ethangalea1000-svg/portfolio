@@ -1623,12 +1623,16 @@
         .replace(/[\\u0300-\\u036f]/g,'')
         .trim();
 
-      const tokens = new Set(normalized.split(/\\s+/).filter(Boolean));
+      const hasWord = word =>
+        normalized === word ||
+        normalized.startsWith(word + ' ') ||
+        normalized.endsWith(' ' + word) ||
+        normalized.includes(' ' + word + ' ');
 
       const strongNegative =
-        tokens.has('nul') ||
-        tokens.has('nulle') ||
-        tokens.has('zero') ||
+        hasWord('nul') ||
+        hasWord('nulle') ||
+        hasWord('zero') ||
         normalized.includes('catastrophique') ||
         normalized.includes('horrible') ||
         normalized.includes('deteste') ||
@@ -1636,13 +1640,13 @@
         normalized.includes('vraiment mauvais');
 
       const strongPositive =
-        tokens.has('genial') ||
-        tokens.has('excellent') ||
-        tokens.has('parfait') ||
+        hasWord('genial') ||
+        hasWord('excellent') ||
+        hasWord('parfait') ||
         normalized.includes('incroyable') ||
         normalized.includes('magnifique') ||
         normalized.includes("j'adore") ||
-        tokens.has('adore') ||
+        hasWord('adore') ||
         normalized.includes('extraordinaire');
 
       if (strongNegative) return -1;

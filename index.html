@@ -1349,8 +1349,8 @@
                 <span class="mood-dot neutral" id="mood-dot"></span>
                 <span class="mood-label" id="mood-label">Ambiance neutre</span>
               </div>
-              <div class="mood-detail" id="mood-detail">Analyse locale du texte et du contexte…</div>
-              <span class="mood-ai-badge" id="mood-ai-badge">Analyse locale · lexique prêt…</span>
+              <div class="mood-detail" id="mood-detail">Analyse locale · chargement du lexique FEEL…</div>
+              <span class="mood-ai-badge" id="mood-ai-badge">Analyse locale · chargement du lexique FEEL…</span>
             </div>
 
             <p class="comments-login-note">
@@ -1563,7 +1563,7 @@
       }
     }
 
-    function applyMood(comments) {
+    async function applyMood(comments) {
       const label = document.getElementById('mood-label');
       const detail = document.getElementById('mood-detail');
       const dot = document.getElementById('mood-dot');
@@ -1578,49 +1578,73 @@
         return;
       }
 
-      const result = window.EmotionLexicon.analyzeMany(comments);
+      try {
+        badge.textContent = 'Analyse locale · chargement du lexique FEEL…';
+        if (window.EmotionLexicon?.ready) {
+          await window.EmotionLexicon.ready;
+        }
 
-      document.body.dataset.mood = result.mood;
-      dot.className = 'mood-dot ' + result.mood;
+        const result = window.EmotionLexicon.analyzeMany(comments);
 
-      const labels = {
-        positive: 'Ambiance positive',
-        neutral: 'Ambiance neutre',
-        negative: 'Ambiance critique'
-      };
-      label.textContent = labels[result.mood];
+        document.body.dataset.mood = result.mood;
+        dot.className = 'mood-dot ' + result.mood;
 
-      const emotionNames = {
-        joy: 'Joie',
-        admiration: 'Admiration',
-        gratitude: 'Gratitude',
-        amusement: 'Amusement',
-        love: 'Affection',
-        excitement: 'Enthousiasme',
-        optimism: 'Optimisme',
-        relief: 'Soulagement',
-        anger: 'Colère',
-        sadness: 'Tristesse',
-        disappointment: 'Déception',
-        fear: 'Peur',
-        disgust: 'Dégoût',
-        frustration: 'Frustration',
-        confusion: 'Confusion',
-        boredom: 'Ennui',
-        positive: 'Positif',
-        negative: 'Négatif',
-        neutral: 'Neutre'
-      };
+        const labels = {
+          positive: 'Ambiance positive',
+          neutral: 'Ambiance neutre',
+          negative: 'Ambiance critique'
+        };
+        label.textContent = labels[result.mood];
 
-      const emotion = emotionNames[result.dominantEmotion] || result.dominantEmotion;
+        const emotionNames = {
+          joy: 'Joie',
+          admiration: 'Admiration',
+          gratitude: 'Gratitude',
+          amusement: 'Amusement',
+          love: 'Affection',
+          excitement: 'Enthousiasme',
+          optimism: 'Optimisme',
+          relief: 'Soulagement',
+          anger: 'Colère',
+          sadness: 'Tristesse',
+          disappointment: 'Déception',
+          fear: 'Peur',
+          disgust: 'Dégoût',
+          frustration: 'Frustration',
+          confusion: 'Confusion',
+          boredom: 'Ennui',
+          surprise: 'Surprise',
+          positive: 'Positif',
+          negative: 'Négatif',
+          neutral: 'Neutre'
+        };
 
-      detail.textContent =
-        result.analyzed + ' commentaire' + (result.analyzed > 1 ? 's' : '') +
-        ' analysé' + (result.analyzed > 1 ? 's' : '') +
-        ' · émotion dominante : ' + emotion +
-        ' · confiance : ' + Math.round(result.confidence * 100) + '%.';
+        const emotion = emotionNames[result.dominantEmotion] || result.dominantEmotion;
+        const sourceLabel = result.lexiconSource === 'ready'
+          ? 'FEEL + règles locales'
+          : 'règles locales de secours';
 
-      badge.textContent = 'Analyse locale · lexique + contexte + négation';
+        const sizeLabel = result.lexiconSize > 0
+          ? ' · ' + result.lexiconSize.toLocaleString('fr-FR') + ' entrées FEEL'
+          : '';
+
+        detail.textContent =
+          result.analyzed + ' commentaire' + (result.analyzed > 1 ? 's' : '') +
+          ' analysé' + (result.analyzed > 1 ? 's' : '') +
+          ' · émotion dominante : ' + emotion +
+          ' · confiance : ' + Math.round(result.confidence * 100) + '%' +
+          ' · ' + sourceLabel + sizeLabel + '.';
+
+        badge.textContent = result.lexiconSource === 'ready'
+          ? 'Analyse locale · FEEL + contexte + négation'
+          : 'Analyse locale · moteur de secours';
+      } catch (error) {
+        document.body.dataset.mood = 'neutral';
+        dot.className = 'mood-dot neutral';
+        label.textContent = 'Ambiance neutre';
+        detail.textContent = 'Analyse locale indisponible pour le moment.';
+        badge.textContent = 'Analyse locale · secours';
+      }
     }
 
     async function loadSharedComments() {

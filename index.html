@@ -142,6 +142,170 @@
   }
 
 
+
+  /* ===== COMMENTAIRES ===== */
+  .comments-shell {
+    position: relative;
+    overflow: hidden;
+    margin-top: 1.25rem;
+    padding: 1.25rem;
+    border-radius: 1.5rem;
+    border: 1px solid rgba(167, 139, 250, 0.28);
+    background:
+      radial-gradient(circle at 100% 0%, rgba(167, 139, 250, 0.14), transparent 30%),
+      radial-gradient(circle at 0% 100%, rgba(56, 189, 248, 0.10), transparent 32%),
+      rgba(15, 23, 42, 0.82);
+    box-shadow: 0 18px 50px rgba(0,0,0,0.25);
+  }
+
+  .comments-shell::before {
+    content: "";
+    position: absolute;
+    inset: -30%;
+    background: conic-gradient(from 0deg, transparent, rgba(56,189,248,0.08), transparent, rgba(167,139,250,0.08), transparent);
+    animation: comments-spin 14s linear infinite;
+    pointer-events: none;
+  }
+
+  @keyframes comments-spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .comments-grid {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: minmax(260px, 0.8fr) minmax(320px, 1.2fr);
+    gap: 1rem;
+  }
+
+  .comment-form,
+  .comment-list-panel {
+    padding: 1.15rem;
+    border-radius: 1.1rem;
+    background: rgba(2, 6, 23, 0.42);
+    border: 1px solid rgba(148,163,184,0.13);
+  }
+
+  .comment-label {
+    display: block;
+    margin-bottom: 0.4rem;
+    color: var(--muted);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .comment-input,
+  .comment-textarea {
+    width: 100%;
+    border: 1px solid rgba(148,163,184,0.2);
+    border-radius: 0.85rem;
+    background: rgba(15,23,42,0.72);
+    color: var(--text);
+    padding: 0.8rem 0.9rem;
+    font: inherit;
+    outline: none;
+    transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+  }
+
+  .comment-input:focus,
+  .comment-textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(56,189,248,0.1);
+    transform: translateY(-1px);
+  }
+
+  .comment-textarea {
+    min-height: 130px;
+    resize: vertical;
+  }
+
+  .comment-submit {
+    width: 100%;
+    margin-top: 0.8rem;
+    border: 0;
+    border-radius: 0.9rem;
+    padding: 0.85rem 1rem;
+    font: inherit;
+    font-weight: 800;
+    color: #08111f;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    cursor: pointer;
+    box-shadow: 0 10px 25px rgba(56,189,248,0.16);
+    transition: transform .2s ease, box-shadow .2s ease;
+  }
+
+  .comment-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 32px rgba(167,139,250,0.2);
+  }
+
+  .comment-note {
+    margin-top: 0.65rem;
+    color: var(--muted);
+    font-size: 0.78rem;
+  }
+
+  .comment-list {
+    display: grid;
+    gap: 0.75rem;
+    max-height: 430px;
+    overflow: auto;
+    padding-right: 0.25rem;
+  }
+
+  .comment-empty {
+    padding: 1.4rem 1rem;
+    text-align: center;
+    color: var(--muted);
+    border: 1px dashed rgba(148,163,184,0.17);
+    border-radius: 0.9rem;
+  }
+
+  .comment-card {
+    padding: 0.95rem;
+    border-radius: 0.9rem;
+    background: rgba(30,41,59,0.58);
+    border: 1px solid rgba(148,163,184,0.11);
+    animation: comment-in .45s cubic-bezier(.2,.8,.2,1);
+  }
+
+  @keyframes comment-in {
+    from { opacity: 0; transform: translateY(10px) scale(.985); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .comment-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 0.45rem;
+  }
+
+  .comment-author {
+    color: var(--accent);
+    font-weight: 800;
+  }
+
+  .comment-date {
+    color: var(--muted);
+    font-size: 0.72rem;
+  }
+
+  .comment-body {
+    color: var(--text);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+
+  @media (max-width: 760px) {
+    .comments-grid { grid-template-columns: 1fr; }
+  }
+
+
   /* ===== SCROLL INTERACTIONS ===== */
   .scroll-orbit {
     position: fixed;
@@ -934,6 +1098,40 @@
       </div>
     </section>
 
+
+    <section id="commentaires">
+      <h2>Commentaires</h2>
+
+      <div class="comments-shell">
+        <div class="comments-grid">
+          <div class="comment-form">
+            <span class="contact-kicker">Votre avis</span>
+            <h3 class="contact-title" style="font-size:1.55rem;">Un retour sur mon portfolio ?</h3>
+            <p class="contact-intro">Laissez un message, une idée ou une suggestion pour m'aider à améliorer le site.</p>
+
+            <form id="comment-form" style="margin-top:1rem;">
+              <label class="comment-label" for="comment-name">Nom</label>
+              <input class="comment-input" id="comment-name" maxlength="40" required placeholder="Votre prénom ou pseudo">
+
+              <label class="comment-label" for="comment-text" style="margin-top:0.8rem;">Commentaire</label>
+              <textarea class="comment-textarea" id="comment-text" maxlength="500" required placeholder="Votre commentaire..."></textarea>
+
+              <button class="comment-submit" type="submit">Publier le commentaire →</button>
+            </form>
+
+            <p class="comment-note">Les commentaires sont enregistrés dans le navigateur de cet appareil.</p>
+          </div>
+
+          <div class="comment-list-panel">
+            <div class="contact-side-title" style="margin-bottom:0.75rem;">Messages récents</div>
+            <div class="comment-list" id="comment-list">
+              <div class="comment-empty" id="comment-empty">Aucun commentaire pour le moment. Soyez le premier à laisser un message.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section id="contact">
       <h2>Contact</h2>
 
@@ -1039,6 +1237,85 @@
   }
 
   window.addEventListener('DOMContentLoaded', () => {
+    const commentForm = document.getElementById('comment-form');
+    const commentList = document.getElementById('comment-list');
+    const commentEmpty = document.getElementById('comment-empty');
+    const commentStorageKey = 'portfolio_comments_v1';
+
+    function getComments() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(commentStorageKey) || '[]');
+        return Array.isArray(saved) ? saved : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function saveComments(comments) {
+      localStorage.setItem(commentStorageKey, JSON.stringify(comments));
+    }
+
+    function renderComments() {
+      const comments = getComments();
+      commentList.innerHTML = '';
+
+      if (!comments.length) {
+        commentList.innerHTML = '<div class="comment-empty">Aucun commentaire pour le moment. Soyez le premier à laisser un message.</div>';
+        return;
+      }
+
+      comments.slice().reverse().forEach(comment => {
+        const card = document.createElement('article');
+        card.className = 'comment-card';
+
+        const top = document.createElement('div');
+        top.className = 'comment-top';
+
+        const author = document.createElement('span');
+        author.className = 'comment-author';
+        author.textContent = comment.name;
+
+        const date = document.createElement('span');
+        date.className = 'comment-date';
+        date.textContent = comment.date;
+
+        const body = document.createElement('div');
+        body.className = 'comment-body';
+        body.textContent = comment.text;
+
+        top.append(author, date);
+        card.append(top, body);
+        commentList.appendChild(card);
+      });
+    }
+
+    renderComments();
+
+    commentForm.addEventListener('submit', event => {
+      event.preventDefault();
+
+      const name = document.getElementById('comment-name').value.trim();
+      const text = document.getElementById('comment-text').value.trim();
+
+      if (!name || !text) return;
+
+      const comments = getComments();
+      comments.push({
+        name,
+        text,
+        date: new Date().toLocaleDateString('fr-FR', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric'
+        })
+      });
+
+      saveComments(comments.slice(-50));
+      commentForm.reset();
+      renderComments();
+    });
+
+
     calculerPourcentages();
 
     const sections = document.querySelectorAll('section, header, footer');

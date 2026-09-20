@@ -208,6 +208,21 @@
     font-size: 0.8rem;
   }
 
+  .mood-ai-badge {
+    display: inline-flex;
+    margin-top: 0.5rem;
+    padding: 0.28rem 0.55rem;
+    border-radius: 999px;
+    color: #cdefff;
+    background: rgba(56,189,248,.08);
+    border: 1px solid rgba(56,189,248,.18);
+    font-size: .7rem;
+    font-weight: 800;
+    letter-spacing: .04em;
+  }
+
+
+
   .comments-embed {
     min-height: 430px;
     border-radius: 1rem;
@@ -1334,7 +1349,8 @@
                 <span class="mood-dot neutral" id="mood-dot"></span>
                 <span class="mood-label" id="mood-label">Ambiance neutre</span>
               </div>
-              <div class="mood-detail" id="mood-detail">Analyse des derniers commentaires…</div>
+              <div class="mood-detail" id="mood-detail">Analyse IA locale des derniers commentaires…</div>
+              <span class="mood-ai-badge" id="mood-ai-badge">IA · chargement…</span>
             </div>
 
             <p class="comments-login-note">
@@ -1427,6 +1443,28 @@
   </div>
 
   <!-- Script : calcul automatique des pourcentages selon le contenu -->
+  <script type="module">
+    import { pipeline } from 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1';
+
+    const EMOTION_MODEL = 'onnx-community/tanaos-emotion-detection-v1-ONNX';
+
+    window.emotionAIReady = pipeline('text-classification', EMOTION_MODEL, {
+      dtype: 'q4'
+    }).then(classifier => {
+      window.emotionClassifier = classifier;
+      return classifier;
+    }).catch(error => {
+      window.emotionClassifierError = error;
+      throw error;
+    });
+
+    window.analyzeEmotionAI = async function(text) {
+      const classifier = await window.emotionAIReady;
+      const result = await classifier(text, { top_k: 1 });
+      return Array.isArray(result) ? result[0] : result;
+    };
+  </script>
+
   <script>
   function calculerPourcentages() {
     // Indicateurs de progression affichés sur le portfolio.
@@ -1456,6 +1494,225 @@
 
   window.addEventListener('DOMContentLoaded', () => {
     const sharedCommentsList = document.getElementById('shared-comments-list');
+
+    async function loadSharedComments() {
+      try {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 7000);
+
+        const response = await fetch(
+          'https://api.github.com/repos/ethangalea1000-svg/portfolio/issues/1/comments?per_page=30&sort=created&direction=desc',
+          {
+            headers: {
+              'Accept': 'application/vnd.github+json'
+            },
+            cache: 'no-store',
+            signal: controller.signal
+          }
+        );
+
+        clearTimeout(timeout);
+
+        if (!response.ok) {
+          let detail = 'GitHub API indisponible';
+          try {
+            const apiError = await response.json();
+            if (apiError?.message) detail += ' : ' + apiError.message;
+          } catch {}
+          throw new Error(detail);
+        }
+
+        const comments = await response.json();
+        sharedCommentsList.innerHTML = '';
+
+        if (!comments.length) {
+          sharedCommentsList.innerHTML = `
+            <div class="comments-status">
+              Aucun commentaire pour le moment.<br>
+              <a class="comments-action" href="https://github.com/ethangalea1000-svg/portfolio/issues/1" target="_blank" rel="noopener">
+                Laisser le premier commentaire →
+              </a>
+            </div>`;
+          applyMood(comments).catch(() => {});
+          return;
+        }
+
+        comments.forEach(comment => {
+          const card = document.createElement('article');
+          card.className = 'shared-comment';
+
+          const top = document.createElement('div');
+          top.className = 'shared-comment-top';
+
+          const author = document.createElement('span');
+          author.className = 'shared-comment-author';
+          author.textContent = '@' + (comment.user?.login || 'visiteur');
+
+          const date = document.createElement('span');
+          date.className = 'shared-comment-date';
+          date.textContent = new Date(comment.created_at).toLocaleDateString('fr-FR', {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric'
+          });
+
+          const body = document.createElement('div');
+          body.className = 'shared-comment-body';
+          body.textContent = comment.body || '';
+
+          top.append(author, date);
+          card.append(top, body);
+          sharedCommentsList.appendChild(card);
+        });
+
+        applyMood(comments).catch(() => {});
+      } catch (error) {
+        const message = error?.name === 'AbortError'
+          ? 'Le chargement a pris trop de temps.'
+          : (error?.message || 'Erreur inconnue.');
+
+        sharedCommentsList.innerHTML = `
+          <div class="comments-status">
+            Impossible de charger les commentaires automatiquement.<br>
+            <span style="display:block;margin-top:.45rem;font-size:.78rem;">${message}</span>
+            <a class="comments-action" href="https://github.com/ethangalea1000-svg/portfolio/issues/1" target="_blank" rel="noopener">
+              Voir les commentaires publics →
+            </a>
+          </div>`;
+      }
+    }
+
+    const moodPositive = [
+      'super','parfait','génial','genial','excellent','magnifique','incroyable','bravo',
+      'top','cool','j’aime',"j'aime",'merci','félicitations','felicitations','impressionnant',
+      'beau','belle','réussi','reussi','adore','adoré','utile','clair','pro'
+    ];
+
+    const moodNegative = [
+      'nul','mauvais','déçu','decu','décevant','decevant','bug','lent','moche','dommage',
+      'horrible','problème','probleme','erreur','cassé','casse','difficile','bof','confus',
+      'déteste','deteste','inutile','pénible','penible'
+    ];
+
+    function keywordMood(text) {
+      const normalized = text.toLowerCase().normalize('NFD').replace(/[\\u0300-\\u036f]/g,'');
+      let score = 0;
+
+      moodPositive.forEach(word => {
+        const clean = word.normalize('NFD').replace(/[\\u0300-\\u036f]/g,'');
+        if (normalized.includes(clean)) score += 1;
+      });
+
+      moodNegative.forEach(word => {
+        const clean = word.normalize('NFD').replace(/[\\u0300-\\u036f]/g,'');
+        if (normalized.includes(clean)) score -= 1;
+      });
+
+      if (/[😀😄😁😊😍❤️💙💚🔥👏🎉]/u.test(text)) score += 1;
+      if (/[😡😠😞😔😕💔]/u.test(text)) score -= 1;
+
+      return score;
+    }
+
+    const emotionLabels = {
+      joy: 'Joie',
+      excitement: 'Enthousiasme',
+      anger: 'Colère',
+      fear: 'Peur',
+      sadness: 'Tristesse',
+      disgust: 'Dégoût',
+      surprise: 'Surprise',
+      neutral: 'Neutre'
+    };
+
+    function emotionPolarity(label) {
+      const positive = new Set(['joy','excitement']);
+      const negative = new Set(['anger','fear','sadness','disgust']);
+      if (positive.has(label)) return 1;
+      if (negative.has(label)) return -1;
+      return 0;
+    }
+
+    async function applyMood(comments) {
+      const label = document.getElementById('mood-label');
+      const detail = document.getElementById('mood-detail');
+      const dot = document.getElementById('mood-dot');
+      const badge = document.getElementById('mood-ai-badge');
+
+      if (!comments.length) {
+        document.body.dataset.mood = 'neutral';
+        dot.className = 'mood-dot neutral';
+        label.textContent = 'Ambiance neutre';
+        detail.textContent = 'Pas encore assez de commentaires pour détecter une ambiance.';
+        badge.textContent = 'IA · en attente';
+        return;
+      }
+
+      badge.textContent = 'IA · analyse en cours…';
+
+      try {
+        const analyzed = [];
+        for (const comment of comments.slice(0, 10)) {
+          const text = String(comment.body || '').trim();
+          if (!text) continue;
+
+          const result = await window.analyzeEmotionAI(text);
+          if (result && result.label) {
+            analyzed.push({
+              label: String(result.label).toLowerCase(),
+              score: Number(result.score) || 0
+            });
+          }
+        }
+
+        if (!analyzed.length) throw new Error('Aucune analyse');
+
+        const weighted = analyzed.reduce((sum, item) => sum + emotionPolarity(item.label) * item.score, 0);
+        const average = weighted / analyzed.length;
+
+        let mood = 'neutral';
+        if (average >= 0.16) mood = 'positive';
+        else if (average <= -0.16) mood = 'negative';
+
+        const top = analyzed
+          .slice()
+          .sort((a,b) => b.score - a.score)[0];
+
+        document.body.dataset.mood = mood;
+        dot.className = 'mood-dot ' + mood;
+
+        const labels = {
+          positive: 'Ambiance positive',
+          neutral: 'Ambiance neutre',
+          negative: 'Ambiance critique'
+        };
+        label.textContent = labels[mood];
+
+        const emotionName = emotionLabels[top.label] || top.label;
+        detail.textContent =
+          analyzed.length + ' commentaire' + (analyzed.length > 1 ? 's' : '') +
+          ' analysé' + (analyzed.length > 1 ? 's' : '') +
+          ' · émotion dominante détectée : ' + emotionName +
+          ' (' + Math.round(top.score * 100) + '%).';
+
+        badge.textContent = 'IA · modèle local dans le navigateur';
+      } catch (error) {
+        // Fallback si le modèle ne peut pas être chargé.
+        const total = comments.slice(0,10).reduce((sum, c) => sum + keywordMood(c.body || ''), 0);
+        const fallbackMood = total >= 2 ? 'positive' : total <= -2 ? 'negative' : 'neutral';
+
+        document.body.dataset.mood = fallbackMood;
+        dot.className = 'mood-dot ' + fallbackMood;
+        label.textContent = fallbackMood === 'positive'
+          ? 'Ambiance positive'
+          : fallbackMood === 'negative'
+            ? 'Ambiance critique'
+            : 'Ambiance neutre';
+
+        detail.textContent = 'IA indisponible pour le moment · analyse de secours active.';
+        badge.textContent = 'Secours · mots-clés';
+      }
+    }
 
     async function loadSharedComments() {
       try {

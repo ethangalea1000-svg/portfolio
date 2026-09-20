@@ -1466,8 +1466,7 @@
           'https://api.github.com/repos/ethangalea1000-svg/portfolio/issues/1/comments?per_page=30&sort=created&direction=desc',
           {
             headers: {
-              'Accept': 'application/vnd.github+json',
-              'Cache-Control': 'no-cache'
+              'Accept': 'application/vnd.github+json'
             },
             cache: 'no-store',
             signal: controller.signal
@@ -1496,6 +1495,7 @@
                 Laisser le premier commentaire →
               </a>
             </div>`;
+          applyMood(comments);
           return;
         }
 
@@ -1526,6 +1526,8 @@
           card.append(top, body);
           sharedCommentsList.appendChild(card);
         });
+
+        applyMood(comments);
       } catch (error) {
         const message = error?.name === 'AbortError'
           ? 'Le chargement a pris trop de temps.'
@@ -1545,7 +1547,7 @@
     const moodPositive = [
       'super','parfait','génial','genial','excellent','magnifique','incroyable','bravo',
       'top','cool','j’aime','j'aime','merci','félicitations','felicitations','impressionnant',
-      'beau','belle','réussi','reussi','adore','adoré','adore','utile','clair','pro'
+      'beau','belle','réussi','reussi','adore','adoré','utile','clair','pro'
     ];
 
     const moodNegative = [
@@ -1555,16 +1557,16 @@
     ];
 
     function commentMood(text) {
-      const normalized = text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+      const normalized = text.toLowerCase().normalize('NFD').replace(/[\\u0300-\\u036f]/g,'');
       let score = 0;
 
       moodPositive.forEach(word => {
-        const clean = word.normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+        const clean = word.normalize('NFD').replace(/[\\u0300-\\u036f]/g,'');
         if (normalized.includes(clean)) score += 1;
       });
 
       moodNegative.forEach(word => {
-        const clean = word.normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+        const clean = word.normalize('NFD').replace(/[\\u0300-\\u036f]/g,'');
         if (normalized.includes(clean)) score -= 1;
       });
 
@@ -1574,58 +1576,43 @@
       return score;
     }
 
-    async function updateMood() {
+    function applyMood(comments) {
       const label = document.getElementById('mood-label');
       const detail = document.getElementById('mood-detail');
       const dot = document.getElementById('mood-dot');
 
-      try {
-        const response = await fetch(
-          'https://api.github.com/repos/ethangalea1000-svg/portfolio/issues/1/comments?per_page=20&sort=created&direction=desc',
-          { headers: { 'Accept': 'application/vnd.github+json' } }
-        );
-        if (!response.ok) throw new Error('GitHub API indisponible');
-
-        const comments = await response.json();
-        if (!comments.length) {
-          document.body.dataset.mood = 'neutral';
-          dot.className = 'mood-dot neutral';
-          label.textContent = 'Ambiance neutre';
-          detail.textContent = 'Pas encore assez de commentaires pour détecter une ambiance.';
-          return;
-        }
-
-        const recent = comments.slice(0, 10);
-        const total = recent.reduce((sum, c) => sum + commentMood(c.body || ''), 0);
-
-        let mood = 'neutral';
-        if (total >= 2) mood = 'positive';
-        else if (total <= -2) mood = 'negative';
-
-        document.body.dataset.mood = mood;
-        dot.className = 'mood-dot ' + mood;
-
-        const labels = {
-          positive: 'Ambiance positive',
-          neutral: 'Ambiance neutre',
-          negative: 'Ambiance critique'
-        };
-        label.textContent = labels[mood];
-        detail.textContent =
-          recent.length + ' commentaire' + (recent.length > 1 ? 's' : '') +
-          ' récent' + (recent.length > 1 ? 's' : '') + ' analysé' + (recent.length > 1 ? 's' : '') +
-          ' · la palette de la page s’adapte automatiquement.';
-      } catch {
+      if (!comments.length) {
         document.body.dataset.mood = 'neutral';
         dot.className = 'mood-dot neutral';
         label.textContent = 'Ambiance neutre';
-        detail.textContent = 'La discussion est active, mais l’analyse des commentaires est temporairement indisponible.';
+        detail.textContent = 'Pas encore assez de commentaires pour détecter une ambiance.';
+        return;
       }
+
+      const recent = comments.slice(0, 10);
+      const total = recent.reduce((sum, c) => sum + commentMood(c.body || ''), 0);
+
+      let mood = 'neutral';
+      if (total >= 2) mood = 'positive';
+      else if (total <= -2) mood = 'negative';
+
+      document.body.dataset.mood = mood;
+      dot.className = 'mood-dot ' + mood;
+
+      const labels = {
+        positive: 'Ambiance positive',
+        neutral: 'Ambiance neutre',
+        negative: 'Ambiance critique'
+      };
+      label.textContent = labels[mood];
+      detail.textContent =
+        recent.length + ' commentaire' + (recent.length > 1 ? 's' : '') +
+        ' récent' + (recent.length > 1 ? 's' : '') + ' analysé' + (recent.length > 1 ? 's' : '') +
+        ' · la palette de la page s’adapte automatiquement.';
     }
 
     loadSharedComments();
-    updateMood();
-    setInterval(updateMood, 60000);
+    setInterval(loadSharedComments, 60000);
 
 
 

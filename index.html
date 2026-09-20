@@ -1707,7 +1707,45 @@
         return;
       }
 
-      badge.textContent = 'IA · analyse en cours…';
+      // D'abord une détection immédiate côté navigateur.
+      // Cela évite de laisser la page bloquée si le modèle IA met du temps à charger.
+      const recentComments = comments.slice(0, 10);
+      const immediateSignals = recentComments.map(comment => {
+        const text = String(comment.body || '').trim();
+        const explicit = explicitFrenchMood(text);
+        const keyword = Math.max(-1, Math.min(1, keywordMood(text)));
+        return explicit !== 0 ? explicit : keyword * 0.85;
+      }).filter(value => value !== 0);
+
+      const immediateAverage = immediateSignals.length
+        ? immediateSignals.reduce((sum, value) => sum + value, 0) / immediateSignals.length
+        : 0;
+
+      let immediateMood = 'neutral';
+      if (immediateSignals.some(value => value < 0)) immediateMood = 'negative';
+      else if (immediateSignals.some(value => value > 0)) immediateMood = 'positive';
+
+      document.body.dataset.mood = immediateMood;
+      dot.className = 'mood-dot ' + immediateMood;
+
+      const immediateLabels = {
+        positive: 'Ambiance positive',
+        neutral: 'Ambiance neutre',
+        negative: 'Ambiance critique'
+      };
+      label.textContent = immediateLabels[immediateMood];
+
+      if (immediateSignals.length) {
+        detail.textContent =
+          recentComments.length + ' commentaire' + (recentComments.length > 1 ? 's' : '') +
+          ' · détection immédiate : ' +
+          (immediateMood === 'negative' ? 'ton négatif' : immediateMood === 'positive' ? 'ton positif' : 'ton neutre') +
+          '.';
+      } else {
+        detail.textContent = 'Analyse IA des derniers commentaires en arrière-plan…';
+      }
+
+      badge.textContent = 'IA · confirmation en arrière-plan…';
 
       try {
         const analyzed = [];
@@ -1787,20 +1825,13 @@
 
         badge.textContent = 'IA · français · modèle local';
       } catch (error) {
-        // Fallback si le modèle ne peut pas être chargé.
-        const total = comments.slice(0,10).reduce((sum, c) => sum + keywordMood(c.body || ''), 0);
-        const fallbackMood = total >= 2 ? 'positive' : total <= -2 ? 'negative' : 'neutral';
-
-        document.body.dataset.mood = fallbackMood;
-        dot.className = 'mood-dot ' + fallbackMood;
-        label.textContent = fallbackMood === 'positive'
-          ? 'Ambiance positive'
-          : fallbackMood === 'negative'
-            ? 'Ambiance critique'
-            : 'Ambiance neutre';
-
-        detail.textContent = 'IA indisponible pour le moment · analyse de secours active.';
-        badge.textContent = 'Secours · mots-clés';
+        // La détection immédiate reste affichée si le modèle IA ne charge pas.
+        detail.textContent = immediateSignals.length
+          ? 'Détection française locale active · analyse IA indisponible pour le moment.'
+          : 'IA indisponible pour le moment · analyse de secours active.';
+        badge.textContent = immediateSignals.length
+          ? 'Secours · détection locale'
+          : 'Secours · mots-clés';
       }
     }
 

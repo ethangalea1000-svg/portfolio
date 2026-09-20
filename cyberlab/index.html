@@ -113,6 +113,14 @@ nav{display:flex;gap:8px;flex-wrap:wrap;margin:24px 0}nav button,.btn{padding:10
 <a class="btn link" href="./11-cyberacademy/">Ouvrir CyberAcademy →</a>
 </div>
 </article>
+<article class="project">
+<span class="tag">ÉDUCATION</span>
+<h3>⌨️ Clavier Sprint</h3>
+<p>Jeu de frappe pour apprendre à écrire sur ordinateur, mémoriser les touches et améliorer progressivement vitesse et précision.</p>
+<div class="actions">
+<a class="btn link" href="./12-clavier-sprint/">Jouer →</a>
+</div>
+</article>
 </div>
 </section>
 </main>
@@ -130,7 +138,8 @@ const projects=[
 ['08-socialnet-demo','SocialNet Demo','Mini réseau social fictif côté navigateur.'],
 ['09-incident-dashboard','Incident Dashboard','Tableau de suivi d’incidents simulés.'],
 ['10-security-checklist','Security Checklist','Checklist défensive de projet web.'],
-['11-cyberacademy','CyberAcademy','Grande plateforme d’apprentissage : cours, parcours, quiz générés, XP, série et partage de scores.']
+['11-cyberacademy','CyberAcademy','Grande plateforme d’apprentissage : cours, parcours, quiz générés, XP, série et partage de scores.'],
+['12-clavier-sprint','Clavier Sprint','Jeu interactif pour apprendre la frappe au clavier, mémoriser les touches et progresser en vitesse et précision.']
 ];
 const root='https://ethangalea1000-svg.github.io/portfolio/cyberlab/';
 projectGrid.innerHTML=projects.map(p=>'<article class="project"><span class="tag">PROJET</span><h3>'+p[1]+'</h3><p>'+p[2]+'</p><div class="actions"><a class="btn link" href="'+root+p[0]+'/">Ouvrir la démo →</a><a class="btn link" target="_blank" rel="noopener" href="https://github.com/ethangalea1000-svg/mon-projet/tree/master/'+p[0]+'">Voir le code</a></div></article>').join('');

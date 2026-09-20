@@ -88,8 +88,13 @@
       "je ne comprends pas","je comprends rien","je ne comprends rien","??","???"
     ],
     boredom: [
-      "ennui","ennuyeux","ennuyeuse","ennuyant","ennuyante","lassant","lassante",
-      "fatigant","fatigante","monotone","ennuyé","ennuyee"
+      "ennui","ennuie","ennuyé","ennuyée","ennuyee","ennuyeux","ennuyeuse","ennuyant","ennuyante",
+      "lassant","lassante","fatigant","fatigante","monotone","m'ennuie","m ennuie"
+    ],
+    surprise: [
+      "surprise","surprenant","surprenante","étonné","étonnée","etonne","etonnee",
+      "étonnement","etonnement","stupéfait","stupéfaite","inattendu","inattendue",
+      "wow","waouh","quelle surprise","belle surprise","🎉"
     ],
     jealousy: [
       "jalousie","jaloux","jalouse","envieux","envieuse","envier",
@@ -597,6 +602,16 @@
   }
 
   function scorePhraseMap(text, scoreState, matched) {
+    const phraseEmotionHints = {
+      "je m'ennuie": "boredom",
+      "je m ennuie": "boredom",
+      "je m'ennuie beaucoup": "boredom",
+      "je m ennuie beaucoup": "boredom",
+      "c'est une belle surprise": "surprise",
+      "c est une belle surprise": "surprise",
+      "quelle surprise": "surprise"
+    };
+
     const allPhraseMaps = [PHRASES.positive, PHRASES.negative, MORE_PHRASES];
 
     for (const map of allPhraseMaps) {
@@ -607,6 +622,11 @@
         scoreState.score += value;
         if (value >= 0) addEmotion(scoreState.emotions, "positive", value);
         else addEmotion(scoreState.emotions, "negative", Math.abs(value));
+
+        const hintedEmotion = phraseEmotionHints[p];
+        if (hintedEmotion) {
+          addEmotion(scoreState.emotions, hintedEmotion, Math.abs(value) * 1.35);
+        }
 
         matched.push({
           phrase,

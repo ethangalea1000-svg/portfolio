@@ -119,7 +119,6 @@
       "pas mauvaise": 0.95,
       "pas nul": 0.80,
       "pas nulle": 0.80,
-      "pas terrible": -0.70,
       "sans problème": 0.70,
       "sans probleme": 0.70,
       "aucun problème": 0.65,
@@ -291,7 +290,7 @@
         const negated = isNegated(tokens, index);
 
         if (negated) {
-          score = score > 0 ? -Math.max(0.45, score * 0.72) : Math.abs(score) * 0.55;
+          score = score > 0 ? -Math.max(0.82, score * 0.95) : Math.abs(score) * 0.82;
         }
 
         score *= multiplierFromContext(tokens, index);
@@ -396,7 +395,7 @@
           let value = positiveEmotions.has(emotion) ? 0.80 : -0.82;
           const negated = isNegated(tokens, index);
 
-          if (negated) value = value > 0 ? -0.58 : 0.45;
+          if (negated) value = value > 0 ? -0.88 : 0.72;
           value *= multiplierFromContext(tokens, index);
 
           addEmotion(emotionScores, emotion, value);
@@ -458,10 +457,16 @@
     const exclamations = (original.match(/!/g) || []).length;
     if (exclamations >= 2) score *= 1.08;
 
-    const dominant = Object.entries(emotionScores)
+    const maxAbs = Math.max(...Object.values(emotionScores).map(v => Math.abs(v)), 0);
+    let dominant = Object.entries(emotionScores)
       .sort((a,b) => Math.abs(b[1]) - Math.abs(a[1]))[0];
 
-    const maxAbs = Math.max(...Object.values(emotionScores).map(v => Math.abs(v)), 0);
+    if (!maxAbs || Math.abs(score) < 0.05) {
+      dominant = ["neutral", 0];
+    } else if (Math.abs(dominant?.[1] || 0) < 0.08) {
+      dominant = [score > 0 ? "positive" : score < 0 ? "negative" : "neutral", score];
+    }
+
     const confidence = Math.min(1, Math.abs(score) / 3 + maxAbs / 5);
 
     let mood = "neutral";

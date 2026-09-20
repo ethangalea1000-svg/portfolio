@@ -133,6 +133,21 @@ securecode:[
 ()=>({q:'Pourquoi valider les données reçues d’un utilisateur ?',o:['Parce qu’elles peuvent être malformées ou inattendues','Parce qu’elles sont toujours fiables','Pour ralentir l’application','Pour supprimer HTTPS'],a:0,e:'Une application doit considérer les entrées externes comme non fiables jusqu’à validation.'})]
 };
 
+const VARIATIONS={
+fundamentals:{setup:['Dans une petite organisation','Dans un projet web','Pendant un audit défensif','Dans un laboratoire de sécurité','Au sein d’une équipe technique','Pour un service exposé sur Internet'],situation:['tu dois choisir le contrôle le plus pertinent','tu dois réduire un risque concret','tu dois expliquer ta décision à une équipe','tu dois analyser la priorité suivante']},
+identity:{setup:['Pour un compte d’élève','Pour un compte administrateur','Dans une application collaborative','Dans un service Cloud','Pour une API interne','Dans un portail utilisateur'],situation:['tu veux limiter l’impact d’un compte compromis','tu dois sécuriser une connexion','tu dois séparer identité et permissions','tu dois choisir un mécanisme adapté']},
+phishing:{setup:['Dans une boîte mail professionnelle','Dans une messagerie scolaire','Sur un compte de jeu','Dans un service de support','Sur un téléphone mobile','Dans une plateforme de projet'],situation:['tu reçois une demande inattendue','tu dois vérifier un message urgent','tu hésites avant d’ouvrir un lien','tu dois expliquer pourquoi un message est suspect']},
+network:{setup:['Sur un réseau d’entreprise','Dans un petit laboratoire','Pour une application web','Dans un réseau domestique','Sur un service Cloud','Pendant une analyse réseau'],situation:['tu dois comprendre le chemin d’une requête','tu observes un problème de communication','tu dois choisir le bon service réseau','tu vérifies la protection du transport']},
+web:{setup:['Dans une application web','Pour une API publique','Dans un formulaire utilisateur','Sur une plateforme collaborative','Dans un tableau de bord','Pendant une revue de code'],situation:['tu dois réduire la surface d’attaque','tu dois traiter une entrée externe','tu vérifies un contrôle de sécurité','tu dois expliquer un risque à un développeur']},
+crypto:{setup:['Pour protéger un fichier','Dans une messagerie','Lors d’un contrôle d’intégrité','Dans un système de signature','Pour une connexion sécurisée','Pendant un cours de cryptographie'],situation:['tu dois choisir le bon mécanisme','tu dois distinguer deux primitives','tu dois protéger une propriété précise','tu expliques le rôle d’une clé']},
+incident:{setup:['Dans un SOC','Pendant une alerte de sécurité','Après une connexion inhabituelle','Sur un serveur compromis','Dans une équipe de réponse à incident','Lors d’un exercice de crise'],situation:['tu dois décider de la prochaine action','tu dois préserver les informations utiles','tu dois limiter l’impact','tu dois documenter une décision']},
+forensics:{setup:['Pendant une investigation','Sur un poste de travail','À partir de journaux système','Sur un fichier suspect','Dans un laboratoire forensique','Après un incident'],situation:['tu dois établir une chronologie','tu dois préserver un artefact','tu dois vérifier une trace','tu dois relier plusieurs indices']},
+cloud:{setup:['Dans une infrastructure Cloud','Pour une application serverless','Dans un pipeline CI/CD','Sur un stockage Cloud','Pour une identité Cloud','Dans un environnement de test'],situation:['tu dois limiter les permissions','tu dois protéger un secret','tu dois surveiller une activité','tu dois sécuriser un déploiement']},
+privacy:{setup:['Pour une recherche OSINT','Sur un réseau social','Lors d’une vérification d’information','Pour un fichier partagé','Pendant une enquête documentaire','Dans un projet de sensibilisation'],situation:['tu dois évaluer une source','tu dois limiter les informations exposées','tu dois vérifier un indice','tu dois protéger la vie privée']},
+mobile:{setup:['Sur un smartphone personnel','Dans une application mobile','Pour un appareil professionnel','Lors d’un déplacement','Sur un téléphone partagé','Pendant un audit mobile'],situation:['tu dois réduire l’exposition','tu vérifies une permission','tu dois protéger une donnée locale','tu choisis une mesure de sécurité']},
+securecode:{setup:['Dans un projet JavaScript','Dans une API Python','Pendant une revue de code','Dans un dépôt Git','Pour une application scolaire','Dans un prototype web'],situation:['tu dois éviter une erreur courante','tu dois traiter une donnée externe','tu dois protéger une configuration','tu dois rendre le code plus robuste']}};
+function variation(track){const v=VARIATIONS[track]||VARIATIONS.fundamentals;return v.setup[rand(0,v.setup.length-1)]+'. '+v.situation[rand(0,v.situation.length-1)]+'.';}
+
 const state={track:'fundamentals',index:0,score:0,correct:0,asked:[],current:null,history:JSON.parse(localStorage.getItem('cyberacademy_seen')||'[]'),stats:JSON.parse(localStorage.getItem('cyberacademy_stats')||'{"xp":0,"best":0,"completed":0}'),last:null};
 
 const $=id=>document.getElementById(id);
@@ -142,8 +157,15 @@ function sig(q){return q.q+'|'+q.o.join('|')}
 function normalize(q){const indexed=q.o.map((x,i)=>({x,i}));shuffle(indexed);const answer=indexed.findIndex(x=>x.i===q.a);return {...q,o:indexed.map(x=>x.x),a:answer}}
 function generate(track){
  const pool=CONCEPTS[track]||CONCEPTS.fundamentals;
- for(let attempt=0;attempt<30;attempt++){const q=normalize(pool[rand(0,pool.length-1)]());const s=sig(q);if(!state.history.includes(s))return {...q,_sig:s}}
- const q=normalize(pool[rand(0,pool.length-1)]());return {...q,_sig:sig(q)+'|'+Date.now()};
+ for(let attempt=0;attempt<120;attempt++){
+   const base=pool[rand(0,pool.length-1)]();
+   const prefix=variation(track);
+   const q=normalize({...base,q:prefix+' '+base.q});
+   const s=sig(q);
+   if(!state.history.includes(s))return {...q,_sig:s};
+ }
+ const q=normalize({...pool[rand(0,pool.length-1)](),q:variation(track)+' '+pool[rand(0,pool.length-1)]().q});
+ return {...q,_sig:sig(q)+'|'+Date.now()};
 }
 function persist(){localStorage.setItem('cyberacademy_seen',JSON.stringify(state.history.slice(-1200)));localStorage.setItem('cyberacademy_stats',JSON.stringify(state.stats));}
 function updateStreak(){

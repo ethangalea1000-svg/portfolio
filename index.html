@@ -1334,7 +1334,6 @@
       script.setAttribute('repo', 'ethangalea1000-svg/portfolio');
       script.setAttribute('issue-number', '1');
       script.setAttribute('theme', 'github-dark-blue');
-      script.setAttribute('label', 'comment');
       script.setAttribute('crossorigin', 'anonymous');
       script.async = true;
       commentsEmbed.appendChild(script);
@@ -1425,31 +1424,6 @@
     updateMood();
     setInterval(updateMood, 60000);
 
-
-
-    commentForm.addEventListener('submit', event => {
-      event.preventDefault();
-
-      const name = document.getElementById('comment-name').value.trim();
-      const text = document.getElementById('comment-text').value.trim();
-
-      if (!name || !text) return;
-
-      const comments = getComments();
-      comments.push({
-        name,
-        text,
-        date: new Date().toLocaleDateString('fr-FR', {
-          day: '2-digit',
-          month: '2-digit',
-          year: 'numeric'
-        })
-      });
-
-      saveComments(comments.slice(-50));
-      commentForm.reset();
-      renderComments();
-    });
 
 
     calculerPourcentages();

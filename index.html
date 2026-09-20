@@ -1446,7 +1446,9 @@
   <script type="module">
     import { pipeline } from 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1';
 
-    const EMOTION_MODEL = 'onnx-community/tanaos-emotion-detection-v1-ONNX';
+    // Modèle multilingue : prend en charge le français et l'analyse multi-émotions.
+    // Il est exécuté localement dans le navigateur, sans clé API.
+    const EMOTION_MODEL = 'jdp8/multilingual_go_emotions-ONNX';
 
     window.emotionAIReady = pipeline('text-classification', EMOTION_MODEL, {
       dtype: 'q4'
@@ -1460,8 +1462,8 @@
 
     window.analyzeEmotionAI = async function(text) {
       const classifier = await window.emotionAIReady;
-      const result = await classifier(text, { top_k: 1 });
-      return Array.isArray(result) ? result[0] : result;
+      const raw = await classifier(text, { top_k: 8 });
+      return Array.isArray(raw) && Array.isArray(raw[0]) ? raw[0] : raw;
     };
   </script>
 
@@ -1615,19 +1617,38 @@
     }
 
     const emotionLabels = {
-      joy: 'Joie',
-      excitement: 'Enthousiasme',
+      admiration: 'Admiration',
+      amusement: 'Amusement',
       anger: 'Colère',
-      fear: 'Peur',
-      sadness: 'Tristesse',
+      annoyance: 'Agacement',
+      approval: 'Approbation',
+      caring: 'Bienveillance',
+      confusion: 'Confusion',
+      curiosity: 'Curiosité',
+      disappointment: 'Déception',
+      disapproval: 'Désapprobation',
       disgust: 'Dégoût',
+      excitement: 'Enthousiasme',
+      fear: 'Peur',
+      gratitude: 'Gratitude',
+      joy: 'Joie',
+      love: 'Amour',
+      nervousness: 'Nervosité',
+      optimism: 'Optimisme',
+      sadness: 'Tristesse',
       surprise: 'Surprise',
       neutral: 'Neutre'
     };
 
     function emotionPolarity(label) {
-      const positive = new Set(['joy','excitement']);
-      const negative = new Set(['anger','fear','sadness','disgust']);
+      const positive = new Set([
+        'admiration','amusement','approval','caring','excitement',
+        'gratitude','joy','love','optimism','pride','relief'
+      ]);
+      const negative = new Set([
+        'anger','annoyance','disappointment','disapproval','disgust',
+        'fear','grief','remorse','sadness','nervousness'
+      ]);
       if (positive.has(label)) return 1;
       if (negative.has(label)) return -1;
       return 0;
@@ -1656,26 +1677,49 @@
           const text = String(comment.body || '').trim();
           if (!text) continue;
 
-          const result = await window.analyzeEmotionAI(text);
-          if (result && result.label) {
-            analyzed.push({
-              label: String(result.label).toLowerCase(),
-              score: Number(result.score) || 0
-            });
+          const predictions = await window.analyzeEmotionAI(text);
+          const rows = Array.isArray(predictions) ? predictions : [predictions];
+
+          const topRows = rows
+            .filter(item => item && item.label)
+            .map(item => ({
+              label: String(item.label).toLowerCase(),
+              score: Number(item.score) || 0
+            }))
+            .sort((a,b) => b.score - a.score);
+
+          if (!topRows.length) continue;
+
+          const aiPolarity = topRows.reduce(
+            (sum, item) => sum + emotionPolarity(item.label) * item.score,
+            0
+          );
+
+          // Garde-fou français pour les messages très courts et explicites.
+          // Exemple : « NUL ! » doit rester négatif même si le modèle hésite.
+          const keywordPolarity = Math.max(-1, Math.min(1, keywordMood(text)));
+          let polarity = aiPolarity;
+
+          if (keywordPolarity !== 0 && Math.abs(polarity) < 0.35) {
+            polarity = keywordPolarity * 0.75;
           }
+
+          analyzed.push({
+            polarity,
+            top: topRows[0]
+          });
         }
 
         if (!analyzed.length) throw new Error('Aucune analyse');
 
-        const weighted = analyzed.reduce((sum, item) => sum + emotionPolarity(item.label) * item.score, 0);
-        const average = weighted / analyzed.length;
+        const average = analyzed.reduce((sum, item) => sum + item.polarity, 0) / analyzed.length;
 
         let mood = 'neutral';
         if (average >= 0.16) mood = 'positive';
         else if (average <= -0.16) mood = 'negative';
 
         const top = analyzed
-          .slice()
+          .map(item => item.top)
           .sort((a,b) => b.score - a.score)[0];
 
         document.body.dataset.mood = mood;
@@ -1695,7 +1739,7 @@
           ' · émotion dominante détectée : ' + emotionName +
           ' (' + Math.round(top.score * 100) + '%).';
 
-        badge.textContent = 'IA · modèle local dans le navigateur';
+        badge.textContent = 'IA · français · modèle local';
       } catch (error) {
         // Fallback si le modèle ne peut pas être chargé.
         const total = comments.slice(0,10).reduce((sum, c) => sum + keywordMood(c.body || ''), 0);

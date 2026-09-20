@@ -1350,7 +1350,7 @@
                 <span class="mood-label" id="mood-label">Ambiance neutre</span>
               </div>
               <div class="mood-detail" id="mood-detail">Analyse IA locale des derniers commentaires…</div>
-              <span class="mood-ai-badge" id="mood-ai-badge">IA · chargement…</span>
+              <span class="mood-ai-badge" id="mood-ai-badge">IA · préparation…</span>
             </div>
 
             <p class="comments-login-note">
@@ -1446,24 +1446,55 @@
   <script type="module">
     import { pipeline } from 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1';
 
-    // Modèle multilingue : prend en charge le français et l'analyse multi-émotions.
-    // Il est exécuté localement dans le navigateur, sans clé API.
+    // Modèle multilingue exécuté dans le navigateur.
     const EMOTION_MODEL = 'jdp8/multilingual_go_emotions-ONNX';
 
-    window.emotionAIReady = pipeline('text-classification', EMOTION_MODEL, {
-      dtype: 'q4'
-    }).then(classifier => {
+    let emotionDevice = 'wasm';
+    try {
+      if (navigator.gpu) emotionDevice = 'webgpu';
+    } catch {}
+
+    const modelOptions = {
+      device: emotionDevice,
+      dtype: emotionDevice === 'webgpu' ? 'q4' : 'q8'
+    };
+
+    function withTimeout(promise, ms, message) {
+      return Promise.race([
+        promise,
+        new Promise((_, reject) => setTimeout(() => reject(new Error(message)), ms))
+      ]);
+    }
+
+    window.emotionAIStatus = 'chargement';
+    window.emotionAIDevice = emotionDevice;
+
+    window.emotionAIReady = withTimeout(
+      pipeline('text-classification', EMOTION_MODEL, modelOptions),
+      20000,
+      'Le modèle IA met trop de temps à se charger'
+    ).then(classifier => {
       window.emotionClassifier = classifier;
+      window.emotionAIStatus = 'ready';
       return classifier;
     }).catch(error => {
       window.emotionClassifierError = error;
+      window.emotionAIStatus = 'error';
       throw error;
     });
 
     window.analyzeEmotionAI = async function(text) {
-      const classifier = await window.emotionAIReady;
-      const raw = await classifier(text, { top_k: 8 });
-      return Array.isArray(raw) && Array.isArray(raw[0]) ? raw[0] : raw;
+      const classifier = await withTimeout(
+        window.emotionAIReady,
+        21000,
+        'Le modèle IA n’est pas prêt'
+      );
+
+      return withTimeout(
+        classifier(text, { top_k: 8 }),
+        8000,
+        'L’analyse IA a dépassé le délai'
+      );
     };
   </script>
 
@@ -1745,11 +1776,13 @@
         detail.textContent = 'Analyse IA des derniers commentaires en arrière-plan…';
       }
 
-      badge.textContent = 'IA · confirmation en arrière-plan…';
+      badge.textContent = window.emotionAIDevice === 'webgpu'
+        ? 'IA · GPU · chargement…'
+        : 'IA · CPU · chargement…';
 
       try {
         const analyzed = [];
-        for (const comment of comments.slice(0, 10)) {
+        for (const comment of comments.slice(0, 3)) {
           const text = String(comment.body || '').trim();
           if (!text) continue;
 
@@ -1823,14 +1856,19 @@
           ' · émotion dominante détectée : ' + emotionName +
           ' (' + Math.round(top.score * 100) + '%).';
 
-        badge.textContent = 'IA · français · modèle local';
+        badge.textContent = 'IA · français · ' + (window.emotionAIDevice === 'webgpu' ? 'GPU' : 'CPU');
       } catch (error) {
         // La détection immédiate reste affichée si le modèle IA ne charge pas.
+        const timeoutError = /trop de temps|dépassé le délai|n’est pas prêt/i.test(error?.message || '');
         detail.textContent = immediateSignals.length
-          ? 'Détection française locale active · analyse IA indisponible pour le moment.'
-          : 'IA indisponible pour le moment · analyse de secours active.';
+          ? (timeoutError
+              ? 'Détection française locale active · le modèle IA a dépassé son délai.'
+              : 'Détection française locale active · analyse IA indisponible.')
+          : (timeoutError
+              ? 'Le modèle IA a dépassé son délai · analyse de secours active.'
+              : 'IA indisponible · analyse de secours active.');
         badge.textContent = immediateSignals.length
-          ? 'Secours · détection locale'
+          ? (timeoutError ? 'Secours · IA trop lente' : 'Secours · détection locale')
           : 'Secours · mots-clés';
       }
     }
@@ -1923,6 +1961,10 @@
     }
 
     loadSharedComments();
+
+    // Prépare le modèle en arrière-plan : la page reste interactive pendant le chargement.
+    window.emotionAIReady.catch(() => {});
+
     setInterval(loadSharedComments, 60000);
 
 

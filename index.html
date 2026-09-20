@@ -1597,16 +1597,16 @@
     ];
 
     function keywordMood(text) {
-      const normalized = text.toLowerCase().normalize('NFD').replace(/[\\u0300-\\u036f]/g,'');
+      const normalized = text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
       let score = 0;
 
       moodPositive.forEach(word => {
-        const clean = word.normalize('NFD').replace(/[\\u0300-\\u036f]/g,'');
+        const clean = word.normalize('NFD').replace(/[\u0300-\u036f]/g,'');
         if (normalized.includes(clean)) score += 1;
       });
 
       moodNegative.forEach(word => {
-        const clean = word.normalize('NFD').replace(/[\\u0300-\\u036f]/g,'');
+        const clean = word.normalize('NFD').replace(/[\u0300-\u036f]/g,'');
         if (normalized.includes(clean)) score -= 1;
       });
 
@@ -1620,7 +1620,7 @@
       const normalized = text
         .toLowerCase()
         .normalize('NFD')
-        .replace(/[\\u0300-\\u036f]/g,'')
+        .replace(/[\u0300-\u036f]/g,'')
         .trim();
 
       const hasWord = word =>

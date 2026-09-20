@@ -90,6 +90,12 @@
     boredom: [
       "ennui","ennuyeux","ennuyeuse","ennuyant","ennuyante","lassant","lassante",
       "fatigant","fatigante","monotone","ennuyé","ennuyee"
+    ],
+    jealousy: [
+      "jalousie","jaloux","jalouse","envieux","envieuse","envie","envier",
+      "envies","jalousement","jaloux de","jalouse de","je suis jaloux",
+      "je suis jalouse","ça me rend jaloux","ca me rend jaloux",
+      "ça me rend jalouse","ca me rend jalouse"
     ]
   };
 
@@ -734,6 +740,33 @@
     return { ...scoreState, matched };
   }
 
+  function themeForEmotion(emotion, score = 0) {
+    const themeMap = {
+      joy: "joy",
+      love: "love",
+      excitement: "excitement",
+      admiration: "admiration",
+      gratitude: "gratitude",
+      optimism: "optimism",
+      relief: "relief",
+      sadness: "sadness",
+      jealousy: "jealousy",
+      anger: "anger",
+      fear: "fear",
+      disgust: "disgust",
+      frustration: "frustration",
+      confusion: "confusion",
+      boredom: "boredom",
+      disappointment: "disappointment",
+      surprise: "surprise",
+      positive: "positive",
+      negative: "negative",
+      neutral: "neutral"
+    };
+
+    return themeMap[emotion] || (score > 0 ? "positive" : score < 0 ? "negative" : "neutral");
+  }
+
   function analyzeText(input) {
     const original = String(input || "");
     const text = normalize(original);
@@ -773,20 +806,20 @@
       core = sentenceScore(original);
     }
 
-    let mood = "neutral";
-    if (core.score >= 0.30) mood = "positive";
-    if (core.score <= -0.30) mood = "negative";
+    let polarityMood = "neutral";
+    if (core.score >= 0.30) polarityMood = "positive";
+    if (core.score <= -0.30) polarityMood = "negative";
 
     const emotionEntries = Object.entries(core.emotions)
       .filter(([emotion]) => !["positive","negative"].includes(emotion));
 
     let dominantEmotion = "neutral";
-    if (mood === "positive") {
+    if (polarityMood === "positive") {
       const ranked = emotionEntries
         .filter(([emotion]) => emotionSign(emotion) > 0)
         .sort((a,b) => Math.abs(b[1]) - Math.abs(a[1]));
       dominantEmotion = ranked[0]?.[0] || "positive";
-    } else if (mood === "negative") {
+    } else if (polarityMood === "negative") {
       const ranked = emotionEntries
         .filter(([emotion]) => emotionSign(emotion) < 0)
         .sort((a,b) => Math.abs(b[1]) - Math.abs(a[1]));
@@ -797,6 +830,8 @@
       ...emotionEntries.map(([,value]) => Math.abs(value)),
       0
     );
+
+    const mood = themeForEmotion(dominantEmotion, core.score);
 
     const confidence = Math.min(
       1,
@@ -809,6 +844,7 @@
       polarity:Number(core.score.toFixed(3)),
       score:Number(core.score.toFixed(3)),
       mood,
+      polarityMood,
       dominantEmotion,
       confidence:Number(confidence.toFixed(3)),
       matched:core.matched.slice(0, 60),
@@ -855,9 +891,9 @@
     const totalWeight = results.reduce((sum, item) => sum + item.weight, 0);
     const score = results.reduce((sum, item) => sum + item.score * item.weight, 0) / totalWeight;
 
-    let mood = "neutral";
-    if (score >= 0.40) mood = "positive";
-    if (score <= -0.40) mood = "negative";
+    let polarityMood = "neutral";
+    if (score >= 0.40) polarityMood = "positive";
+    if (score <= -0.40) polarityMood = "negative";
 
     const emotionTotals = {};
     results.forEach(item => {
@@ -869,11 +905,14 @@
     const dominantEmotion =
       Object.entries(emotionTotals).sort((a,b) => b[1] - a[1])[0]?.[0] || "neutral";
 
+    const mood = themeForEmotion(dominantEmotion, score);
+
     const confidence =
       results.reduce((sum,item) => sum + item.confidence * item.weight, 0) / totalWeight;
 
     return {
       mood,
+      polarityMood,
       score:Number(score.toFixed(3)),
       confidence:Number(confidence.toFixed(3)),
       dominantEmotion,

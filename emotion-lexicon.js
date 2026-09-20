@@ -1,15 +1,13 @@
 (() => {
   /*
-   * EmotionLexicon v1
+   * EmotionLexicon v2
    * Analyse locale de texte français, sans IA ni API.
    * Le fichier contient :
-   * - émotions et polarités
-   * - mots d'intensité
-   * - atténuateurs
-   * - négations
-   * - expressions multi-mots
-   * - connecteurs de contraste
-   * - règles de contexte et de portée de négation
+   * - un lexique FEEL chargé depuis une ressource publique
+   * - un moteur local de secours
+   * - négations, intensificateurs, atténuateurs et contrastes
+   * - analyse par mot, expression et contexte
+   * - agrégation des commentaires avec pondération temporelle
    */
 
   const EMOTIONS = {
@@ -212,16 +210,313 @@
   const NEGATION_WINDOW = 4;
   const INTENSITY_WINDOW = 2;
 
-  const normalize = text => String(text || "")
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[\u2019']/g, "'")
-    .replace(/[^\p{L}\p{N}\s!?.,;:'’🔥✨❤️💙💚👍👎😡😠😢😭😊😍🤬🤢🤮😨😰😱👏🎉]/gu, " ")
-    .replace(/\s+/g, " ")
-    .trim();
 
-  const tokenize = text => normalize(text).split(" ").filter(Boolean);
+  const FEEL_URLS = [
+    "https://raw.githubusercontent.com/sborms/sentometrics/master/data-raw/lexicons-raw/FEEL_raw.csv",
+    "https://raw.githubusercontent.com/sborms/sentometrics/main/data-raw/lexicons-raw/FEEL_raw.csv"
+  ];
+
+  const MORE_POSITIVE = [
+    "agréable","agreable","amical","amicale","amitié","amitie","apprécier","apprecier",
+    "appréciation","appreciation","bienveillant","bienveillante","brillant","brillante",
+    "chance","chanceux","chanceuse","confiance","courage","courtois","courtoise","délicieux",
+    "delicieux","douceur","émerveillé","emerveille","émerveillée","emerveillee","enthousiasmant",
+    "excellent","excellente","fierté","fierte","fier","fière","fiere","formidable","généreux",
+    "genereux","généreuse","genereuse","gagnant","gagnante","génialement","genialement","grâce",
+    "grace","heureux","heureuse","honneur","joie","joli","jolie","liberté","liberte","magnifique",
+    "merveilleux","merveilleuse","optimisme","paix","plaisir","positivement","réussite","reussite",
+    "respect","respectueux","respectueuse","sécurité","securite","satisfaisant","satisfaite",
+    "sincère","sincere","sourire","succès","succes","sublime","sympa","sympathique","tendre",
+    "triomphe","triomphant","triomphante","utile","valorisant","valorisante","victoire","vivant",
+    "vivante","volontaire","zen","bien joué","bien joue","bonne idée","bonne idee","bonne nouvelle",
+    "c'est bien","c est bien","c'est super","c est super","c'est cool","c est cool"
+  ];
+
+  const MORE_NEGATIVE = [
+    "absurde","agressif","agressive","agression","amer","amère","amere","anxieux","anxieuse",
+    "appréhension","apprehension","atroce","autoritaire","blessant","blessante","brusque",
+    "colérique","colerique","cruel","cruelle","culpabilité","culpabilite","danger","dangereux",
+    "dangereuse","désastre","desastre","désastreux","desastreux","doute","douteux","douteuse",
+    "échec","echec","énerver","enerver","épuisé","epuise","épuisée","epuisee","froid","froide",
+    "frayeur","haineux","haineuse","hésitation","hesitation","humiliant","humiliante","honte",
+    "hostile","inacceptable","indifférent","indifferente","injustice","insupportable","irrespect",
+    "jaloux","jalouse","méchant","mechant","méchante","mechante","mensonge","menteur","menteuse",
+    "menace","menaçant","menacant","misérable","miserable","panique","pessimiste","plainte",
+    "pleurnicher","regretter","ridicule","risque","sarcastique","sarcasme","souffrance","tension",
+    "terrifié","terrifiée","terrifiant","toxique","trahison","traître","traitre","violent",
+    "violente","vulgaire","problématique","problematique","déconseillé","deconseille","négatif",
+    "negative","mauvaisement","ça craint","ca craint","ça m'énerve","ça m enerve","ça m'enerve",
+    "ras le bol","ras-le-bol","marre de","j'en ai marre","j en ai marre"
+  ];
+
+  const MORE_PHRASES = {
+    "tout va bien": 1.15,
+    "tout est bien": 1.0,
+    "je suis content": 1.15,
+    "je suis contente": 1.15,
+    "je suis ravi": 1.25,
+    "je suis ravie": 1.25,
+    "je suis heureux": 1.25,
+    "je suis heureuse": 1.25,
+    "j'ai adoré": 1.35,
+    "j ai adore": 1.35,
+    "j'ai adoré ça": 1.45,
+    "j ai adore ca": 1.45,
+    "ça me plaît": 1.05,
+    "ca me plait": 1.05,
+    "ça me fait plaisir": 1.20,
+    "ca me fait plaisir": 1.20,
+    "bonne surprise": 1.15,
+    "super idée": 1.20,
+    "super idee": 1.20,
+    "très bonne idée": 1.45,
+    "tres bonne idee": 1.45,
+    "je suis déçu": -1.15,
+    "je suis decu": -1.15,
+    "je suis déçue": -1.15,
+    "je suis decue": -1.15,
+    "je suis énervé": -1.25,
+    "je suis enerve": -1.25,
+    "je suis énervée": -1.25,
+    "je suis enervee": -1.25,
+    "je suis inquiet": -1.10,
+    "je suis inquiète": -1.10,
+    "je suis inquiete": -1.10,
+    "ça m'inquiète": -1.15,
+    "ca m inquiete": -1.15,
+    "ça me déçoit": -1.20,
+    "ca me decoit": -1.20,
+    "ça me déprime": -1.30,
+    "ca me deprime": -1.30,
+    "ça m'énerve": -1.25,
+    "ca m enerve": -1.25,
+    "ça m'énerve beaucoup": -1.55,
+    "ca m enerve beaucoup": -1.55,
+    "c'est une catastrophe": -1.60,
+    "c est une catastrophe": -1.60,
+    "c'est vraiment nul": -1.65,
+    "c est vraiment nul": -1.65,
+    "ça ne sert à rien": -1.10,
+    "ca ne sert a rien": -1.10,
+    "ça sert à rien": -1.10,
+    "ca sert a rien": -1.10,
+    "aucun souci": 0.80,
+    "aucun soucis": 0.80,
+    "pas de souci": 0.80,
+    "pas de soucis": 0.80
+  };
+
+  MORE_POSITIVE.forEach(word => EMOTIONS.optimism.push(word));
+  MORE_NEGATIVE.forEach(word => EMOTIONS.frustration.push(word));
+
+  const FEEL_LEXICON = new Map();
+  const FEEL_PHRASES = [];
+  let FEEL_STATE = "fallback";
+  let FEEL_COUNT = 0;
+  let FEEL_ERROR = "";
+
+  const EMOTION_HEADERS = {
+    joy: ["joy", "joie"],
+    surprise: ["surprise"],
+    anger: ["anger", "colere", "colère"],
+    disgust: ["disgust", "degout", "dégoût"],
+    sadness: ["sadness", "tristesse"],
+    fear: ["fear", "peur"]
+  };
+
+  function normalize(value) {
+    return String(value || "")
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[’']/g, " ")
+      .replace(/[\u2010-\u2015]/g, "-")
+      .replace(/[^\p{L}\p{N}\s!?.,;:💙💚❤️🔥✨👍👎😡😠😢😭😊😍🤬🤢🤮😨😰😱👏🎉]/gu, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  function tokenize(text) {
+    return normalize(text).split(" ").filter(Boolean);
+  }
+
+  function parseSemicolonCSV(csv) {
+    const rows = [];
+    let row = [];
+    let cell = "";
+    let quoted = false;
+
+    for (let i = 0; i < csv.length; i++) {
+      const ch = csv[i];
+
+      if (ch === '"') {
+        if (quoted && csv[i + 1] === '"') {
+          cell += '"';
+          i++;
+        } else {
+          quoted = !quoted;
+        }
+        continue;
+      }
+
+      if (ch === ";" && !quoted) {
+        row.push(cell);
+        cell = "";
+        continue;
+      }
+
+      if ((ch === "\n" || ch === "\r") && !quoted) {
+        if (ch === "\r" && csv[i + 1] === "\n") i++;
+        row.push(cell);
+        if (row.some(value => String(value).trim() !== "")) rows.push(row);
+        row = [];
+        cell = "";
+        continue;
+      }
+
+      cell += ch;
+    }
+
+    row.push(cell);
+    if (row.some(value => String(value).trim() !== "")) rows.push(row);
+
+    return rows;
+  }
+
+  function parseNumber(value) {
+    const n = Number(String(value || "").replace(",", "."));
+    return Number.isFinite(n) ? n : 0;
+  }
+
+  function headerIndex(header, names) {
+    const wanted = names.map(name => normalize(name).replace(/ /g, ""));
+    return header.findIndex(cell => {
+      const key = normalize(cell).replace(/ /g, "");
+      return wanted.includes(key);
+    });
+  }
+
+  function addFeelEntry(word, polarity, emotionNames) {
+    const clean = normalize(word);
+    if (!clean) return;
+
+    const target = {
+      polarity: polarity > 0 ? 1 : -1,
+      emotions: new Set(emotionNames)
+    };
+
+    const existing = FEEL_LEXICON.get(clean);
+    if (!existing) {
+      FEEL_LEXICON.set(clean, target);
+    } else {
+      if (existing.polarity !== target.polarity) {
+        existing.polarity = 0;
+      }
+      target.emotions.forEach(emotion => existing.emotions.add(emotion));
+    }
+
+    if (clean.includes(" ")) {
+      FEEL_PHRASES.push([clean, target]);
+    }
+  }
+
+  async function fetchWithTimeout(url, ms = 7000) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), ms);
+
+    try {
+      const response = await fetch(url, {
+        headers: { "Accept": "text/csv,text/plain;q=0.9,*/*;q=0.8" },
+        cache: "no-store",
+        signal: controller.signal
+      });
+
+      if (!response.ok) throw new Error("HTTP " + response.status);
+      return await response.text();
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
+  async function loadFeelLexicon() {
+    FEEL_STATE = "loading";
+
+    for (const url of FEEL_URLS) {
+      try {
+        const csv = await fetchWithTimeout(url);
+        const rows = parseSemicolonCSV(csv);
+        if (rows.length < 2) throw new Error("CSV vide ou incomplet");
+
+        const header = rows[0];
+        const wordIndex = headerIndex(header, ["word", "mot"]);
+        const polarityIndex = headerIndex(header, ["polarity", "polarité", "polarity"]);
+        if (wordIndex < 0 || polarityIndex < 0) throw new Error("Colonnes FEEL introuvables");
+
+        const emotionIndexes = Object.entries(EMOTION_HEADERS)
+          .map(([emotion, names]) => [emotion, headerIndex(header, names)])
+          .filter(([, index]) => index >= 0);
+
+        for (let i = 1; i < rows.length; i++) {
+          const row = rows[i];
+          const word = row[wordIndex];
+          const polarityText = normalize(row[polarityIndex]);
+
+          let polarity = 0;
+          if (polarityText === "positive" || polarityText === "positif") polarity = 1;
+          if (polarityText === "negative" || polarityText === "negatif") polarity = -1;
+          if (!polarity) continue;
+
+          const emotions = emotionIndexes
+            .filter(([, index]) => {
+              const value = String(row[index] ?? "").trim().toLowerCase();
+              return value === "1" || value === "1.0" || value === "true" || value === "oui";
+            })
+            .map(([emotion]) => emotion);
+
+          addFeelEntry(word, polarity, emotions);
+        }
+
+        FEEL_COUNT = FEEL_LEXICON.size;
+        if (FEEL_COUNT < 1000) throw new Error("Lexique chargé mais trop petit");
+
+        FEEL_STATE = "ready";
+        FEEL_ERROR = "";
+        return true;
+      } catch (error) {
+        FEEL_ERROR = error?.message || "Erreur de chargement";
+      }
+    }
+
+    FEEL_STATE = "fallback";
+    return false;
+  }
+
+  function emotionSign(emotion) {
+    return ["joy","surprise","optimism","admiration","gratitude","amusement","love","excitement","relief"]
+      .includes(emotion) ? 1 : -1;
+  }
+
+  function oppositeEmotion(emotion) {
+    const opposites = {
+      joy: "sadness",
+      sadness: "joy",
+      anger: "relief",
+      relief: "anger",
+      fear: "confidence",
+      disgust: "admiration",
+      admiration: "disappointment",
+      surprise: "confusion",
+      confusion: "clarity",
+      love: "disappointment",
+      excitement: "boredom",
+      boredom: "excitement",
+      optimism: "disappointment",
+      disappointment: "optimism",
+      gratitude: "frustration",
+      amusement: "sadness"
+    };
+    return opposites[emotion] || emotion;
+  }
 
   function hasPhrase(text, phrase) {
     return text.includes(normalize(phrase));
@@ -230,21 +525,20 @@
   function isNegated(tokens, index) {
     const start = Math.max(0, index - NEGATION_WINDOW);
     const previous = tokens.slice(start, index);
-
     const joined = previous.join(" ");
+
     for (const exception of NEGATION_EXCEPTIONS) {
       if (joined.endsWith(normalize(exception))) return false;
     }
 
-    const lastNegation = previous.map((token, i) => ({token, i}))
+    const lastNegation = previous.map((token, i) => ({ token, i }))
       .filter(item => NEGATIONS.has(item.token))
       .pop();
 
     if (!lastNegation) return false;
 
-    // "ne ... mais" / "ne ... cependant" coupe la portée.
     const afterNegation = previous.slice(lastNegation.i + 1);
-    if (afterNegation.some(t => CONTRAST_WORDS.includes(t))) return false;
+    if (afterNegation.some(token => CONTRAST_WORDS.includes(token))) return false;
 
     return true;
   }
@@ -265,302 +559,336 @@
     return multiplier;
   }
 
-  function contrastWeight(text, sentenceIndex) {
-    const sentences = text.split(/(?<=[.!?])/u);
-    if (sentences.length < 2) return 1;
-
-    const current = sentences[sentenceIndex] || "";
-    const hasContrast = CONTRAST_WORDS.some(word => current.includes(normalize(word)));
-    return hasContrast || sentenceIndex > 0 ? 1.18 : 0.82;
+  function buildSentenceEmotionScores() {
+    return {
+      joy:0, admiration:0, gratitude:0, amusement:0, love:0, excitement:0,
+      optimism:0, relief:0, anger:0, sadness:0, disappointment:0, fear:0,
+      disgust:0, frustration:0, confusion:0, boredom:0, surprise:0,
+      positive:0, negative:0
+    };
   }
 
-  function addEmotion(map, emotion, value) {
-    map[emotion] = (map[emotion] || 0) + value;
+  function addEmotion(scores, emotion, value) {
+    scores[emotion] = (scores[emotion] || 0) + value;
   }
 
-  function scoreWordList(text, tokens, list, baseScore, emotion, emotions, matched) {
-    for (const word of list) {
-      const normalWord = normalize(word);
-      if (!normalWord || normalWord.includes(" ")) continue;
+  function scorePhraseMap(text, scoreState, matched) {
+    const allPhraseMaps = [PHRASES.positive, PHRASES.negative, MORE_PHRASES];
 
-      tokens.forEach((token, index) => {
-        if (token !== normalWord) return;
+    for (const map of allPhraseMaps) {
+      for (const [phrase, value] of Object.entries(map)) {
+        const p = normalize(phrase);
+        if (!p || !text.includes(p)) continue;
 
-        let score = baseScore;
-        const negated = isNegated(tokens, index);
+        scoreState.score += value;
+        if (value >= 0) addEmotion(scoreState.emotions, "positive", value);
+        else addEmotion(scoreState.emotions, "negative", Math.abs(value));
 
-        if (negated) {
-          score = score > 0 ? -Math.max(0.82, score * 0.95) : Math.abs(score) * 0.82;
+        matched.push({
+          phrase,
+          score: Number(value.toFixed(3)),
+          source: "phrase"
+        });
+      }
+    }
+
+    if (FEEL_STATE === "ready") {
+      for (const [phrase, entry] of FEEL_PHRASES) {
+        if (!text.includes(phrase)) continue;
+
+        const signed = entry.polarity || 0;
+        if (!signed) continue;
+
+        scoreState.score += signed * 0.85;
+        addEmotion(scoreState.emotions, signed > 0 ? "positive" : "negative", 0.85);
+
+        for (const emotion of entry.emotions) {
+          const value = emotionSign(emotion) * Math.abs(signed) * 0.55;
+          addEmotion(scoreState.emotions, emotion, value);
         }
 
-        score *= multiplierFromContext(tokens, index);
-
-        addEmotion(emotions, emotion, score);
-        matched.push({word: normalWord, emotion, score, negated});
-      });
+        matched.push({
+          phrase,
+          score: Number((signed * 0.85).toFixed(3)),
+          source: "FEEL"
+        });
+      }
     }
+  }
+
+  function scoreToken(token, index, tokens, scoreState, matched) {
+    const negated = isNegated(tokens, index);
+    const multiplier = multiplierFromContext(tokens, index);
+
+    const feel = FEEL_STATE === "ready" ? FEEL_LEXICON.get(token) : null;
+
+    if (feel && feel.polarity !== 0) {
+      let signed = feel.polarity * 1.0;
+      if (negated) signed *= -0.95;
+      signed *= multiplier;
+
+      scoreState.score += signed;
+      addEmotion(
+        scoreState.emotions,
+        signed >= 0 ? "positive" : "negative",
+        Math.abs(signed)
+      );
+
+      for (const emotion of feel.emotions) {
+        let value = emotionSign(emotion) * (Math.abs(signed) * 0.72);
+        if (negated) {
+          value *= -1;
+          addEmotion(scoreState.emotions, oppositeEmotion(emotion), Math.abs(value) * 0.65);
+        } else {
+          addEmotion(scoreState.emotions, emotion, value);
+        }
+      }
+
+      matched.push({
+        word: token,
+        score: Number(signed.toFixed(3)),
+        negated,
+        source: "FEEL",
+        emotions: Array.from(feel.emotions)
+      });
+      return;
+    }
+
+    for (const word of EXTRA_POSITIVE.concat(MORE_POSITIVE)) {
+      if (normalize(word) !== token) continue;
+
+      let signed = 0.85 * multiplier;
+      if (negated) signed *= -0.80;
+
+      scoreState.score += signed;
+      addEmotion(scoreState.emotions, signed >= 0 ? "positive" : "negative", Math.abs(signed));
+      matched.push({ word:token, score:Number(signed.toFixed(3)), negated, source:"local-positive" });
+    }
+
+    for (const word of EXTRA_NEGATIVE.concat(MORE_NEGATIVE)) {
+      if (normalize(word) !== token) continue;
+
+      let signed = -0.95 * multiplier;
+      if (negated) signed *= -0.75;
+
+      scoreState.score += signed;
+      addEmotion(scoreState.emotions, signed >= 0 ? "positive" : "negative", Math.abs(signed));
+      matched.push({ word:token, score:Number(signed.toFixed(3)), negated, source:"local-negative" });
+    }
+
+    Object.entries(EMOTIONS).forEach(([emotion, words]) => {
+      if (!words.some(word => normalize(word) === token)) return;
+
+      let value = emotionSign(emotion) * 0.78 * multiplier;
+      if (negated) value *= -1;
+
+      addEmotion(scoreState.emotions, emotion, value);
+      scoreState.score += value * 0.50;
+      matched.push({
+        word:token,
+        emotion,
+        score:Number(value.toFixed(3)),
+        negated,
+        source:"local-emotion"
+      });
+    });
+  }
+
+  function sentenceScore(text) {
+    const normalized = normalize(text);
+    const tokens = tokenize(text);
+    const scoreState = {
+      score: 0,
+      emotions: buildSentenceEmotionScores()
+    };
+    const matched = [];
+
+    scorePhraseMap(normalized, scoreState, matched);
+
+    tokens.forEach((token, index) => {
+      scoreToken(token, index, tokens, scoreState, matched);
+    });
+
+    // Ponctuation expressive.
+    const exclamations = (String(text).match(/!/g) || []).length;
+    const questionMarks = (String(text).match(/\?/g) || []).length;
+    if (exclamations >= 2) scoreState.score *= 1.08;
+    if (questionMarks >= 2 && Math.abs(scoreState.score) < 0.8) {
+      addEmotion(scoreState.emotions, "confusion", 0.45);
+    }
+
+    // Lettres en capitales : légère intensification.
+    const caps = String(text).match(/\b[A-ZÀÂÄÇÉÈÊËÎÏÔÖÙÛÜŸ]{3,}\b/g) || [];
+    if (caps.length) scoreState.score *= 1.08;
+
+    return { ...scoreState, matched };
   }
 
   function analyzeText(input) {
     const original = String(input || "");
     const text = normalize(original);
-    const tokens = tokenize(original);
 
     if (!text) {
       return {
-        polarity: 0,
-        mood: "neutral",
-        dominantEmotion: "neutral",
-        confidence: 0,
-        score: 0,
-        matched: [],
-        original
+        polarity:0, score:0, mood:"neutral", dominantEmotion:"neutral",
+        confidence:0, matched:[], original, lexiconSource:FEEL_STATE
       };
     }
 
-    const emotions = {};
-    const matched = [];
-    let score = 0;
+    // Le contraste fait basculer le poids vers la seconde partie.
+    const contrastRegex = /\bmais\b|\bcependant\b|\bpourtant\b|\btoutefois\b|\ben revanche\b|\bpar contre\b|\bnéanmoins\b/g;
+    const contrastMatch = contrastRegex.exec(text);
 
-    // Expressions multi-mots : elles passent avant les mots isolés.
-    for (const [phrase, value] of Object.entries(PHRASES.positive)) {
-      const p = normalize(phrase);
-      if (text.includes(p)) {
-        score += value;
-        addEmotion(emotions, value > 0 ? "positive" : "disappointment", Math.abs(value));
-        matched.push({phrase, score:value, negated:false, source:"phrase"});
-      }
-    }
+    let core;
+    if (contrastMatch) {
+      const before = text.slice(0, contrastMatch.index);
+      const after = text.slice(contrastMatch.index + contrastMatch[0].length);
+      const a = sentenceScore(before);
+      const b = sentenceScore(after);
 
-    for (const [phrase, value] of Object.entries(PHRASES.negative)) {
-      const p = normalize(phrase);
-      if (text.includes(p)) {
-        score += value;
-        addEmotion(emotions, "negative", Math.abs(value));
-        matched.push({phrase, score:value, negated:false, source:"phrase"});
-      }
-    }
+      core = {
+        score: a.score * 0.55 + b.score * 1.35,
+        emotions: buildSentenceEmotionScores(),
+        matched: a.matched.concat(b.matched)
+      };
 
-    // Mots positifs / négatifs généraux.
-    for (const word of EXTRA_POSITIVE) {
-      const w = normalize(word);
-      if (!w || w.includes(" ")) continue;
-
-      tokens.forEach((token, index) => {
-        if (token !== w) return;
-
-        let local = 0.85;
-        if (isNegated(tokens, index)) local = -0.65;
-        local *= multiplierFromContext(tokens, index);
-
-        score += local;
-        matched.push({word:w, score:local, negated:isNegated(tokens,index), source:"positive"});
+      Object.entries(a.emotions).forEach(([emotion, value]) => {
+        core.emotions[emotion] += value * 0.55;
       });
-    }
 
-    for (const word of EXTRA_NEGATIVE) {
-      const w = normalize(word);
-      if (!w || w.includes(" ")) continue;
-
-      tokens.forEach((token, index) => {
-        if (token !== w) return;
-
-        let local = -0.95;
-        if (isNegated(tokens, index)) local = 0.62;
-        local *= multiplierFromContext(tokens, index);
-
-        score += local;
-        matched.push({word:w, score:local, negated:isNegated(tokens,index), source:"negative"});
+      Object.entries(b.emotions).forEach(([emotion, value]) => {
+        core.emotions[emotion] += value * 1.35;
       });
+    } else {
+      core = sentenceScore(original);
     }
 
-    // Emotions fines.
-    const emotionScores = {
-      joy:0, admiration:0, gratitude:0, amusement:0, love:0, excitement:0,
-      optimism:0, relief:0, anger:0, sadness:0, disappointment:0, fear:0,
-      disgust:0, frustration:0, confusion:0, boredom:0
-    };
+    const maxEmotion = Math.max(
+      ...Object.values(core.emotions).map(value => Math.abs(value)),
+      0
+    );
 
-    const positiveEmotions = new Set(["joy","admiration","gratitude","amusement","love","excitement","optimism","relief"]);
-    const negativeEmotions = new Set(["anger","sadness","disappointment","fear","disgust","frustration","confusion","boredom"]);
-
-    Object.entries(EMOTIONS).forEach(([emotion, words]) => {
-      words.forEach(word => {
-        const normalWord = normalize(word);
-        if (!normalWord || normalWord.includes(" ")) return;
-
-        tokens.forEach((token, index) => {
-          if (token !== normalWord) return;
-
-          let value = positiveEmotions.has(emotion) ? 0.80 : -0.82;
-          const negated = isNegated(tokens, index);
-
-          if (negated) value = value > 0 ? -1.00 : 0.78;
-          value *= multiplierFromContext(tokens, index);
-
-          addEmotion(emotionScores, emotion, value);
-          score += value * 0.45;
-          matched.push({word:normalWord, emotion, score:value, negated, source:"emotion"});
-        });
-      });
-    });
-
-    // Phrases ultra-explicites : priorité forte.
-    const explicitNegative = [
-      "tout sauf bien","tout sauf bon","tout sauf genial","tout sauf génial",
-      "complètement nul","completement nul","vraiment nul","c'est nul",
-      "c est nul","c'est mauvais","c est mauvais","je deteste","je déteste",
-      "je ne comprends rien","je comprends rien","ça ne marche pas","ca ne marche pas",
-      "ça ne fonctionne pas","ca ne fonctionne pas","je suis perdu","je suis perdue",
-      "aucun intérêt","aucun interet","aucune utilité","aucune utilite","pas terrible"
-    ];
-    const explicitPositive = [
-      "tout sauf mauvais","tout sauf nul","c'est génial","c est genial",
-      "c'est parfait","c est parfait","je recommande","j'adore","j'aime"
-    ];
-
-    explicitNegative.forEach(phrase => {
-      if (hasPhrase(text, phrase)) {
-        score -= 2.0;
-        addEmotion(emotionScores, "anger", 1.4);
-        addEmotion(emotionScores, "disappointment", 1.2);
-        matched.push({phrase, score:-2, source:"explicit"});
-      }
-    });
-
-    explicitPositive.forEach(phrase => {
-      if (hasPhrase(text, phrase)) {
-        score += 2.0;
-        addEmotion(emotionScores, "joy", 1.4);
-        addEmotion(emotionScores, "admiration", 1.1);
-        matched.push({phrase, score:2, source:"explicit"});
-      }
-    });
-
-    // Contraste : la seconde partie compte davantage.
-    const lowerText = text;
-    const contrastPositions = CONTRAST_WORDS
-      .map(word => lowerText.indexOf(normalize(word)))
-      .filter(position => position >= 0);
-
-    if (contrastPositions.length) {
-      const pivot = Math.min(...contrastPositions);
-      const before = lowerText.slice(0, pivot);
-      const after = lowerText.slice(pivot);
-
-      const beforeResult = before === text ? 0 : analyzeSimple(before);
-      const afterResult = analyzeSimple(after);
-
-      score = (beforeResult * 0.55) + (afterResult * 1.35);
+    let dominantEmotion = "neutral";
+    if (Math.abs(core.score) >= 0.05) {
+      const ranked = Object.entries(core.emotions)
+        .filter(([emotion]) => !["positive","negative"].includes(emotion))
+        .sort((a,b) => Math.abs(b[1]) - Math.abs(a[1]));
+      dominantEmotion = ranked[0]?.[0] || (core.score > 0 ? "positive" : "negative");
     }
-
-    const capsCount = (original.match(/\b[A-ZÀÂÄÇÉÈÊËÎÏÔÖÙÛÜŸ][A-ZÀÂÄÇÉÈÊËÎÏÔÖÙÛÜŸ!-]{2,}\b/g) || []).length;
-    if (capsCount > 0) score *= 1.08;
-
-    const exclamations = (original.match(/!/g) || []).length;
-    if (exclamations >= 2) score *= 1.08;
-
-    const maxAbs = Math.max(...Object.values(emotionScores).map(v => Math.abs(v)), 0);
-    let dominant = Object.entries(emotionScores)
-      .sort((a,b) => Math.abs(b[1]) - Math.abs(a[1]))[0];
-
-    if (Math.abs(score) < 0.05) {
-      dominant = ["neutral", 0];
-    } else if (!maxAbs || Math.abs(dominant?.[1] || 0) < 0.08) {
-      dominant = [score > 0 ? "positive" : "negative", score];
-    }
-
-    const confidence = Math.min(1, Math.abs(score) / 3 + maxAbs / 5);
 
     let mood = "neutral";
-    if (score >= 0.40) mood = "positive";
-    if (score <= -0.40) mood = "negative";
+    if (core.score >= 0.40) mood = "positive";
+    if (core.score <= -0.40) mood = "negative";
+
+    const confidence = Math.min(
+      1,
+      Math.abs(core.score) / 3.5 +
+      maxEmotion / 7 +
+      Math.min(core.matched.length, 8) / 40
+    );
 
     return {
-      polarity: score,
-      score,
+      polarity:Number(core.score.toFixed(3)),
+      score:Number(core.score.toFixed(3)),
       mood,
-      dominantEmotion: dominant ? dominant[0] : "neutral",
-      confidence: Number(confidence.toFixed(3)),
-      matched: matched.slice(0, 40),
-      original
+      dominantEmotion,
+      confidence:Number(confidence.toFixed(3)),
+      matched:core.matched.slice(0, 60),
+      original,
+      lexiconSource:FEEL_STATE,
+      lexiconSize:FEEL_COUNT
     };
   }
 
   function analyzeSimple(text) {
-    const tokens = tokenize(text);
-    let score = 0;
-
-    tokens.forEach((token, index) => {
-      if (EXTRA_POSITIVE.some(w => normalize(w) === token)) {
-        score += isNegated(tokens,index) ? -0.65 : 0.85;
-      }
-      if (EXTRA_NEGATIVE.some(w => normalize(w) === token)) {
-        score += isNegated(tokens,index) ? 0.62 : -0.95;
-      }
-    });
-
-    return score;
+    return sentenceScore(text).score;
   }
 
   function analyzeMany(comments) {
-    const recent = comments
-      .slice(0, 10)
-      .map((comment, index) => ({
-        ...analyzeText(comment?.body || ""),
-        weight: Math.max(0.45, 1 - index * 0.07)
-      }));
+    const list = Array.isArray(comments) ? comments : [];
+    const recent = list
+      .filter(comment => comment && String(comment.body ?? "").trim())
+      .slice(0, 10);
 
-    const usable = recent.filter(item => item.original.trim());
-    if (!usable.length) {
+    if (!recent.length) {
       return {
         mood:"neutral",
         score:0,
         confidence:0,
         dominantEmotion:"neutral",
         analyzed:0,
-        results:[]
+        results:[],
+        lexiconSource:FEEL_STATE,
+        lexiconSize:FEEL_COUNT
       };
     }
 
-    const weighted = usable.reduce((sum,item) => sum + item.score * item.weight, 0);
-    const totalWeight = usable.reduce((sum,item) => sum + item.weight, 0);
-    const score = weighted / totalWeight;
+    const results = recent.map((comment, index) => {
+      const result = analyzeText(comment.body || "");
+      const weight = 1 + (recent.length - index - 1) * 0.08;
+      return {
+        ...result,
+        weight,
+        author:comment.user?.login || "visiteur",
+        createdAt:comment.created_at || ""
+      };
+    });
+
+    const totalWeight = results.reduce((sum, item) => sum + item.weight, 0);
+    const score = results.reduce((sum, item) => sum + item.score * item.weight, 0) / totalWeight;
 
     let mood = "neutral";
     if (score >= 0.40) mood = "positive";
-    else if (score <= -0.40) mood = "negative";
+    if (score <= -0.40) mood = "negative";
 
     const emotionTotals = {};
-    usable.forEach(item => {
-      emotionTotals[item.dominantEmotion] =
-        (emotionTotals[item.dominantEmotion] || 0) + Math.max(0.1, item.confidence) * item.weight;
+    results.forEach(item => {
+      const emotion = item.dominantEmotion || "neutral";
+      emotionTotals[emotion] =
+        (emotionTotals[emotion] || 0) + Math.max(0.1, item.confidence) * item.weight;
     });
 
     const dominantEmotion =
       Object.entries(emotionTotals).sort((a,b) => b[1] - a[1])[0]?.[0] || "neutral";
 
     const confidence =
-      usable.reduce((sum,item) => sum + item.confidence * item.weight, 0) / totalWeight;
+      results.reduce((sum,item) => sum + item.confidence * item.weight, 0) / totalWeight;
 
     return {
       mood,
       score:Number(score.toFixed(3)),
       confidence:Number(confidence.toFixed(3)),
       dominantEmotion,
-      analyzed:usable.length,
-      results:recent
+      analyzed:results.length,
+      results,
+      lexiconSource:FEEL_STATE,
+      lexiconSize:FEEL_COUNT,
+      lexiconError:FEEL_ERROR || null
     };
   }
+
+  function getStatus() {
+    return {
+      state:FEEL_STATE,
+      size:FEEL_COUNT,
+      error:FEEL_ERROR || null,
+      source:FEEL_URLS[0]
+    };
+  }
+
+  const ready = loadFeelLexicon();
 
   window.EmotionLexicon = {
     analyzeText,
     analyzeMany,
+    analyzeSimple,
+    getStatus,
+    ready,
     lexicon: {
       emotions: EMOTIONS,
-      positive: EXTRA_POSITIVE,
-      negative: EXTRA_NEGATIVE,
-      phrases: PHRASES,
+      positive: EXTRA_POSITIVE.concat(MORE_POSITIVE),
+      negative: EXTRA_NEGATIVE.concat(MORE_NEGATIVE),
+      phrases: Object.assign({}, PHRASES.positive, PHRASES.negative, MORE_PHRASES),
       negations: Array.from(NEGATIONS),
       intensifiers: INTENSIFIERS,
       diminishers: DIMINISHERS,

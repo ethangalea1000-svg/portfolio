@@ -1089,26 +1089,26 @@
 
         <div class="skill">
           <span class="skill-name">Cybersécurité</span>
-          <span class="skill-percent" id="cyber-percent">—</span>
+          <span class="skill-percent" id="cyber-percent">60%</span>
         </div>
-        <div class="skill-bar">
-          <div class="skill-fill skill-fill-cyber" id="cyber-bar" style="width:0%;"></div>
+        <div class="skill-bar" aria-label="Cybersécurité : 60 pour cent">
+          <div class="skill-fill skill-fill-cyber" id="cyber-bar" style="width:60%;"></div>
         </div>
 
         <div class="skill">
           <span class="skill-name">Intelligence artificielle</span>
-          <span class="skill-percent" id="ia-percent">—</span>
+          <span class="skill-percent" id="ia-percent">72%</span>
         </div>
-        <div class="skill-bar">
-          <div class="skill-fill skill-fill-ia" id="ia-bar" style="width:0%;"></div>
+        <div class="skill-bar" aria-label="Intelligence artificielle : 72 pour cent">
+          <div class="skill-fill skill-fill-ia" id="ia-bar" style="width:72%;"></div>
         </div>
 
         <div class="skill">
           <span class="skill-name">Programmation</span>
-          <span class="skill-percent" id="code-percent">—</span>
+          <span class="skill-percent" id="code-percent">80%</span>
         </div>
-        <div class="skill-bar">
-          <div class="skill-fill skill-fill-code" id="code-bar" style="width:0%;"></div>
+        <div class="skill-bar" aria-label="Programmation : 80 pour cent">
+          <div class="skill-fill skill-fill-code" id="code-bar" style="width:80%;"></div>
         </div>
       </div>
     </section>
@@ -1429,39 +1429,29 @@
   <!-- Script : calcul automatique des pourcentages selon le contenu -->
   <script>
   function calculerPourcentages() {
-    // ===== CYBERSÉCURITÉ : nombre de projets cyber × 20% =====
-    const tagsProjets = document.querySelectorAll('#projets .tag');
-    let cyberCount = 0;
-    tagsProjets.forEach(tag => {
-      if (tag.textContent.trim() === 'Cybersécurité') cyberCount++;
-    });
-    const pourcentCyber = Math.min(cyberCount * 20, 100);
+    // Indicateurs de progression affichés sur le portfolio.
+    // Ils servent de repères visuels et ne constituent pas une évaluation scolaire.
+    const niveaux = {
+      cyber: 60,
+      ia: 72,
+      code: 80
+    };
 
-    // ===== INTELLIGENCE ARTIFICIELLE : nombre d'IA × 6% =====
-    const cartes = document.querySelectorAll('#competences .card');
-    let iaCount = 0;
-    cartes.forEach(carte => {
-      const h3 = carte.querySelector('h3');
-      if (h3 && h3.textContent.includes('IA maîtrisées')) {
-        iaCount = carte.querySelectorAll('.tag').length;
+    const values = [
+      ['cyber', niveaux.cyber],
+      ['ia', niveaux.ia],
+      ['code', niveaux.code]
+    ];
+
+    values.forEach(([key, value]) => {
+      const percent = document.getElementById(key + '-percent');
+      const bar = document.getElementById(key + '-bar');
+      if (percent) percent.textContent = value + '%';
+      if (bar) {
+        bar.style.width = value + '%';
+        bar.parentElement.setAttribute('aria-label', key + ' : ' + value + ' pour cent');
       }
     });
-    const pourcentIA = Math.min(iaCount * 6, 100);
-
-    // ===== PROGRAMMATION : nombre de projets GitHub × 40% =====
-    const liensGithub = document.querySelectorAll('#projets a[href*="github.com"]');
-    const projetsGithub = Math.ceil(liensGithub.length / 2);
-    const pourcentCode = Math.min(projetsGithub * 40, 100);
-
-    // ===== AFFICHAGE =====
-    document.getElementById('cyber-percent').textContent = pourcentCyber + '%';
-    document.getElementById('cyber-bar').style.width = pourcentCyber + '%';
-
-    document.getElementById('ia-percent').textContent = pourcentIA + '%';
-    document.getElementById('ia-bar').style.width = pourcentIA + '%';
-
-    document.getElementById('code-percent').textContent = pourcentCode + '%';
-    document.getElementById('code-bar').style.width = pourcentCode + '%';
   }
 
   window.addEventListener('DOMContentLoaded', () => {

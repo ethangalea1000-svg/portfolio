@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#050811">
+<meta name="description" content="CyberAcademy — apprendre la cybersécurité avec des cours courts, des quiz générés et une série quotidienne.">
+<link rel="icon" href="../../logo.png" type="image/png">
+<link rel="stylesheet" href="../ui.css">
+<title>CyberAcademy · CyberLab</title>
+<style>
+:root{--bg:#050811;--panel:#0b1423;--panel2:#0e1b2f;--line:rgba(132,164,199,.19);--accent:#38bdf8;--accent2:#a78bfa;--good:#4ade80;--warn:#fbbf24;--bad:#fb7185;--text:#f4f8ff;--muted:#8fa4bb}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;color:var(--text);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:radial-gradient(circle at 12% -10%,rgba(56,189,248,.15),transparent 32rem),radial-gradient(circle at 92% 10%,rgba(167,139,250,.14),transparent 28rem),linear-gradient(180deg,#07101c,#050811 60%,#03050a)}
+.academy-shell{max-width:1320px;margin:auto;padding:18px 18px 60px}.academy-nav{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:8px;border:1px solid var(--line);border-radius:18px;background:rgba(7,14,26,.84);backdrop-filter:blur(18px);position:sticky;top:10px;z-index:50}
+.academy-nav a{padding:9px 11px;color:#a9bbcf;border-radius:10px;text-decoration:none}.academy-nav a:hover,.academy-nav a.active{background:rgba(56,189,248,.1);color:#fff}.academy-brand{display:flex!important;align-items:center;gap:9px;margin-right:auto;font-weight:850;color:#fff!important}.academy-brand img{width:36px;height:36px;object-fit:contain;padding:4px;border-radius:11px;background:#0a1424;border:1px solid rgba(56,189,248,.32)}
+.hero{margin-top:16px;padding:28px;border:1px solid rgba(95,190,240,.25);border-radius:28px;background:linear-gradient(135deg,rgba(16,42,69,.9),rgba(11,18,33,.94));position:relative;overflow:hidden;box-shadow:0 18px 55px rgba(0,0,0,.25)}
+.hero:after{content:"";position:absolute;right:-90px;top:-130px;width:330px;height:330px;border-radius:50%;background:rgba(167,139,250,.15);filter:blur(15px)}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(260px,.8fr);gap:22px;align-items:center;position:relative;z-index:1}.hero-id{display:flex;gap:16px;align-items:center}.hero-logo{width:74px;height:74px;object-fit:contain;padding:9px;background:#07101d;border:1px solid rgba(56,189,248,.34);border-radius:20px}.kicker{margin:0 0 6px;text-transform:uppercase;letter-spacing:.16em;font-size:.68rem;font-weight:850;color:#75d8ff}.hero h1{margin:0;letter-spacing:-.045em;font-size:clamp(2rem,5vw,3.2rem);background:linear-gradient(90deg,#fff,#a4e5ff 52%,#cfbfff);-webkit-background-clip:text;color:transparent}.hero p{margin:7px 0 0;color:var(--muted);line-height:1.6}.streak-card{padding:16px;border:1px solid var(--line);border-radius:17px;background:rgba(3,8,16,.5)}.streak-number{font-size:2.2rem;font-weight:900;color:#ffd76b}.streak-flame{font-size:1.3rem}
+.layout{display:grid;grid-template-columns:250px minmax(0,1fr) 280px;gap:16px;margin-top:16px;align-items:start}.side,.content-card,.right-card{border:1px solid var(--line);border-radius:20px;background:rgba(9,18,32,.84);box-shadow:0 12px 38px rgba(0,0,0,.14);backdrop-filter:blur(14px)}.side{padding:12px;position:sticky;top:86px}.side-title{font-size:.7rem;text-transform:uppercase;letter-spacing:.12em;color:#667d95;padding:8px}.track-btn{display:block;width:100%;text-align:left;background:transparent;color:#a9bbcf;border:1px solid transparent;padding:11px 12px;border-radius:11px;cursor:pointer}.track-btn:hover,.track-btn.active{background:rgba(56,189,248,.1);border-color:rgba(56,189,248,.16);color:#fff}.content-card{padding:18px;margin-bottom:14px}.right-card{padding:15px;margin-bottom:14px}.right-card h3{margin:0 0 10px}
+.track-hero{display:flex;justify-content:space-between;align-items:flex-start;gap:15px}.pill{display:inline-flex;padding:5px 9px;border-radius:999px;background:rgba(56,189,248,.1);border:1px solid rgba(56,189,248,.18);color:#9fe3ff;font-size:.72rem}.lesson-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:9px;margin-top:14px}.lesson{padding:13px;border-radius:14px;background:#07111f;border:1px solid rgba(76,118,153,.2)}.lesson strong{display:block;margin-bottom:5px}.lesson span{color:var(--muted);font-size:.85rem}.topic-tabs{display:flex;gap:7px;overflow:auto;margin-bottom:14px}.topic-btn{flex:0 0 auto;padding:9px 11px;border-radius:10px;border:1px solid var(--line);background:#091426;color:#a9bed2;cursor:pointer}.topic-btn.active{background:linear-gradient(135deg,#174664,#28204d);border-color:rgba(56,189,248,.35);color:#fff}
+.question{font-size:1.2rem;line-height:1.55;font-weight:800;margin:10px 0 15px}.option{display:block;width:100%;text-align:left;margin:8px 0;padding:12px;border:1px solid var(--line);border-radius:12px;background:#07111f;color:#eaf4ff;cursor:pointer}.option:hover{border-color:rgba(56,189,248,.45);transform:translateY(-1px)}.option.correct{border-color:rgba(74,222,128,.55);background:rgba(26,78,49,.55)}.option.wrong{border-color:rgba(251,113,133,.55);background:rgba(82,26,39,.55)}.feedback{padding:13px;border-radius:13px;margin-top:12px}.feedback.ok{background:rgba(22,65,42,.6);border:1px solid rgba(74,222,128,.38)}.feedback.no{background:rgba(80,25,37,.6);border:1px solid rgba(251,113,133,.35)}
+.btn{border:1px solid var(--line);background:linear-gradient(180deg,#132742,#0c1930);color:#eef7ff;padding:10px 13px;border-radius:11px;cursor:pointer}.btn:hover{border-color:rgba(56,189,248,.4)}.btn.good{border-color:rgba(74,222,128,.35);background:linear-gradient(135deg,#123a2a,#102d2e)}.actions{display:flex;gap:8px;flex-wrap:wrap}.score-big{font-size:3.2rem;font-weight:950;letter-spacing:-.06em}.score-ring{width:130px;height:130px;border-radius:50%;display:grid;place-items:center;margin:auto;background:conic-gradient(var(--accent) 0deg,var(--accent2) var(--score-angle),#18263b var(--score-angle),#18263b 360deg)}.score-ring:after{content:"";width:96px;height:96px;background:#091321;border-radius:50%;position:absolute}.score-ring>div{position:relative;z-index:1;font-weight:900}
+.progress{height:9px;background:#040b14;border-radius:999px;overflow:hidden}.progress>span{display:block;width:0;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--accent),var(--accent2))}.stat-row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(76,118,153,.16)}.muted{color:var(--muted)}.small{font-size:.84rem;color:var(--muted)}.hidden{display:none!important}.center{text-align:center}.share-box{display:grid;gap:9px}.share-url{width:100%;padding:10px;border:1px solid var(--line);background:#06101b;color:#dcecff;border-radius:10px}
+@media(max-width:1080px){.layout{grid-template-columns:220px minmax(0,1fr)}.right{display:none}}
+@media(max-width:720px){.academy-shell{padding:8px}.academy-nav{position:static}.academy-brand{width:100%;margin-right:0}.hero-grid{grid-template-columns:1fr}.streak-card{display:flex;align-items:center;gap:12px}.layout{display:block}.side{position:static;margin-bottom:12px}.track-btn{display:inline-block;width:auto}.side .track-list{display:flex;gap:6px;overflow:auto}.content-card{padding:14px}}
+</style>
+</head>
+<body>
+<div class="academy-shell">
+<nav class="academy-nav">
+<a class="academy-brand" href="../"><img src="../../logo.png" alt="Logo Ethan GALEA"><span>CyberAcademy</span></a>
+<a class="active" href="./">Académie</a>
+<a href="../">CyberLab</a><a href="../08-socialnet-demo/">SocialNet</a><a href="../collection/">Collection</a><a href="../account/">Compte</a><a href="../../">Portfolio</a>
+</nav>
+
+<section class="hero">
+<div class="hero-grid">
+<div class="hero-id"><img class="hero-logo cyber-logo-float" src="../../logo.png" alt="Logo Ethan GALEA"><div><div class="kicker">CyberLab · parcours d'apprentissage</div><h1>CyberAcademy</h1><p>Apprends la cybersécurité étape par étape, entraîne-toi avec des questions générées à chaque partie et construis ta série.</p></div></div>
+<div class="streak-card"><div class="small">Série actuelle</div><div><span class="streak-number" id="streak">0</span> <span class="streak-flame">🔥 jours</span></div><div class="small" id="streakHint">Fais un quiz aujourd'hui pour lancer ta série.</div></div>
+</div>
+</section>
+
+<div class="layout">
+<aside class="side">
+<div class="side-title">Parcours</div>
+<div class="track-list" id="tracks"></div>
+</aside>
+
+<main>
+<section class="content-card" id="lessonArea"></section>
+<section class="content-card" id="quizArea">
+<div style="display:flex;justify-content:space-between;gap:10px;align-items:center"><div><span class="pill" id="quizCategory">Quiz généré</span><h2 id="quizTitle" style="margin:6px 0 0">Prêt ?</h2></div><div class="small" id="questionCounter">—</div></div>
+<div id="quizBody" style="margin-top:14px"></div>
+</section>
+<section class="content-card hidden" id="resultArea"></section>
+</main>
+
+<aside class="right">
+<section class="right-card">
+<h3>Ta progression</h3>
+<div class="stat-row"><span>XP</span><strong id="xp">0</strong></div>
+<div class="stat-row"><span>Niveau</span><strong id="level">1</strong></div>
+<div class="stat-row"><span>Meilleur score</span><strong id="best">0%</strong></div>
+<div class="stat-row"><span>Quiz terminés</span><strong id="completed">0</strong></div>
+</section>
+<section class="right-card">
+<h3>Progression du parcours</h3>
+<div class="progress"><span id="courseBar"></span></div>
+<p class="small" id="courseLabel"></p>
+</section>
+<section class="right-card">
+<h3>Partage rapide</h3>
+<p class="small">Après un quiz, tu peux générer un résultat partageable ou utiliser le partage natif du téléphone.</p>
+<div class="share-box"><button class="btn" onclick="shareLast()">Partager mon dernier score</button><button class="btn" onclick="copyAcademyLink()">Copier le lien CyberAcademy</button></div>
+</section>
+</aside>
+</div>
+</div>
+
+<script>
+const TRACKS=[
+{id:'fundamentals',name:'Fondamentaux',icon:'🧭',desc:'Les bases indispensables',lessons:[['Triade CIA','Confidentialité, intégrité, disponibilité.'],['Menaces','Actif, vulnérabilité, menace et risque.'],['Défense en profondeur','Plusieurs couches plutôt qu’un seul contrôle.'],['Moindre privilège','Limiter les droits au nécessaire.'],['Hygiène numérique','Mises à jour, sauvegardes et vigilance.']]},
+{id:'identity',name:'Identité',icon:'🪪',desc:'Comptes et authentification',lessons:[['Mots de passe','Longueur, unicité et gestionnaire.'],['MFA','Ajouter une preuve supplémentaire.'],['Sessions','Cookies, expiration et révocation.'],['Autorisation','Un utilisateur connecté n’a pas tous les droits.'],['Zero Trust','Ne jamais accorder une confiance implicite.']]},
+{id:'phishing',name:'Phishing',icon:'🎣',desc:'Reconnaître et éviter les pièges',lessons:[['Signaux d’alerte','Urgence, domaine étrange, demande inhabituelle.'],['Liens','Vérifier la destination avant de cliquer.'],['Pièces jointes','Prudence avec les fichiers inattendus.'],['Usurpation','Un nom affiché ne suffit pas.'],['Réaction','Signaler, vérifier et ne pas propager.']]},
+{id:'network',name:'Réseaux',icon:'🌐',desc:'Comprendre les communications',lessons:[['IP','Adresse et rôle sur un réseau.'],['DNS','Résolution des noms de domaine.'],['HTTP','Requêtes, réponses et méthodes.'],['TLS','Protection du transport.'],['Segmentation','Limiter la propagation d’un incident.']]},
+{id:'web',name:'Sécurité Web',icon:'🕸️',desc:'Comprendre les risques applicatifs',lessons:[['Validation','Toute donnée externe doit être contrôlée.'],['XSS','Empêcher l’interprétation de données comme du code.'],['CSRF','Protéger les actions sensibles.'],['API','Authentification, autorisation et validation.'],['Secrets','Ne jamais exposer les secrets côté client.']]},
+{id:'crypto',name:'Cryptographie',icon:'🔐',desc:'Chiffrement, hash et signatures',lessons:[['Hash','Empreinte à sens unique.'],['Chiffrement','Confidentialité avec une clé.'],['Symétrique','Même secret pour chiffrer et déchiffrer.'],['Asymétrique','Paire de clés publique/privée.'],['Signatures','Authenticité et intégrité.']]},
+{id:'incident',name:'Incidents',icon:'🚨',desc:'Observer, contenir, apprendre',lessons:[['Détection','Repérer un comportement anormal.'],['Préservation','Éviter de détruire les éléments utiles.'],['Journalisation','Tracer les événements importants.'],['Confinement','Limiter la propagation.'],['Retour d’expérience','Corriger la cause et les contrôles.']]},
+{id:'forensics',name:'Forensique',icon:'🔎',desc:'Analyser les traces numériques',lessons:[['Chronologie','Construire une timeline.'],['Logs','Lire et corréler les événements.'],['Métadonnées','Contexte autour d’un fichier.'],['Artefacts','Indices laissés par les systèmes.'],['Intégrité','Conserver des preuves fiables.']]},
+{id:'cloud',name:'Cloud',icon:'☁️',desc:'Sécurité des services Cloud',lessons:[['IAM','Gérer les identités et permissions.'],['Secrets','Éviter les clés dans le code.'],['Logs','Surveiller les activités.'],['Stockage','Contrôler exposition et accès.'],['CI/CD','Intégrer la sécurité dans le pipeline.']]},
+{id:'privacy',name:'Vie privée & OSINT',icon:'🕵️',desc:'Chercher et vérifier l’information',lessons:[['Source primaire','Revenir à l’origine quand possible.'],['Triangulation','Comparer plusieurs sources.'],['Métadonnées','Des fichiers peuvent révéler du contexte.'],['Empreinte','Les traces publiques s’accumulent.'],['Ingénierie sociale','Comprendre les mécanismes de manipulation.']]},
+{id:'mobile',name:'Mobile',icon:'📱',desc:'Sécuriser un appareil mobile',lessons:[['Permissions','Limiter l’accès aux ressources.'],['Mises à jour','Corriger les vulnérabilités.'],['Stockage','Protéger les données locales.'],['Réseaux','Prudence sur les réseaux inconnus.'],['Applications','Installer depuis des sources fiables.']]},
+{id:'securecode',name:'Code sécurisé',icon:'💻',desc:'Développer avec la sécurité en tête',lessons:[['Validation','Contrôler les entrées.'],['Erreurs','Ne pas exposer les détails sensibles.'],['Dépendances','Surveiller les bibliothèques.'],['Secrets','Séparer configuration et code.'],['Tests','Tester les scénarios normaux et anormaux.']]}
+];
+
+const CONCEPTS={
+fundamentals:[
+()=>({q:'Un service doit rester disponible même après la perte d’un composant. Quel principe est directement concerné ?',o:['Confidentialité','Disponibilité','Authentification','Hachage'],a:1,e:'La disponibilité concerne l’accès au service et sa continuité.'}),
+()=>{const n=rand(2,8);return{q:'Une application a '+n+' contrôles indépendants pour réduire le risque. Quel principe décrit le mieux cette approche ?',o:['Défense en profondeur','Mot de passe unique','Confiance implicite','Obscurcissement'],a:0,e:'La défense en profondeur combine plusieurs couches de protection.'}},
+()=>({q:'Un compte reçoit uniquement les permissions nécessaires à sa mission. Quel principe applique-t-on ?',o:['Moindre privilège','Disponibilité','Compression','Redondance'],a:0,e:'Le moindre privilège réduit la surface d’action d’un compte compromis.'})],
+identity:[
+()=>({q:'Pourquoi le MFA reste utile même si un mot de passe est long ?',o:['Il remplace tous les contrôles','Il ajoute une autre preuve d’identité','Il chiffre automatiquement les fichiers','Il rend le compte public'],a:1,e:'Le MFA ajoute une seconde preuve, par exemple un dispositif ou une biométrie.'}),
+()=>({q:'Quelle différence est correcte entre authentification et autorisation ?',o:['Elles sont identiques','Authentification = qui es-tu ; autorisation = que peux-tu faire','Autorisation = mot de passe','Authentification = journalisation'],a:1,e:'L’authentification établit l’identité ; l’autorisation contrôle les actions permises.'})],
+phishing:[
+()=>{const domain=['paypa1-secure.com','support-exemple.fr','microsofft-login.net'][rand(0,2)];return{q:'Un message urgent te demande de te connecter via « https://'+domain+' ». Quel premier réflexe est le plus pertinent ?',o:['Cliquer rapidement','Vérifier indépendamment le domaine et l’expéditeur','Répondre avec son mot de passe','Transférer le message'],a:1,e:'L’urgence et un domaine inattendu sont des signaux à vérifier.'}},
+()=>({q:'Un nom affiché dans un email suffit-il à prouver l’identité de l’expéditeur ?',o:['Oui','Non, il faut vérifier d’autres indices','Seulement le week-end','Seulement sur mobile'],a:1,e:'Le nom visible peut être usurpé ou imité.'})],
+network:[
+()=>({q:'Quel système associe notamment un nom de domaine à une adresse IP ?',o:['DNS','TLS','HTML','SHA-256'],a:0,e:'DNS réalise notamment la résolution de noms.'}),
+()=>({q:'Quel est le rôle principal de TLS pour un site HTTPS ?',o:['Remplacer l’authentification','Protéger la communication entre le client et le serveur','Créer les pages HTML','Stocker les mots de passe'],a:1,e:'TLS protège le canal de transport ; il ne remplace pas tous les autres contrôles.'})],
+web:[
+()=>({q:'Quel réflexe réduit le risque d’injection dans une interface web ?',o:['Faire confiance à l’entrée utilisateur','Valider et traiter correctement les données','Afficher les erreurs SQL complètes','Désactiver les contrôles'],a:1,e:'Les données externes doivent être validées et traitées avec des mécanismes sûrs.'}),
+()=>({q:'Pourquoi un secret d’API ne doit-il pas être placé dans du JavaScript public ?',o:['Parce qu’il serait lisible par les utilisateurs','Parce que JavaScript est trop rapide','Parce que HTTPS l’interdit','Parce que JSON est dangereux'],a:0,e:'Le code exécuté dans le navigateur est accessible au client et ne doit pas contenir de secret serveur.'})],
+crypto:[
+()=>({q:'À quoi sert principalement un hash cryptographique ?',o:['Rendre un fichier secret et réversible','Produire une empreinte','Attribuer une adresse IP','Compresser une vidéo'],a:1,e:'Un hash produit une empreinte, utile par exemple pour vérifier l’intégrité.'}),
+()=>({q:'Quel énoncé décrit le chiffrement symétrique ?',o:['Une même clé secrète sert au chiffrement et au déchiffrement','Il n’utilise aucune clé','Il repose uniquement sur un hash','Il rend la donnée publique'],a:0,e:'En symétrique, la même clé secrète est utilisée des deux côtés.'})],
+incident:[
+()=>({q:'Lors d’un incident, pourquoi documenter ses actions ?',o:['Pour modifier les preuves sans trace','Pour garder une chronologie fiable des actions','Pour supprimer les logs','Pour accélérer Internet'],a:1,e:'La traçabilité aide l’analyse et le retour d’expérience.'}),
+()=>({q:'Quel objectif correspond au confinement d’un incident ?',o:['Étendre l’incident','Limiter sa propagation','Supprimer tous les comptes','Rendre les logs publics'],a:1,e:'Le confinement cherche à réduire l’étendue et l’impact de l’incident.'})],
+forensics:[
+()=>({q:'Une timeline d’investigation sert principalement à…',o:['Changer les dates','Mettre en ordre les événements et les traces','Chiffrer les disques automatiquement','Créer des mots de passe'],a:1,e:'La chronologie permet de relier les événements et les traces.'}),
+()=>({q:'Pourquoi vérifier l’intégrité d’un artefact analysé ?',o:['Pour prouver qu’il n’a pas été altéré de façon détectable','Pour augmenter sa taille','Pour le rendre public','Pour le compresser'],a:0,e:'Une empreinte peut servir à contrôler qu’un artefact n’a pas changé.'})],
+cloud:[
+()=>({q:'Quel principe limite les dégâts si une identité Cloud est compromise ?',o:['Donner admin à tout le monde','Appliquer le moindre privilège','Désactiver tous les logs','Partager les clés'],a:1,e:'Le moindre privilège réduit les actions possibles avec une identité compromise.'}),
+()=>({q:'Où vaut-il mieux conserver un secret utilisé par une application Cloud ?',o:['Dans le dépôt Git public','Dans un mécanisme de gestion des secrets approprié','Dans le titre de la page','Dans une image'],a:1,e:'Les secrets doivent être séparés du code public et gérés de façon appropriée.'})],
+privacy:[
+()=>({q:'Quelle approche est la plus solide pour vérifier une affirmation en ligne ?',o:['Choisir le post le plus partagé','Comparer plusieurs sources fiables et rechercher la source primaire','Se fier au premier commentaire','Choisir le titre le plus spectaculaire'],a:1,e:'La triangulation et la source primaire renforcent la vérification.'}),
+()=>({q:'Pourquoi les métadonnées peuvent-elles compter pour la vie privée ?',o:['Elles peuvent révéler du contexte sur un fichier ou une activité','Elles rendent toujours les fichiers invisibles','Elles empêchent toute fuite','Elles chiffrent automatiquement les photos'],a:0,e:'Les métadonnées peuvent contenir des informations de contexte selon le format et l’outil.'})],
+mobile:[
+()=>({q:'Pourquoi limiter les permissions d’une application mobile ?',o:['Pour empêcher l’application d’utiliser Internet','Pour réduire son accès aux données et capteurs au nécessaire','Pour supprimer les mises à jour','Pour changer son icône'],a:1,e:'Limiter les permissions réduit l’exposition des données et capteurs.'}),
+()=>({q:'Quel réflexe est pertinent pour une application mobile ancienne ?',o:['Ignorer les mises à jour indéfiniment','Vérifier qu’elle reçoit encore des mises à jour de sécurité','Partager son compte','Désactiver tout verrouillage'],a:1,e:'Les mises à jour corrigent notamment des vulnérabilités connues.'})],
+securecode:[
+()=>({q:'Quelle pratique évite de mettre directement un secret serveur dans le code public ?',o:['Le versionner dans GitHub','Utiliser une configuration ou un gestionnaire de secrets','L’écrire dans le HTML','Le mettre dans une URL publique'],a:1,e:'La configuration sécurisée permet de séparer les secrets du code publié.'}),
+()=>({q:'Pourquoi valider les données reçues d’un utilisateur ?',o:['Parce qu’elles peuvent être malformées ou inattendues','Parce qu’elles sont toujours fiables','Pour ralentir l’application','Pour supprimer HTTPS'],a:0,e:'Une application doit considérer les entrées externes comme non fiables jusqu’à validation.'})]
+};
+
+const state={track:'fundamentals',index:0,score:0,correct:0,asked:[],current:null,history:JSON.parse(localStorage.getItem('cyberacademy_seen')||'[]'),stats:JSON.parse(localStorage.getItem('cyberacademy_stats')||'{"xp":0,"best":0,"completed":0}'),last:null};
+
+const $=id=>document.getElementById(id);
+const rand=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function sig(q){return q.q+'|'+q.o.join('|')}
+function normalize(q){const indexed=q.o.map((x,i)=>({x,i}));shuffle(indexed);const answer=indexed.findIndex(x=>x.i===q.a);return {...q,o:indexed.map(x=>x.x),a:answer}}
+function generate(track){
+ const pool=CONCEPTS[track]||CONCEPTS.fundamentals;
+ for(let attempt=0;attempt<30;attempt++){const q=normalize(pool[rand(0,pool.length-1)]());const s=sig(q);if(!state.history.includes(s))return {...q,_sig:s}}
+ const q=normalize(pool[rand(0,pool.length-1)]());return {...q,_sig:sig(q)+'|'+Date.now()};
+}
+function persist(){localStorage.setItem('cyberacademy_seen',JSON.stringify(state.history.slice(-1200)));localStorage.setItem('cyberacademy_stats',JSON.stringify(state.stats));}
+function updateStreak(){
+ const key='cyberacademy_days',days=JSON.parse(localStorage.getItem(key)||'[]'),today=new Date().toISOString().slice(0,10);
+ if(!days.includes(today))days.push(today);
+ days.sort();let streak=1;for(let i=days.length-2;i>=0;i--){const d=new Date(days[i+1]),p=new Date(days[i]);if((d-p)/86400000===1)streak++;else break}
+ state.streak=streak;localStorage.setItem(key,JSON.stringify(days.slice(-400)));$('streak').textContent=streak;
+ $('streakHint').textContent=streak>1?'Continue demain pour garder ta série.':'Ta série démarre aujourd’hui.';
+}
+function renderTracks(){$('tracks').innerHTML=TRACKS.map(t=>'<button class="track-btn '+(state.track===t.id?'active':'')+'" onclick="selectTrack(\''+t.id+'\')">'+t.icon+' '+t.name+'</button>').join('')}
+function renderLesson(){
+ const t=TRACKS.find(x=>x.id===state.track);$('lessonArea').innerHTML='<div class="track-hero"><div><span class="pill">'+t.icon+' Parcours</span><h2 style="margin:7px 0 4px">'+t.name+'</h2><p class="muted">'+t.desc+'</p></div><span class="pill">'+t.lessons.length+' mini-cours</span></div><div class="lesson-grid">'+t.lessons.map((l,i)=>'<article class="lesson"><strong>'+(i+1)+'. '+l[0]+'</strong><span>'+l[1]+'</span></article>').join('')+'</div><div class="actions" style="margin-top:15px"><button class="btn good" onclick="startQuiz()">Lancer un quiz généré</button></div>';
+}
+function startQuiz(){
+ state.index=0;state.score=0;state.correct=0;state.asked=[];state.current=null;$('resultArea').classList.add('hidden');nextQuestion();
+}
+function nextQuestion(){
+ if(state.index>=10){finish();return}
+ const q=generate(state.track);state.current=q;state.asked.push(q._sig);state.history.push(q._sig);state.index++;
+ $('quizCategory').textContent=TRACKS.find(t=>t.id===state.track)?.name||'Quiz';
+ $('quizTitle').textContent='Question '+state.index;
+ $('questionCounter').textContent=state.index+' / 10';
+ $('quizBody').innerHTML='<div class="question">'+escapeHtml(q.q)+'</div>'+q.o.map((o,i)=>'<button class="option" onclick="answer('+i+')">'+escapeHtml(o)+'</button>').join('')+'<div id="feedback"></div>';
+}
+function answer(i){
+ const q=state.current;if(!q)return;document.querySelectorAll('.option').forEach((b,j)=>{b.disabled=true;if(j===q.a)b.classList.add('correct');if(j===i&&i!==q.a)b.classList.add('wrong')});
+ const ok=i===q.a;if(ok){state.correct++;state.score+=10}
+ $('feedback').innerHTML='<div class="feedback '+(ok?'ok':'no')+'"><strong>'+(ok?'Bonne réponse ✅':'Pas tout à fait ❌')+'</strong><div style="margin-top:5px">'+escapeHtml(q.e)+'</div></div><div class="actions" style="margin-top:10px"><button class="btn" onclick="nextQuestion()">Question suivante</button></div>';
+}
+function finish(){
+ updateStreak();const pct=Math.round(state.correct/10*100),xp=state.correct*10+20;
+ state.stats.xp+=(xp);state.stats.completed++;state.stats.best=Math.max(state.stats.best,pct);state.last={track:state.track,pct,correct:state.correct,xp,date:new Date().toISOString()};
+ persist();renderStats();
+ const level=Math.floor(state.stats.xp/100)+1,angle=Math.round(pct/100*360);
+ $('resultArea').classList.remove('hidden');$('resultArea').innerHTML='<div class="center"><span class="pill">Quiz terminé</span><h2>Résultat</h2><div class="score-ring" style="--score-angle:'+angle+'deg"><div>'+pct+'%</div></div><div class="score-big" style="margin-top:8px">'+state.correct+'/10</div><p class="muted">+'+xp+' XP · niveau '+level+' · série '+state.streak+' jour'+(state.streak>1?'s':'')+'</p><div class="actions" style="justify-content:center"><button class="btn good" onclick="startQuiz()">Nouveau quiz généré</button><button class="btn" onclick="shareLast()">Partager mon score</button></div><div class="share-box" style="max-width:620px;margin:14px auto 0"><input class="share-url" id="shareUrl" readonly value="'+location.origin+location.pathname+'#score='+encodeURIComponent(btoa(unescape(encodeURIComponent(JSON.stringify(state.last)))))+'"><button class="btn" onclick="copyShareUrl()">Copier le lien de résultat</button></div></div>';
+}
+function renderStats(){$('xp').textContent=state.stats.xp||0;$('level').textContent=Math.floor((state.stats.xp||0)/100)+1;$('best').textContent=(state.stats.best||0)+'%';$('completed').textContent=state.stats.completed||0;const t=TRACKS.find(x=>x.id===state.track);const pct=Math.min(100,((state.stats.completed||0)%20)*5);$('courseBar').style.width=pct+'%';$('courseLabel').textContent=(state.stats.completed||0)+' quiz terminés · parcours actif : '+t.name}
+function selectTrack(id){state.track=id;renderTracks();renderLesson();startQuiz()}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+async function copyShareUrl(){const v=$('shareUrl')?.value;if(v)await navigator.clipboard?.writeText(v)}
+async function shareLast(){
+ if(!state.last){alert('Termine un quiz pour avoir un score partageable.');return}
+ const encoded=btoa(unescape(encodeURIComponent(JSON.stringify(state.last)))),url=location.origin+location.pathname+'#score='+encodeURIComponent(encoded),text='🛡️ CyberAcademy — '+state.last.pct+'% · '+state.last.correct+'/10 · +'+state.last.xp+' XP · série '+state.streak+' jour(s)\n'+url;
+ try{if(navigator.share)await navigator.share({title:'Mon score CyberAcademy',text,url});else{await navigator.clipboard?.writeText(text);alert('Score copié dans le presse-papiers.')}}catch{}
+}
+async function copyAcademyLink(){await navigator.clipboard?.writeText(location.href.split('#')[0]);}
+function readShared(){
+ const raw=new URLSearchParams(location.hash.slice(1)).get('score');if(!raw)return;
+ try{const d=JSON.parse(decodeURIComponent(escape(atob(decodeURIComponent(raw)))));$('resultArea').classList.remove('hidden');$('resultArea').innerHTML='<div class="center"><span class="pill">Score partagé</span><h2>'+d.pct+'% · '+d.correct+'/10</h2><p class="muted">Un résultat CyberAcademy partagé.</p><button class="btn good" onclick="startQuiz()">À mon tour : générer un quiz</button></div>'}catch{}
+}
+renderTracks();renderLesson();renderStats();updateStreak();readShared();
+</script>
+<script src="../ui.js"></script>
+</body>
+</html>

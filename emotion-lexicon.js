@@ -92,7 +92,7 @@
       "fatigant","fatigante","monotone","ennuyé","ennuyee"
     ],
     jealousy: [
-      "jalousie","jaloux","jalouse","envieux","envieuse","envie","envier",
+      "jalousie","jaloux","jalouse","envieux","envieuse","envier",
       "envies","jalousement","jaloux de","jalouse de","je suis jaloux",
       "je suis jalouse","ça me rend jaloux","ca me rend jaloux",
       "ça me rend jalouse","ca me rend jalouse"
@@ -579,7 +579,7 @@
     return {
       joy:0, admiration:0, gratitude:0, amusement:0, love:0, excitement:0,
       optimism:0, relief:0, anger:0, sadness:0, disappointment:0, fear:0,
-      disgust:0, frustration:0, confusion:0, boredom:0, surprise:0,
+      disgust:0, frustration:0, confusion:0, boredom:0, jealousy:0, surprise:0,
       positive:0, negative:0
     };
   }

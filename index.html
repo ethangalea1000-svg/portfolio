@@ -1617,22 +1617,36 @@
     }
 
     function explicitFrenchMood(text) {
-      const normalized = text.toLowerCase().normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').trim();
+      const normalized = text
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\\u0300-\\u036f]/g,'')
+        .trim();
 
-      const strongNegative = [
-        /\\bnul(?:le)?\\b/, /\\bzero\\b/, /\\bcatastrophique\\b/,
-        /\\bhorrible\\b/, /\\bdeteste\\b/, /\\bpas bon\\b/,
-        /\\bvraiment mauvais\\b/
-      ];
+      const tokens = new Set(normalized.split(/\\s+/).filter(Boolean));
 
-      const strongPositive = [
-        /\\bgenial\\b/, /\\bexcellent\\b/, /\\bparfait\\b/,
-        /\\bincroyable\\b/, /\\bmagnifique\\b/, /\\bj'adore\\b/,
-        /\\badore\\b/, /\\bextraordinaire\\b/
-      ];
+      const strongNegative =
+        tokens.has('nul') ||
+        tokens.has('nulle') ||
+        tokens.has('zero') ||
+        normalized.includes('catastrophique') ||
+        normalized.includes('horrible') ||
+        normalized.includes('deteste') ||
+        normalized.includes('pas bon') ||
+        normalized.includes('vraiment mauvais');
 
-      if (strongNegative.some(pattern => pattern.test(normalized))) return -1;
-      if (strongPositive.some(pattern => pattern.test(normalized))) return 1;
+      const strongPositive =
+        tokens.has('genial') ||
+        tokens.has('excellent') ||
+        tokens.has('parfait') ||
+        normalized.includes('incroyable') ||
+        normalized.includes('magnifique') ||
+        normalized.includes("j'adore") ||
+        tokens.has('adore') ||
+        normalized.includes('extraordinaire');
+
+      if (strongNegative) return -1;
+      if (strongPositive) return 1;
       return 0;
     }
 

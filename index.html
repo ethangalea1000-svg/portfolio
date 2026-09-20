@@ -140,6 +140,127 @@
     }
   }
 
+
+  /* ===== SCROLL INTERACTIONS ===== */
+  .scroll-orbit {
+    position: fixed;
+    top: 18vh;
+    right: 6vw;
+    width: 90px;
+    height: 90px;
+    border: 1px solid rgba(56, 189, 248, 0.28);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 5;
+    opacity: 0.55;
+    box-shadow: 0 0 28px rgba(56, 189, 248, 0.08);
+    transition: transform 0.75s cubic-bezier(.2,.8,.2,1), opacity 0.35s ease, border-color 0.35s ease;
+  }
+
+  .scroll-orbit::before,
+  .scroll-orbit::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+  }
+
+  .scroll-orbit::before {
+    width: 10px;
+    height: 10px;
+    top: 10px;
+    left: 14px;
+    background: var(--accent);
+    box-shadow: 0 0 18px rgba(56, 189, 248, 0.85);
+  }
+
+  .scroll-orbit::after {
+    width: 7px;
+    height: 7px;
+    right: 8px;
+    bottom: 16px;
+    background: var(--accent2);
+    box-shadow: 0 0 16px rgba(167, 139, 250, 0.85);
+  }
+
+  body.scroll-down .scroll-orbit {
+    transform: translate3d(-18px, 58px, 0) rotate(110deg) scale(1.08);
+    opacity: 0.82;
+    border-color: rgba(167, 139, 250, 0.42);
+  }
+
+  body.scroll-up .scroll-orbit {
+    transform: translate3d(16px, -48px, 0) rotate(-100deg) scale(0.94);
+    opacity: 0.95;
+    border-color: rgba(56, 189, 248, 0.5);
+  }
+
+  body.scroll-down .container {
+    --scroll-shift: 1px;
+  }
+
+  body.scroll-up .container {
+    --scroll-shift: -1px;
+  }
+
+  .scroll-reveal {
+    opacity: 0.72;
+    transform: translateY(28px) scale(0.985);
+    transition: opacity 0.75s ease, transform 0.75s cubic-bezier(.2,.8,.2,1), filter 0.75s ease;
+    will-change: transform, opacity;
+  }
+
+  .scroll-reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  body.scroll-down .scroll-reveal.is-visible {
+    transition-duration: 0.6s;
+  }
+
+  body.scroll-up .scroll-reveal.is-visible {
+    transition-duration: 0.8s;
+  }
+
+  .scroll-flash {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 4;
+    opacity: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(167, 139, 250, 0.08),
+      transparent 28%,
+      transparent 72%,
+      rgba(56, 189, 248, 0.06)
+    );
+  }
+
+  body.scroll-down .scroll-flash {
+    animation: scroll-down-flash 0.55s ease-out;
+  }
+
+  body.scroll-up .scroll-flash {
+    animation: scroll-up-flash 0.55s ease-out;
+  }
+
+  @keyframes scroll-down-flash {
+    0% { opacity: 0; transform: translateY(-14px); }
+    25% { opacity: 1; }
+    100% { opacity: 0; transform: translateY(10px); }
+  }
+
+  @keyframes scroll-up-flash {
+    0% { opacity: 0; transform: translateY(14px); }
+    25% { opacity: 1; }
+    100% { opacity: 0; transform: translateY(-10px); }
+  }
+
+  @media (max-width: 800px) {
+    .scroll-orbit { right: 3vw; width: 64px; height: 64px; }
+  }
+
   @keyframes gradient {
     0% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
@@ -499,6 +620,8 @@
 </head>
 <body>
   <div class="page-effects" aria-hidden="true"></div>
+  <div class="scroll-orbit" aria-hidden="true"></div>
+  <div class="scroll-flash" aria-hidden="true"></div>
   <div class="container">
     <header>
       <div style="text-align: center; margin-bottom: 1.5rem;">
@@ -907,7 +1030,55 @@
     document.getElementById('code-bar').style.width = pourcentCode + '%';
   }
 
-  window.addEventListener('DOMContentLoaded', calculerPourcentages);
+  window.addEventListener('DOMContentLoaded', () => {
+    calculerPourcentages();
+
+    const sections = document.querySelectorAll('section, header, footer');
+    sections.forEach((section, index) => {
+      section.classList.add('scroll-reveal');
+      section.style.transitionDelay = Math.min(index * 35, 180) + 'ms';
+    });
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('is-visible');
+      });
+    }, { threshold: 0.08 });
+
+    document.querySelectorAll('.scroll-reveal').forEach(el => observer.observe(el));
+
+    let lastY = window.scrollY;
+    let ticking = false;
+    let directionTimer;
+
+    function updateScrollDirection() {
+      const y = window.scrollY;
+      const delta = y - lastY;
+
+      if (Math.abs(delta) < 2) {
+        ticking = false;
+        return;
+      }
+
+      document.body.classList.remove('scroll-up', 'scroll-down');
+      document.body.classList.add(delta > 0 ? 'scroll-down' : 'scroll-up');
+
+      clearTimeout(directionTimer);
+      directionTimer = setTimeout(() => {
+        document.body.classList.remove('scroll-up', 'scroll-down');
+      }, 520);
+
+      lastY = y;
+      ticking = false;
+    }
+
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        requestAnimationFrame(updateScrollDirection);
+        ticking = true;
+      }
+    }, { passive: true });
+  });
   </script>
 </body>
 </html>

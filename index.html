@@ -492,14 +492,42 @@
 
   body.scroll-down .scroll-orbit {
     transform: translate3d(-18px, 58px, 0) rotate(110deg) scale(1.08);
-    opacity: 0.82;
-    border-color: rgba(167, 139, 250, 0.42);
+    opacity: 0.9;
+    border-color: rgba(167, 139, 250, 0.52);
+    filter: drop-shadow(0 0 18px rgba(167, 139, 250, 0.22));
   }
 
   body.scroll-up .scroll-orbit {
     transform: translate3d(16px, -48px, 0) rotate(-100deg) scale(0.94);
-    opacity: 0.95;
-    border-color: rgba(56, 189, 248, 0.5);
+    opacity: 1;
+    border-color: rgba(56, 189, 248, 0.58);
+    filter: drop-shadow(0 0 18px rgba(56, 189, 248, 0.22));
+  }
+
+  body.scroll-down .scroll-orbit::before {
+    animation: orbit-dot-down 0.65s ease-in-out infinite alternate;
+  }
+
+  body.scroll-up .scroll-orbit::before {
+    animation: orbit-dot-up 0.65s ease-in-out infinite alternate;
+  }
+
+  body.scroll-down .scroll-orbit::after {
+    animation: orbit-dot-up 0.65s ease-in-out infinite alternate-reverse;
+  }
+
+  body.scroll-up .scroll-orbit::after {
+    animation: orbit-dot-down 0.65s ease-in-out infinite alternate-reverse;
+  }
+
+  @keyframes orbit-dot-down {
+    from { transform: translate3d(0, -3px, 0) rotate(0deg); }
+    to { transform: translate3d(7px, 9px, 0) rotate(180deg); }
+  }
+
+  @keyframes orbit-dot-up {
+    from { transform: translate3d(0, 3px, 0) rotate(0deg); }
+    to { transform: translate3d(-7px, -9px, 0) rotate(-180deg); }
   }
 
   body.scroll-down .container {
@@ -1593,7 +1621,7 @@
       clearTimeout(directionTimer);
       directionTimer = setTimeout(() => {
         document.body.classList.remove('scroll-up', 'scroll-down');
-      }, 520);
+      }, 1100);
 
       lastY = y;
       ticking = false;

@@ -677,6 +677,33 @@
     font-size: 0.85rem;
   }
 
+  .tag-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.38rem;
+    text-decoration: none !important;
+    border: 1px solid rgba(148, 163, 184, 0.12);
+    transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+  }
+
+  .tag-link:hover {
+    transform: translateY(-2px);
+    border-color: rgba(56, 189, 248, 0.5);
+    background: rgba(51, 65, 85, 0.95);
+    box-shadow: 0 7px 18px rgba(56, 189, 248, 0.08);
+  }
+
+  .tag-link .tag-arrow {
+    color: var(--accent);
+    font-size: 0.75rem;
+    opacity: 0.8;
+    transition: transform 0.18s ease;
+  }
+
+  .tag-link:hover .tag-arrow {
+    transform: translate(2px, -2px);
+  }
+
   a { color: var(--accent); text-decoration: none; }
 
   a:hover { text-decoration: underline; }
@@ -1014,29 +1041,29 @@
         <div class="card">
           <h3>Outils numériques</h3>
           <div class="tags">
-            <span class="tag">Canva</span>
-            <span class="tag">PowerPoint</span>
-            <span class="tag">Word</span>
-            <span class="tag">Proton Mail</span>
-            <span class="tag">Proton VPN</span>
+            <a class="tag tag-link" href="https://www.canva.com/" target="_blank" rel="noopener noreferrer" title="Site officiel — Canva"><span>Canva</span><span class="tag-arrow" aria-hidden="true">↗</span></a>
+            <a class="tag tag-link" href="https://www.microsoft.com/fr-fr/microsoft-365/powerpoint" target="_blank" rel="noopener noreferrer" title="Site officiel — PowerPoint"><span>PowerPoint</span><span class="tag-arrow" aria-hidden="true">↗</span></a>
+            <a class="tag tag-link" href="https://www.microsoft.com/fr-fr/microsoft-365/word" target="_blank" rel="noopener noreferrer" title="Site officiel — Word"><span>Word</span><span class="tag-arrow" aria-hidden="true">↗</span></a>
+            <a class="tag tag-link" href="https://proton.me/fr/mail" target="_blank" rel="noopener noreferrer" title="Site officiel — Proton Mail"><span>Proton Mail</span><span class="tag-arrow" aria-hidden="true">↗</span></a>
+            <a class="tag tag-link" href="https://protonvpn.com/fr" target="_blank" rel="noopener noreferrer" title="Site officiel — Proton VPN"><span>Proton VPN</span><span class="tag-arrow" aria-hidden="true">↗</span></a>
           </div>
         </div>
 
         <div class="card">
           <h3>IA maîtrisées</h3>
           <div class="tags">
-            <span class="tag">Copilot</span>
-            <span class="tag">Claude</span>
-            <span class="tag">ChatGPT</span>
-            <span class="tag">Perplexity</span>
-            <span class="tag">Mistral / Le Chat</span>
-            <span class="tag">Canva AI</span>
-            <span class="tag">Notion AI</span>
-            <span class="tag">Suno</span>
-            <span class="tag">GitHub Copilot</span>
-            <span class="tag">Proton AI / Lumo</span>
-            <span class="tag">DeepSeek</span>
-            <span class="tag">Kimi K3</span>
+            <a class="tag tag-link" href="https://copilot.microsoft.com/" target="_blank" rel="noopener noreferrer" title="Site officiel — Copilot"><span>Copilot</span><span class="tag-arrow" aria-hidden="true">↗</span></a>
+            <a class="tag tag-link" href="https://claude.ai/" target="_blank" rel="noopener noreferrer" title="Site officiel — Claude"><span>Claude</span><span class="tag-arrow" aria-hidden="true">↗</span></a>
+            <a class="tag tag-link" href="https://chatgpt.com/" target="_blank" rel="noopener noreferrer" title="Site officiel — ChatGPT"><span>ChatGPT</span><span class="tag-arrow" aria-hidden="true">↗</span></a>
+            <a class="tag tag-link" href="https://www.perplexity.ai/" target="_blank" rel="noopener noreferrer" title="Site officiel — Perplexity"><span>Perplexity</span><span class="tag-arrow" aria-hidden="true">↗</span></a>
+            <a class="tag tag-link" href="https://chat.mistral.ai/" target="_blank" rel="noopener noreferrer" title="Site officiel — Mistral / Le Chat"><span>Mistral / Le Chat</span><span class="tag-arrow" aria-hidden="true">↗</span></a>
+            <a class="tag tag-link" href="https://www.canva.com/canva-ai/" target="_blank" rel="noopener noreferrer" title="Site officiel — Canva AI"><span>Canva AI</span><span class="tag-arrow" aria-hidden="true">↗</span></a>
+            <a class="tag tag-link" href="https://www.notion.com/product/ai" target="_blank" rel="noopener noreferrer" title="Site officiel — Notion AI"><span>Notion AI</span><span class="tag-arrow" aria-hidden="true">↗</span></a>
+            <a class="tag tag-link" href="https://suno.com/" target="_blank" rel="noopener noreferrer" title="Site officiel — Suno"><span>Suno</span><span class="tag-arrow" aria-hidden="true">↗</span></a>
+            <a class="tag tag-link" href="https://github.com/features/copilot" target="_blank" rel="noopener noreferrer" title="Site officiel — GitHub Copilot"><span>GitHub Copilot</span><span class="tag-arrow" aria-hidden="true">↗</span></a>
+            <a class="tag tag-link" href="https://proton.me/fr/lumo" target="_blank" rel="noopener noreferrer" title="Site officiel — Proton AI / Lumo"><span>Proton AI / Lumo</span><span class="tag-arrow" aria-hidden="true">↗</span></a>
+            <a class="tag tag-link" href="https://www.deepseek.com/" target="_blank" rel="noopener noreferrer" title="Site officiel — DeepSeek"><span>DeepSeek</span><span class="tag-arrow" aria-hidden="true">↗</span></a>
+            <a class="tag tag-link" href="https://www.kimi.ai/fr/ai-models/" target="_blank" rel="noopener noreferrer" title="Site officiel — Kimi K3"><span>Kimi K3</span><span class="tag-arrow" aria-hidden="true">↗</span></a>
           </div>
         </div>
 
@@ -1102,7 +1129,7 @@
             <span class="tag">GitHub Pages</span>
             <span class="tag">Automatisation</span>
             <span class="tag">Bien-être</span>
-            <span class="tag">Claude</span>
+            <a class="tag tag-link" href="https://claude.ai/" target="_blank" rel="noopener noreferrer" title="Site officiel — Claude"><span>Claude</span><span class="tag-arrow" aria-hidden="true">↗</span></a>
           </div>
         </div>
 

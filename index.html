@@ -18,15 +18,23 @@
 
 <style>
   :root {
-    --bg: #0f172a;
-    --card: #1e293b;
+    --bg: #0b1020;
+    --bg2: #0f172a;
+    --bg3: #111a33;
+    --bg4: #1e1b4b;
+    --card: #162033;
+    --card2: #101827;
     --text: #e2e8f0;
     --muted: #94a3b8;
     --accent: #38bdf8;
     --accent2: #a78bfa;
+    --accent-soft: rgba(56, 189, 248, 0.10);
+    --border: rgba(148, 163, 184, 0.16);
     --mood-a: rgba(56, 189, 248, 0.12);
     --mood-b: rgba(167, 139, 250, 0.10);
     --mood-glow: rgba(56, 189, 248, 0.18);
+    --orb-a: rgba(56, 189, 248, 0.32);
+    --orb-b: rgba(167, 139, 250, 0.28);
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -34,16 +42,17 @@
   body {
     font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
     background:
-      radial-gradient(circle at 15% 15%, rgba(56, 189, 248, 0.12), transparent 28%),
-      radial-gradient(circle at 85% 25%, rgba(167, 139, 250, 0.11), transparent 30%),
-      radial-gradient(circle at 45% 85%, rgba(56, 189, 248, 0.08), transparent 32%),
-      linear-gradient(-45deg, #0f172a, #111a33, #0f172a, #1e1b4b);
+      radial-gradient(circle at 15% 15%, var(--mood-a), transparent 28%),
+      radial-gradient(circle at 85% 25%, var(--mood-b), transparent 30%),
+      radial-gradient(circle at 45% 85%, var(--accent-soft), transparent 32%),
+      linear-gradient(-45deg, var(--bg), var(--bg2), var(--bg3), var(--bg4));
     background-size: auto, auto, auto, 400% 400%;
     animation: gradient 15s ease infinite;
     color: var(--text);
     line-height: 1.6;
     overflow-x: hidden;
     position: relative;
+    transition: background 1.2s ease, color 0.9s ease;
   }
 
   body::before {
@@ -74,22 +83,80 @@
     transition: background 1.2s ease;
   }
 
+  /* ===== THÈME GLOBAL DYNAMIQUE ===== */
   body[data-mood="positive"] {
-    --mood-a: rgba(52, 211, 153, 0.16);
-    --mood-b: rgba(56, 189, 248, 0.11);
-    --mood-glow: rgba(52, 211, 153, 0.22);
+    --bg: #061814;
+    --bg2: #08251f;
+    --bg3: #07352c;
+    --bg4: #062f35;
+    --card: #0d2b24;
+    --card2: #0a211c;
+    --text: #ecfdf5;
+    --muted: #a7f3d0;
+    --accent: #34d399;
+    --accent2: #22d3ee;
+    --accent-soft: rgba(52, 211, 153, 0.12);
+    --border: rgba(110, 231, 183, 0.20);
+    --mood-a: rgba(52, 211, 153, 0.22);
+    --mood-b: rgba(34, 211, 238, 0.14);
+    --mood-glow: rgba(52, 211, 153, 0.30);
+    --orb-a: rgba(52, 211, 153, 0.30);
+    --orb-b: rgba(34, 211, 238, 0.24);
   }
 
   body[data-mood="neutral"] {
+    --bg: #0b1020;
+    --bg2: #0f172a;
+    --bg3: #111a33;
+    --bg4: #1e1b4b;
+    --card: #162033;
+    --card2: #101827;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --accent: #38bdf8;
+    --accent2: #a78bfa;
+    --accent-soft: rgba(56, 189, 248, 0.10);
+    --border: rgba(148, 163, 184, 0.16);
     --mood-a: rgba(56, 189, 248, 0.12);
     --mood-b: rgba(167, 139, 250, 0.10);
     --mood-glow: rgba(56, 189, 248, 0.18);
+    --orb-a: rgba(56, 189, 248, 0.32);
+    --orb-b: rgba(167, 139, 250, 0.28);
   }
 
   body[data-mood="negative"] {
-    --mood-a: rgba(251, 113, 133, 0.15);
-    --mood-b: rgba(167, 139, 250, 0.12);
-    --mood-glow: rgba(251, 113, 133, 0.22);
+    --bg: #1a0a12;
+    --bg2: #24101a;
+    --bg3: #35131d;
+    --bg4: #29152d;
+    --card: #321622;
+    --card2: #241119;
+    --text: #fff1f2;
+    --muted: #fecdd3;
+    --accent: #fb7185;
+    --accent2: #f59e0b;
+    --accent-soft: rgba(251, 113, 133, 0.11);
+    --border: rgba(251, 113, 133, 0.20);
+    --mood-a: rgba(251, 113, 133, 0.23);
+    --mood-b: rgba(245, 158, 11, 0.12);
+    --mood-glow: rgba(251, 113, 133, 0.30);
+    --orb-a: rgba(251, 113, 133, 0.27);
+    --orb-b: rgba(245, 158, 11, 0.22);
+  }
+
+  body[data-mood] .card,
+  body[data-mood] .tag,
+  body[data-mood] .badge,
+  body[data-mood] .mood-panel,
+  body[data-mood] .contact-shell,
+  body[data-mood] .comments-shell,
+  body[data-mood] .contact-links a,
+  body[data-mood] .contact-email {
+    transition:
+      background 1.2s ease,
+      border-color 1s ease,
+      color 0.9s ease,
+      box-shadow 1s ease;
   }
 
   .page-effects {
@@ -116,14 +183,14 @@
   .page-effects::before {
     top: 8%;
     left: -10%;
-    background: rgba(56, 189, 248, 0.32);
+    background: var(--orb-a);
     animation: orb-one 19s ease-in-out infinite;
   }
 
   .page-effects::after {
     right: -12%;
     bottom: 4%;
-    background: rgba(167, 139, 250, 0.28);
+    background: var(--orb-b);
     animation: orb-two 23s ease-in-out infinite;
   }
 
@@ -171,8 +238,8 @@
     margin-top: 1rem;
     padding: 0.9rem 1rem;
     border-radius: 0.95rem;
-    border: 1px solid rgba(148,163,184,0.14);
-    background: linear-gradient(135deg, rgba(30,41,59,0.72), rgba(15,23,42,0.6));
+    border: 1px solid var(--border);
+    background: linear-gradient(135deg, var(--card), var(--card2));
     box-shadow: 0 0 30px var(--mood-glow);
     transition: box-shadow 1s ease, border-color 1s ease;
   }
@@ -193,9 +260,12 @@
     transition: background 0.8s ease, box-shadow 0.8s ease;
   }
 
-  .mood-dot.positive { background: #34d399; color: #34d399; }
-  .mood-dot.neutral { background: #38bdf8; color: #38bdf8; }
-  .mood-dot.negative { background: #fb7185; color: #fb7185; }
+  .mood-dot.positive,
+  .mood-dot.neutral,
+  .mood-dot.negative {
+    background: var(--accent);
+    color: var(--accent);
+  }
 
   .mood-label {
     font-weight: 800;
@@ -213,9 +283,9 @@
     margin-top: 0.5rem;
     padding: 0.28rem 0.55rem;
     border-radius: 999px;
-    color: #cdefff;
-    background: rgba(56,189,248,.08);
-    border: 1px solid rgba(56,189,248,.18);
+    color: var(--text);
+    background: var(--accent-soft);
+    border: 1px solid var(--border);
     font-size: .7rem;
     font-weight: 800;
     letter-spacing: .04em;
@@ -464,12 +534,12 @@
     right: 6vw;
     width: 90px;
     height: 90px;
-    border: 1px solid rgba(56, 189, 248, 0.28);
+    border: 1px solid var(--border);
     border-radius: 50%;
     pointer-events: none;
     z-index: 5;
     opacity: 0.55;
-    box-shadow: 0 0 28px rgba(56, 189, 248, 0.08);
+    box-shadow: 0 0 28px var(--mood-glow);
     transition: transform 0.75s cubic-bezier(.2,.8,.2,1), opacity 0.35s ease, border-color 0.35s ease;
     animation: orbit-spin 7s linear infinite;
     will-change: transform, rotate;
@@ -493,7 +563,7 @@
     top: 10px;
     left: 14px;
     background: var(--accent);
-    box-shadow: 0 0 18px rgba(56, 189, 248, 0.85);
+    box-shadow: 0 0 18px var(--mood-glow);
   }
 
   .scroll-orbit::after {
@@ -502,21 +572,21 @@
     right: 8px;
     bottom: 16px;
     background: var(--accent2);
-    box-shadow: 0 0 16px rgba(167, 139, 250, 0.85);
+    box-shadow: 0 0 16px var(--mood-glow);
   }
 
   body.scroll-down .scroll-orbit {
     transform: translate3d(-18px, 58px, 0) rotate(110deg) scale(1.08);
     opacity: 0.9;
-    border-color: rgba(167, 139, 250, 0.52);
-    filter: drop-shadow(0 0 18px rgba(167, 139, 250, 0.22));
+    border-color: var(--accent2);
+    filter: drop-shadow(0 0 18px var(--mood-glow));
   }
 
   body.scroll-up .scroll-orbit {
     transform: translate3d(16px, -48px, 0) rotate(-100deg) scale(0.94);
     opacity: 1;
-    border-color: rgba(56, 189, 248, 0.58);
-    filter: drop-shadow(0 0 18px rgba(56, 189, 248, 0.22));
+    border-color: var(--accent);
+    filter: drop-shadow(0 0 18px var(--mood-glow));
   }
 
   body.scroll-down .scroll-orbit::before {
@@ -668,7 +738,7 @@
     background: var(--card);
     border-radius: 1rem;
     padding: 1.5rem;
-    border: 1px solid #334155;
+    border: 1px solid var(--border);
     transition: transform 0.2s, border-color 0.2s;
   }
 
@@ -685,7 +755,7 @@
   .tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem; }
 
   .tag {
-    background: #334155;
+    background: var(--card2);
     color: var(--text);
     padding: 0.2rem 0.6rem;
     border-radius: 0.5rem;
@@ -697,7 +767,7 @@
     align-items: center;
     gap: 0.38rem;
     text-decoration: none !important;
-    border: 1px solid rgba(148, 163, 184, 0.12);
+    border: 1px solid var(--border);
     transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
   }
 
@@ -994,6 +1064,27 @@
     .contact-signature { flex-direction: column; align-items: flex-start; }
     .contact-signature .line { width: 100%; flex: none; }
   }
+
+  /* Transition globale : le changement d'ambiance traverse toute l'interface. */
+  body[data-mood] *,
+  body[data-mood] *::before,
+  body[data-mood] *::after {
+    border-color: inherit;
+  }
+
+  body[data-mood] .card,
+  body[data-mood] .tag,
+  body[data-mood] .badge,
+  body[data-mood] .comments-shell,
+  body[data-mood] .contact-shell,
+  body[data-mood] footer {
+    transition:
+      background 1.2s ease,
+      color 0.9s ease,
+      border-color 1s ease,
+      box-shadow 1s ease;
+  }
+
 </style>
 </head>
 <body>

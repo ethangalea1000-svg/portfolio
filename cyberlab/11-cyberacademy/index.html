@@ -24,7 +24,12 @@
 @media(max-width:1080px){.layout{grid-template-columns:220px minmax(0,1fr)}.right{display:none}}
 @media(max-width:720px){.academy-shell{padding:8px}.academy-nav{position:static}.academy-brand{width:100%;margin-right:0}.hero-grid{grid-template-columns:1fr}.streak-card{display:flex;align-items:center;gap:12px}.layout{display:block}.side{position:static;margin-bottom:12px}.track-btn{display:inline-block;width:auto}.side .track-list{display:flex;gap:6px;overflow:auto}.content-card{padding:14px}}
 </style>
-<style id="cyberlab-footer-style">.cyberlab-footer{max-width:1180px;margin:38px auto 20px;padding:16px 18px;display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap;border:1px solid rgba(132,164,199,.18);border-radius:18px;background:rgba(7,14,26,.76);box-shadow:0 14px 35px rgba(0,0,0,.18);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}.cyberlab-footer-brand{display:flex;align-items:center;gap:10px}.cyberlab-footer-brand img{width:38px;height:38px;object-fit:contain;padding:4px;border-radius:11px;background:#0b1525;border:1px solid rgba(56,189,248,.28)}.cyberlab-footer-brand strong,.cyberlab-footer-brand span{display:block}.cyberlab-footer-brand span{font-size:.78rem;color:#7890a8;margin-top:2px}.cyberlab-footer-links{display:flex;gap:7px;flex-wrap:wrap}.cyberlab-footer-links a{padding:8px 10px;border-radius:10px;color:#9fb3c7;text-decoration:none;border:1px solid transparent}.cyberlab-footer-links a:hover{color:#fff;background:rgba(56,189,248,.08);border-color:rgba(56,189,248,.15)}@media(max-width:650px){.cyberlab-footer{align-items:flex-start}.cyberlab-footer-links{width:100%}.cyberlab-footer-links a{font-size:.82rem}}</style></head>
+<style id="cyberlab-footer-style">.cyberlab-footer{max-width:1180px;margin:38px auto 20px;padding:16px 18px;display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap;border:1px solid rgba(132,164,199,.18);border-radius:18px;background:rgba(7,14,26,.76);box-shadow:0 14px 35px rgba(0,0,0,.18);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}.cyberlab-footer-brand{display:flex;align-items:center;gap:10px}.cyberlab-footer-brand img{width:38px;height:38px;object-fit:contain;padding:4px;border-radius:11px;background:#0b1525;border:1px solid rgba(56,189,248,.28)}.cyberlab-footer-brand strong,.cyberlab-footer-brand span{display:block}.cyberlab-footer-brand span{font-size:.78rem;color:#7890a8;margin-top:2px}.cyberlab-footer-links{display:flex;gap:7px;flex-wrap:wrap}.cyberlab-footer-links a{padding:8px 10px;border-radius:10px;color:#9fb3c7;text-decoration:none;border:1px solid transparent}.cyberlab-footer-links a:hover{color:#fff;background:rgba(56,189,248,.08);border-color:rgba(56,189,248,.15)}@media(max-width:650px){.cyberlab-footer{align-items:flex-start}.cyberlab-footer-links{width:100%}.cyberlab-footer-links a{font-size:.82rem}}</style><style id="cyberacademy-footer-style">
+.academy-footer{max-width:1320px;margin:36px auto 18px;padding:16px 18px;display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap;border:1px solid rgba(132,164,199,.18);border-radius:18px;background:rgba(7,14,26,.78);box-shadow:0 14px 38px rgba(0,0,0,.2)}
+.academy-footer-brand{display:flex;align-items:center;gap:10px}.academy-footer-brand img{width:38px;height:38px;object-fit:contain;padding:4px;border-radius:11px;background:#0b1525;border:1px solid rgba(56,189,248,.28)}.academy-footer-brand strong,.academy-footer-brand span{display:block}.academy-footer-brand span{font-size:.78rem;color:#7890a8;margin-top:2px}
+.academy-footer-links{display:flex;gap:7px;flex-wrap:wrap}.academy-footer-links a{padding:8px 10px;border-radius:10px;color:#9fb3c7;text-decoration:none;border:1px solid transparent}.academy-footer-links a:hover{color:#fff;background:rgba(56,189,248,.08);border-color:rgba(56,189,248,.15)}
+@media(max-width:650px){.academy-footer{align-items:flex-start}.academy-footer-links{width:100%}.academy-footer-links a{font-size:.82rem}}
+</style></head>
 <body>
 <div class="academy-shell">
 <section class="hero">
@@ -213,5 +218,14 @@ function readShared(){
 renderTracks();renderLesson();renderStats();updateStreak();readShared();
 </script>
 <script src="../ui.js"></script>
-</body>
+<footer class="academy-footer">
+<div class="academy-footer-brand"><img src="../../logo.png" alt="Logo Ethan GALEA"><div><strong>CyberAcademy</strong><span>Apprentissage cybersécurité · CyberLab</span></div></div>
+<div class="academy-footer-links">
+<a href="../">CyberLab</a>
+<a href="../08-socialnet-demo/">SocialNet</a>
+<a href="../collection/">Collection</a>
+<a href="../account/">Compte</a>
+<a href="../../">Portfolio</a>
+</div>
+</footer></body>
 </html>

@@ -303,7 +303,17 @@
     "aucun souci": 0.80,
     "aucun soucis": 0.80,
     "pas de souci": 0.80,
-    "pas de soucis": 0.80
+    "pas de soucis": 0.80,
+    "ce n'est pas nul": 0.95,
+    "ce n est pas nul": 0.95,
+    "ce n'est pas mauvais": 0.90,
+    "ce n est pas mauvais": 0.90,
+    "je ne déteste pas": 0.90,
+    "je ne deteste pas": 0.90,
+    "je ne suis pas content": -1.00,
+    "je ne suis pas contente": -1.00,
+    "je ne suis pas heureux": -1.00,
+    "je ne suis pas heureuse": -1.00
   };
 
   MORE_POSITIVE.forEach(word => EMOTIONS.optimism.push(word));
@@ -763,22 +773,30 @@
       core = sentenceScore(original);
     }
 
-    const maxEmotion = Math.max(
-      ...Object.values(core.emotions).map(value => Math.abs(value)),
-      0
-    );
+    let mood = "neutral";
+    if (core.score >= 0.30) mood = "positive";
+    if (core.score <= -0.30) mood = "negative";
+
+    const emotionEntries = Object.entries(core.emotions)
+      .filter(([emotion]) => !["positive","negative"].includes(emotion));
 
     let dominantEmotion = "neutral";
-    if (Math.abs(core.score) >= 0.05) {
-      const ranked = Object.entries(core.emotions)
-        .filter(([emotion]) => !["positive","negative"].includes(emotion))
+    if (mood === "positive") {
+      const ranked = emotionEntries
+        .filter(([emotion]) => emotionSign(emotion) > 0)
         .sort((a,b) => Math.abs(b[1]) - Math.abs(a[1]));
-      dominantEmotion = ranked[0]?.[0] || (core.score > 0 ? "positive" : "negative");
+      dominantEmotion = ranked[0]?.[0] || "positive";
+    } else if (mood === "negative") {
+      const ranked = emotionEntries
+        .filter(([emotion]) => emotionSign(emotion) < 0)
+        .sort((a,b) => Math.abs(b[1]) - Math.abs(a[1]));
+      dominantEmotion = ranked[0]?.[0] || "negative";
     }
 
-    let mood = "neutral";
-    if (core.score >= 0.40) mood = "positive";
-    if (core.score <= -0.40) mood = "negative";
+    const maxEmotion = Math.max(
+      ...emotionEntries.map(([,value]) => Math.abs(value)),
+      0
+    );
 
     const confidence = Math.min(
       1,

@@ -52,6 +52,7 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}a{color:#8bdcff;
 @media(max-width:760px){.app-shell{display:block;padding:8px 8px 76px}.sidebar{display:none}.topbar{top:8px}.mobile-brand{display:flex}.hero{padding:18px}.hero-row{align-items:flex-start}.platform-state{display:none}.composer-row{grid-template-columns:1fr}.composer-tools{align-items:flex-start;flex-direction:column}.kpis{grid-template-columns:1fr 1fr}.mobile-nav{position:fixed;display:grid;grid-template-columns:repeat(5,1fr);left:8px;right:8px;bottom:8px;z-index:80;padding:6px;border:1px solid var(--line);border-radius:16px;background:rgba(7,14,26,.9);backdrop-filter:blur(18px);box-shadow:0 18px 45px rgba(0,0,0,.35)}.mobile-nav button{border:0;background:transparent;color:#8fa4bb;padding:8px 4px;border-radius:10px;font-size:.72rem}.mobile-nav button:hover{background:rgba(56,189,248,.1);color:#fff}}
 @media(max-width:500px){.topbar{padding:7px}.top-action{padding:9px}.feed-switch{margin-bottom:6px}.panel{padding:13px;border-radius:17px}.hero-logo{width:50px;height:50px}.hero h1{font-size:1.8rem}.kpis{grid-template-columns:1fr}.post-actions .btn{font-size:.78rem;padding:8px 9px}}
 </style>
+<link rel="stylesheet" href="../ui.css">
 </head>
 <body>
 <div class="app-shell">
@@ -483,4 +484,5 @@ renderStats();
 init();
 window.startQuiz=startQuiz;window.answerQuiz=answerQuiz;window.nextQuiz=nextQuiz;window.toggleLike=toggleLike;window.addComment=addComment;window.focusComment=focusComment;window.followUser=followUser;window.reportPost=reportPost;window.blockUser=blockUser;window.saveProfile=saveProfile;window.resolveReport=resolveReport;window.hideReportedPost=hideReportedPost;
 </script>
+<script src="../ui.js"></script>
 </body></html>

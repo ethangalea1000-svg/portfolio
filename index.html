@@ -1388,12 +1388,31 @@
 
     async function loadSharedComments() {
       try {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 7000);
+
         const response = await fetch(
           'https://api.github.com/repos/ethangalea1000-svg/portfolio/issues/1/comments?per_page=30&sort=created&direction=desc',
-          { headers: { 'Accept': 'application/vnd.github+json' } }
+          {
+            headers: {
+              'Accept': 'application/vnd.github+json',
+              'Cache-Control': 'no-cache'
+            },
+            cache: 'no-store',
+            signal: controller.signal
+          }
         );
 
-        if (!response.ok) throw new Error('GitHub API indisponible');
+        clearTimeout(timeout);
+
+        if (!response.ok) {
+          let detail = 'GitHub API indisponible';
+          try {
+            const apiError = await response.json();
+            if (apiError?.message) detail += ' : ' + apiError.message;
+          } catch {}
+          throw new Error(detail);
+        }
 
         const comments = await response.json();
         sharedCommentsList.innerHTML = '';
@@ -1437,11 +1456,16 @@
           sharedCommentsList.appendChild(card);
         });
       } catch (error) {
+        const message = error?.name === 'AbortError'
+          ? 'Le chargement a pris trop de temps.'
+          : (error?.message || 'Erreur inconnue.');
+
         sharedCommentsList.innerHTML = `
           <div class="comments-status">
-            Les commentaires partagés n'ont pas pu être chargés.<br>
+            Impossible de charger les commentaires automatiquement.<br>
+            <span style="display:block;margin-top:.45rem;font-size:.78rem;">${message}</span>
             <a class="comments-action" href="https://github.com/ethangalea1000-svg/portfolio/issues/1" target="_blank" rel="noopener">
-              Ouvrir la discussion publique →
+              Voir les commentaires publics →
             </a>
           </div>`;
       }

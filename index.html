@@ -1446,8 +1446,8 @@
   <script type="module">
     import { pipeline } from 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1';
 
-    // Modèle multilingue exécuté dans le navigateur.
-    const EMOTION_MODEL = 'jdp8/multilingual_go_emotions-ONNX';
+    // Modèle de sentiment multilingue plus léger : positive / neutral / negative.
+    const EMOTION_MODEL = 'Xenova/distilbert-base-multilingual-cased-sentiments-student';
 
     let emotionDevice = 'wasm';
     try {
@@ -1456,7 +1456,7 @@
 
     const modelOptions = {
       device: emotionDevice,
-      dtype: emotionDevice === 'webgpu' ? 'q4' : 'q8'
+      dtype: 'q4'
     };
 
     function withTimeout(promise, ms, message) {
@@ -1486,13 +1486,13 @@
     window.analyzeEmotionAI = async function(text) {
       const classifier = await withTimeout(
         window.emotionAIReady,
-        21000,
+        15000,
         'Le modèle IA n’est pas prêt'
       );
 
       return withTimeout(
-        classifier(text, { top_k: 8 }),
-        8000,
+        classifier(text, { top_k: 3 }),
+        5000,
         'L’analyse IA a dépassé le délai'
       );
     };
@@ -1710,16 +1710,8 @@
     };
 
     function emotionPolarity(label) {
-      const positive = new Set([
-        'admiration','amusement','approval','caring','excitement',
-        'gratitude','joy','love','optimism','pride','relief'
-      ]);
-      const negative = new Set([
-        'anger','annoyance','disappointment','disapproval','disgust',
-        'fear','grief','remorse','sadness','nervousness'
-      ]);
-      if (positive.has(label)) return 1;
-      if (negative.has(label)) return -1;
+      if (label === 'positive') return 1;
+      if (label === 'negative') return -1;
       return 0;
     }
 
@@ -1799,10 +1791,8 @@
 
           if (!topRows.length) continue;
 
-          const aiPolarity = topRows.reduce(
-            (sum, item) => sum + emotionPolarity(item.label) * item.score,
-            0
-          );
+          const best = topRows[0];
+          const aiPolarity = emotionPolarity(best.label) * best.score;
 
           const explicitPolarity = explicitFrenchMood(text);
           const keywordPolarity = Math.max(-1, Math.min(1, keywordMood(text)));
@@ -1849,14 +1839,20 @@
         };
         label.textContent = labels[mood];
 
-        const emotionName = emotionLabels[top.label] || top.label;
+        const sentimentName = top.label === 'negative'
+          ? 'Négatif'
+          : top.label === 'positive'
+            ? 'Positif'
+            : 'Neutre';
+
         detail.textContent =
           analyzed.length + ' commentaire' + (analyzed.length > 1 ? 's' : '') +
           ' analysé' + (analyzed.length > 1 ? 's' : '') +
-          ' · émotion dominante détectée : ' + emotionName +
+          ' · sentiment IA : ' + sentimentName +
           ' (' + Math.round(top.score * 100) + '%).';
 
-        badge.textContent = 'IA · français · ' + (window.emotionAIDevice === 'webgpu' ? 'GPU' : 'CPU');
+        badge.textContent = 'IA · sentiment multilingue · ' +
+          (window.emotionAIDevice === 'webgpu' ? 'GPU' : 'CPU');
       } catch (error) {
         // La détection immédiate reste affichée si le modèle IA ne charge pas.
         const timeoutError = /trop de temps|dépassé le délai|n’est pas prêt/i.test(error?.message || '');

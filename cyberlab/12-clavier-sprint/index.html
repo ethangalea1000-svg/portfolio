@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Clavier Sprint — Jeu de frappe</title>
+<meta name="description" content="Jeu éducatif pour apprendre à taper au clavier plus vite et avec plus de précision.">
+<link rel="icon" href="../../logo.png" type="image/png">
+<style>
+:root{--bg:#08111f;--panel:#0f1d31;--panel2:#132640;--text:#eef5ff;--muted:#9bb0c8;--cyan:#38bdf8;--violet:#a78bfa;--green:#34d399;--red:#fb7185}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--text);background:radial-gradient(circle at 15% 10%,rgba(56,189,248,.12),transparent 28%),radial-gradient(circle at 85% 85%,rgba(167,139,250,.12),transparent 30%),linear-gradient(145deg,#07101d,#0c1627 55%,#10162c);padding:24px;overflow-x:hidden}
+main{max-width:1100px;margin:auto}
+a{color:#9bdfff;text-decoration:none}
+a:hover{text-decoration:underline}
+.hero{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;margin:16px 0 22px}
+.kicker{display:inline-block;padding:6px 10px;border-radius:999px;border:1px solid rgba(56,189,248,.2);background:rgba(56,189,248,.08);color:#7dd3fc;font-size:.78rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+h1{font-size:clamp(2.1rem,5vw,4.2rem);line-height:.95;margin:14px 0 12px;background:linear-gradient(90deg,#f8fbff,var(--cyan),var(--violet));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{max-width:680px;color:var(--muted);font-size:1.05rem}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;min-width:300px}
+.stat{background:rgba(15,29,49,.8);border:1px solid rgba(132,164,199,.17);border-radius:16px;padding:14px;text-align:center}
+.stat strong{display:block;font-size:1.7rem}.stat span{color:var(--muted);font-size:.78rem}
+.card{background:rgba(15,29,49,.82);border:1px solid rgba(132,164,199,.18);border-radius:22px;padding:20px;box-shadow:0 18px 50px rgba(0,0,0,.2);backdrop-filter:blur(10px)}
+.word-zone{margin-top:16px}
+.target{min-height:150px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:clamp(1.5rem,3.4vw,2.5rem);font-weight:800;letter-spacing:.03em;padding:25px;border-radius:18px;background:linear-gradient(145deg,rgba(56,189,248,.07),rgba(167,139,250,.07));border:1px solid rgba(56,189,248,.16);word-break:break-word}
+.target .typed{opacity:.45}.target .current{color:var(--cyan);text-decoration:underline;text-underline-offset:7px}.target .wrong{color:var(--red);text-decoration:underline wavy var(--red);text-underline-offset:5px}
+.input{width:100%;margin-top:14px;padding:16px;border-radius:15px;border:1px solid #2a4260;background:#081321;color:#fff;font-size:1.1rem;outline:none}
+.input:focus{border-color:var(--cyan);box-shadow:0 0 0 4px rgba(56,189,248,.08)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:14px}
+button{border:1px solid rgba(132,164,199,.2);background:#172943;color:#fff;padding:10px 14px;border-radius:12px;cursor:pointer;font:inherit;font-weight:750}
+button:hover{border-color:var(--cyan);transform:translateY(-1px)}
+.primary{background:linear-gradient(135deg,var(--cyan),var(--violet));color:#07111d;border:none}
+.help{color:var(--muted);font-size:.82rem}
+.progress{height:9px;background:#091523;border-radius:999px;overflow:hidden;margin-top:14px}
+.progress>span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--violet));transition:width .25s ease}
+.keyboard{display:grid;gap:8px;margin-top:18px}
+.krow{display:grid;grid-template-columns:repeat(10,1fr);gap:7px}
+.key{padding:10px 5px;text-align:center;border-radius:9px;background:#102137;border:1px solid #24405f;color:#a7bad0;font-weight:700;font-size:.78rem;transition:.12s}
+.key.active{background:rgba(56,189,248,.22);border-color:var(--cyan);color:#fff;box-shadow:0 0 16px rgba(56,189,248,.12)}
+.layout{display:grid;grid-template-columns:1.3fr .7fr;gap:18px;margin-top:18px}
+.lesson-list{display:grid;gap:10px;margin-top:12px}
+.lesson{padding:13px;border-radius:13px;background:#0b182a;border:1px solid rgba(132,164,199,.13);cursor:pointer}
+.lesson:hover,.lesson.active{border-color:rgba(56,189,248,.45);background:#10243b}
+.lesson strong{display:block}.lesson span{color:var(--muted);font-size:.82rem}
+.badge{display:inline-block;padding:5px 8px;border-radius:999px;background:rgba(52,211,153,.1);color:#6ee7b7;border:1px solid rgba(52,211,153,.18);font-size:.72rem;font-weight:800;margin:3px}
+footer{margin-top:28px;color:var(--muted);font-size:.82rem;text-align:center}
+@media(max-width:820px){.hero{flex-direction:column}.stats{width:100%;min-width:0}.layout{grid-template-columns:1fr}}
+@media(max-width:520px){body{padding:14px}.krow{gap:4px}.key{font-size:.66rem;padding:9px 2px}}
+</style>
+</head>
+<body>
+<main>
+  <div class="hero">
+    <div>
+      <span class="kicker">CyberLab · projet 12</span>
+      <h1>Clavier Sprint</h1>
+      <p>Un jeu pour apprendre à écrire sur ordinateur, mémoriser les touches et améliorer progressivement sa vitesse de frappe.</p>
+    </div>
+    <div class="stats">
+      <div class="stat"><strong id="wpm">0</strong><span>mots/min</span></div>
+      <div class="stat"><strong id="accuracy">100%</strong><span>précision</span></div>
+      <div class="stat"><strong id="score">0</strong><span>score</span></div>
+    </div>
+  </div>
+
+  <section class="card word-zone">
+    <div class="target" id="target" aria-live="polite">Clique sur « Commencer » pour lancer la partie.</div>
+    <input id="input" class="input" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Tape ici…" disabled>
+    <div class="progress"><span id="progress"></span></div>
+    <div class="row">
+      <button class="primary" id="start">Commencer</button>
+      <button id="next">Nouveau texte</button>
+      <button id="reset">Réinitialiser</button>
+      <span class="help" id="status">Niveau découverte · 30 secondes</span>
+    </div>
+  </section>
+
+  <section class="layout">
+    <div class="card">
+      <h2>Clavier d'entraînement</h2>
+      <p class="help">La touche à utiliser s'allume pendant l'exercice.</p>
+      <div class="keyboard" id="keyboard"></div>
+      <div style="margin-top:14px">
+        <span class="badge">ASDF JKL;</span>
+        <span class="badge">rangée centrale</span>
+        <span class="badge">précision</span>
+      </div>
+    </div>
+
+    <aside class="card">
+      <h2>Parcours</h2>
+      <p class="help">Commence simple, puis augmente la difficulté.</p>
+      <div class="lesson-list" id="lessons">
+        <div class="lesson active" data-level="1"><strong>Niveau 1 · Découverte</strong><span>mots courts et lettres simples</span></div>
+        <div class="lesson" data-level="2"><strong>Niveau 2 · Fluidité</strong><span>phrases courtes</span></div>
+        <div class="lesson" data-level="3"><strong>Niveau 3 · Sprint</strong><span>phrases plus longues</span></div>
+      </div>
+    </aside>
+  </section>
+
+  <footer>
+    <a href="../">← Retour à CyberLab</a> · <a href="../../">Portfolio</a>
+  </footer>
+</main>
+
+<script>
+const BANKS={
+  1:["salut ami","robot bleu","clavier rapide","code simple","jeu clavier","bonjour monde"],
+  2:["je progresse au clavier","je tape avec precision","chaque touche devient familiere","un bon rythme vient avec la pratique"],
+  3:["la vitesse vient apres la precision et une bonne position des mains","apprendre a taper sans regarder le clavier devient progressivement naturel","chaque exercice me permet de gagner en fluidite et en confiance"]
+};
+const state={level:1,target:"",started:false,startTime:0,errors:0,score:0,timer:null,seconds:30};
+
+const targetEl=document.getElementById("target"), input=document.getElementById("input");
+const wpmEl=document.getElementById("wpm"), accEl=document.getElementById("accuracy"), scoreEl=document.getElementById("score");
+const progressEl=document.getElementById("progress"), statusEl=document.getElementById("status");
+
+function buildKeyboard(){
+  const rows=["AZERTYUIOP","QSDFGHJKLM","WXCVBN"];
+  const keyboard=document.getElementById("keyboard");
+  keyboard.innerHTML="";
+  rows.forEach(function(row){
+    const wrap=document.createElement("div");wrap.className="krow";
+    Array.from(row).forEach(function(ch){
+      const k=document.createElement("div");k.className="key";k.dataset.key=ch.toLowerCase();k.textContent=ch;
+      wrap.appendChild(k);
+    });
+    keyboard.appendChild(wrap);
+  });
+}
+function pickText(){
+  const bank=BANKS[state.level];
+  state.target=bank[Math.floor(Math.random()*bank.length)];
+  state.errors=0;
+  input.value="";
+  render();
+}
+function render(){
+  const typed=input.value;
+  let html="";
+  for(let i=0;i<state.target.length;i++){
+    const ch=state.target[i];
+    if(i<typed.length){
+      html+='<span class="'+(typed[i]===ch?"typed":"wrong")+'">'+(ch===" "?"·":ch)+'</span>';
+    }else if(i===typed.length){
+      html+='<span class="current">'+(ch===" "?"·":ch)+'</span>';
+    }else{
+      html+=(ch===" "?"·":ch);
+    }
+  }
+  targetEl.innerHTML=html||"Prêt ?";
+  const ratio=state.target.length?Math.min(typed.length/state.target.length,1):0;
+  progressEl.style.width=(ratio*100)+"%";
+  document.querySelectorAll(".key").forEach(function(k){k.classList.remove("active")});
+  const next=state.target[typed.length];
+  if(next){
+    document.querySelectorAll(".key").forEach(function(k){
+      if(k.dataset.key===next.toLowerCase())k.classList.add("active");
+    });
+  }
+  updateStats();
+}
+function updateStats(){
+  const elapsed=state.started?Math.max((Date.now()-state.startTime)/1000,0.5):1;
+  const chars=input.value.length;
+  const wpm=Math.round((chars/5)/(elapsed/60));
+  const total=chars+state.errors;
+  const acc=total?Math.max(0,Math.round(((total-state.errors)/total)*100)):100;
+  wpmEl.textContent=wpm;
+  accEl.textContent=acc+"%";
+  scoreEl.textContent=state.score;
+}
+function startGame(){
+  clearInterval(state.timer);
+  state.started=true;state.score=0;state.startTime=Date.now();state.errors=0;state.seconds=30;
+  pickText();input.disabled=false;input.focus();
+  statusEl.textContent="30 secondes · tape le texte affiché";
+  state.timer=setInterval(function(){
+    state.seconds--;
+    statusEl.textContent=state.seconds+" seconde"+(state.seconds>1?"s":"")+" restante"+(state.seconds>1?"s":"")+" · niveau "+state.level;
+    updateStats();
+    if(state.seconds<=0)finish();
+  },1000);
+}
+function finish(){
+  clearInterval(state.timer);state.started=false;input.disabled=true;
+  statusEl.textContent="Terminé · clique sur « Commencer » pour rejouer";
+  updateStats();
+}
+function submitInput(){
+  if(!state.started)return;
+  const value=input.value;
+  state.errors=0;
+  for(let i=0;i<Math.min(value.length,state.target.length);i++){
+    if(value[i]!==state.target[i])state.errors++;
+  }
+  if(value.length>state.target.length)state.errors+=value.length-state.target.length;
+  if(value===state.target){
+    state.score+=Math.max(25,100-state.errors*10);
+    pickText();
+  }
+  updateStats();
+}
+input.addEventListener("input",submitInput);
+document.getElementById("start").addEventListener("click",startGame);
+document.getElementById("next").addEventListener("click",function(){
+  if(state.started)state.score=Math.max(0,state.score-5);
+  pickText();input.focus();
+});
+document.getElementById("reset").addEventListener("click",function(){
+  clearInterval(state.timer);state.started=false;state.score=0;state.errors=0;input.value="";input.disabled=true;state.seconds=30;
+  targetEl.textContent="Clique sur « Commencer » pour lancer la partie.";
+  progressEl.style.width="0%";
+  statusEl.textContent="Niveau découverte · 30 secondes";
+  updateStats();
+});
+document.querySelectorAll(".lesson").forEach(function(el){
+  el.addEventListener("click",function(){
+    document.querySelectorAll(".lesson").forEach(function(x){x.classList.remove("active")});
+    el.classList.add("active");
+    state.level=Number(el.dataset.level);
+    state.seconds=30;
+    pickText();
+    statusEl.textContent="Niveau "+state.level+" sélectionné";
+  });
+});
+buildKeyboard();pickText();updateStats();
+</script>
+</body>
+</html>

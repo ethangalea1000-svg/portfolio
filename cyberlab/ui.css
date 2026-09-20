@@ -1,0 +1,21 @@
+/* CyberLab UI System — Ethan GALEA */
+:root{--cyber-accent:#38bdf8;--cyber-accent2:#a78bfa;--cyber-glow:rgba(56,189,248,.24);--cyber-ease:cubic-bezier(.2,.8,.2,1)}
+html{scroll-behavior:smooth}body{position:relative;isolation:isolate}body.cyber-page-ready{animation:cyberPageIn .65s var(--cyber-ease) both}
+@keyframes cyberPageIn{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:none}}
+body:after{content:"";position:fixed;inset:0;pointer-events:none;z-index:9998;opacity:0;background:radial-gradient(520px circle at var(--mx,50%) var(--my,15%),rgba(56,189,248,.085),transparent 58%);transition:opacity .25s ease}
+body.cyber-pointer:after{opacity:1}
+a,button,.btn,.project,.card,.panel,.post,.rail-card,.math-card,.earnedCard,.q,.notice,.kpi,.spec,.badge,.mission,input,select,textarea{transition:transform .2s var(--cyber-ease),box-shadow .28s ease,border-color .2s ease,background-color .25s ease,color .2s ease,filter .25s ease}
+button,.btn,.top-action,.side-btn,.feedBtn{position:relative;overflow:hidden}
+button:hover,.btn:hover,.top-action:hover,.feedBtn:hover{box-shadow:0 9px 28px rgba(0,0,0,.22),0 0 0 1px rgba(56,189,248,.08)}
+button:active,.btn:active{transform:translateY(1px) scale(.985)}
+.cyber-ripple{position:absolute;border-radius:50%;pointer-events:none;background:rgba(255,255,255,.2);transform:scale(0);animation:cyberRipple .55s ease-out forwards}
+@keyframes cyberRipple{to{transform:scale(2.8);opacity:0}}
+.cyber-reveal{opacity:0;transform:translateY(18px) scale(.985)}.cyber-reveal.cyber-visible{opacity:1;transform:none;transition:opacity .6s var(--cyber-ease),transform .6s var(--cyber-ease)}
+.cyber-stagger-1{transition-delay:.04s}.cyber-stagger-2{transition-delay:.08s}.cyber-stagger-3{transition-delay:.12s}.cyber-stagger-4{transition-delay:.16s}.cyber-stagger-5{transition-delay:.20s}.cyber-stagger-6{transition-delay:.24s}
+.cyber-glow-hover:hover{border-color:rgba(56,189,248,.38)!important;box-shadow:0 18px 45px rgba(0,0,0,.25),0 0 30px rgba(56,189,248,.08)}
+.cyber-logo-float{animation:cyberLogoFloat 4.5s ease-in-out infinite}
+@keyframes cyberLogoFloat{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-4px) rotate(1deg)}}
+.cyber-shimmer{background-size:200% 100%!important;animation:cyberShimmer 7s linear infinite}
+@keyframes cyberShimmer{to{background-position:-200% 0}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.001ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.001ms!important}}
+@media(max-width:700px){body:after{display:none}}

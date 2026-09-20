@@ -32,7 +32,7 @@ nav{display:flex;gap:8px;flex-wrap:wrap;margin:24px 0}nav button,.btn{padding:10
 </div>
 <main>
 <header>
-<div><span class="tag">CYBERSÉCURITÉ · PROJETS</span><h1>CyberLab</h1><p class="sub">Des mini-applications web, une calculatrice scientifique et une collection de cartes de résultats.</p></div>
+<div><span class="tag">CYBERSÉCURITÉ · PROJETS</span><h1>CyberLab</h1><p class="sub">Un laboratoire interactif pour apprendre la cybersécurité, expérimenter, progresser et construire des projets.</p></div>
 <div class="notice">Tes cartes sont sauvegardées dans le navigateur.</div>
 </header>
 
@@ -43,23 +43,13 @@ nav{display:flex;gap:8px;flex-wrap:wrap;margin:24px 0}nav button,.btn{padding:10
 <button data-tab="account">Connexion</button>
 </nav>
 
-<section class="project" style="margin-top:18px">
-<h2>🔐 Connexion CyberLab</h2>
-<p class="small">Tu ne vois pas les méthodes de connexion ? Elles sont aussi accessibles directement ici. Pour les utiliser, le projet Supabase doit d'abord être configuré dans la page Connexion.</p>
-<div class="actions" style="margin:10px 0">
-<a class="btn link" href="./account/">Ouvrir la page Connexion →</a>
-<a class="btn link" href="./collection/">Voir ma collection →</a>
-</div>
+<section class="project academy-feature" style="margin-top:18px;background:linear-gradient(135deg,#102f4a,#1b1740);border-color:#4abdf0">
+<h2>🎓 CyberAcademy</h2>
+<p>Le grand espace d’apprentissage du CyberLab : 12 parcours, mini-cours, quiz générés à chaque partie, anti-répétition, XP, niveaux, série quotidienne et résultats partageables.</p>
 <div class="actions">
-<a class="btn link" href="./account/#email">Email + mot de passe</a>
-<a class="btn link" href="./account/#oauth">Google / GitHub / Discord / Apple</a>
-<a class="btn link" href="./account/#more">Microsoft / GitLab / Magic Link / Passkey</a>
+<a class="btn link" href="./11-cyberacademy/">Entrer dans CyberAcademy →</a>
+<a class="btn link" href="./11-cyberacademy/#score=">Voir les scores partagés</a>
 </div>
-</section>
-
-<section class="project" style="margin-top:18px">
-<h2>🧭 Comment ça marche ?</h2>
-<p class="small"><strong>1.</strong> Configure Supabase une fois. <strong>2.</strong> Choisis une méthode de connexion. <strong>3.</strong> Fais des calculs dans CyberCalc : tes cartes sont enregistrées localement. <strong>4.</strong> Va dans « Ma collection » pour les voir.</p>
 </section>
 <section id="projects" class="panel active">
 <h2>Mes projets</h2><p class="small">Le bouton « Démo » ouvre l’application. « Code » ouvre uniquement le dépôt GitHub.</p>
@@ -127,7 +117,8 @@ const projects=[
 ['07-crypto-messenger','Crypto Messenger','Démonstration locale d’AES-GCM.'],
 ['08-socialnet-demo','SocialNet Demo','Mini réseau social fictif côté navigateur.'],
 ['09-incident-dashboard','Incident Dashboard','Tableau de suivi d’incidents simulés.'],
-['10-security-checklist','Security Checklist','Checklist défensive de projet web.']
+['10-security-checklist','Security Checklist','Checklist défensive de projet web.'],
+['11-cyberacademy','CyberAcademy','Grande plateforme d’apprentissage : cours, parcours, quiz générés, XP, série et partage de scores.']
 ];
 const root='https://ethangalea1000-svg.github.io/portfolio/cyberlab/';
 projectGrid.innerHTML=projects.map(p=>'<article class="project"><span class="tag">PROJET</span><h3>'+p[1]+'</h3><p>'+p[2]+'</p><div class="actions"><a class="btn link" href="'+root+p[0]+'/">Ouvrir la démo →</a><a class="btn link" target="_blank" rel="noopener" href="https://github.com/ethangalea1000-svg/mon-projet/tree/master/'+p[0]+'">Voir le code</a></div></article>').join('');

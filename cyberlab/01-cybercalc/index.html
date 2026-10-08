@@ -164,7 +164,53 @@ function render(v=expr||'0'){display.textContent=v}
 function append(v){expr+=v;render()}
 function clearAll(){expr='';render()}
 function back(){expr=expr.slice(0,-1);render()}
-function safeEval(s){if(!/^[0-9+\-*/%().\s]+$/.test(s))throw new Error('Expression invalide');return Function('return ('+s+')')()}
+function safeEval(s){
+ s=String(s).trim();
+ if(!s||s.length>200)throw new Error('Expression invalide');
+ let i=0;
+ const peek=()=>s[i]||'';
+ const eat=ch=>{if(s[i]===ch){i++;return true}return false};
+ function number(){
+  const start=i;
+  while(/[0-9.]/.test(peek()))i++;
+  const raw=s.slice(start,i);
+  if(!raw||((raw.match(/\./g)||[]).length>1))throw new Error('Nombre invalide');
+  const n=Number(raw);
+  if(!Number.isFinite(n))throw new Error('Nombre invalide');
+  return n;
+ }
+ function factor(){
+  if(eat('+'))return factor();
+  if(eat('-'))return -factor();
+  if(eat('(')){const v=expression();if(!eat(')'))throw new Error('Parenthèse manquante');return v}
+  return number();
+ }
+ function term(){
+  let v=factor();
+  while(peek()==='*'||peek()==='/'||peek()==='%'){
+   const op=s[i++];
+   const r=factor();
+   if(op==='*')v*=r;
+   else if(op==='/'){if(r===0)throw new Error('Division par zéro');v/=r}
+   else v%=r;
+   if(!Number.isFinite(v))throw new Error('Résultat non fini');
+  }
+  return v;
+ }
+ function expression(){
+  let v=term();
+  while(peek()==='+'||peek()==='-'){
+   const op=s[i++];
+   const r=term();
+   v=op==='+'?v+r:v-r;
+   if(!Number.isFinite(v))throw new Error('Résultat non fini');
+  }
+  return v;
+ }
+ const result=expression();
+ if(i!==s.length)throw new Error('Expression invalide');
+ return result;
+}
 function resultRarity(value){const n=Math.abs(Number(value));if(!Number.isFinite(n))return 'common';if(n>=1000000000000)return 'legendary';if(n>=1000000)return 'epic';if(n>=100)return 'rare';return 'common'}
 function resultRarityLabel(r){return ({common:'COMMUNE',rare:'RARE',epic:'ÉPIQUE',legendary:'LÉGENDAIRE'})[r]}
 function addResultCard(expression,result,type){

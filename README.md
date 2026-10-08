@@ -1,20 +1,25 @@
-# 🌐 Portfolio – Ethan GALEA
+# Portfolio – Ethan .G
 
 Bienvenue sur le dépôt de mon portfolio personnel !
 
 👉 **Voir le site en ligne :** [https://ethangalea1000-svg.github.io/portfolio/](https://ethangalea1000-svg.github.io/portfolio/)
 
 ## 👤 À propos
-Je m'appelle Ethan, j'ai 13 ans, je suis en 3e à Avignon. Passionné d'IA, de cybersécurité et de développement durable.
+Je m'appelle Ethan et je suis en 3e dans le 13 (Bouches-du-Rhône). Je construis des projets personnels autour du développement web, de l'IA et de la cybersécurité.
 
 ## 🚀 Mes projets
-- **ContentFlow – Bien-être** : Compte Instagram automatisé sur le bien-être. [Voir le site](https://ethangalea1000-svg.github.io/contentflow-wellbeing/index.html)
+- **CyberLab** : laboratoire personnel regroupant des expériences interactives en cybersécurité, cryptographie, analyse et apprentissage.
+- **CyberAcademy** : espace d'apprentissage interactif intégré au CyberLab.
+- **Crypto Messenger** : démonstration locale autour du chiffrement AES-GCM.
 - **Root-Me** : Challenges en cybersécurité. [Profil](https://www.root-me.org/Ethan-1130436?lang=fr)
 - **TryHackMe** : Labs en cybersécurité. [Profil](https://tryhackme.com/p/ethan.galea1000)
 
-## 🛠️ Technologies utilisées pour ce portfolio
+## 🛠️ Technologies
 - HTML5
-- CSS3 (Flexbox, Grid, Variables)
+- CSS3 (Flexbox, Grid, variables)
+- JavaScript
+- GitHub Pages
+- APIs web
 
 ## 📜 Certification
 - **AI Foundations – SPUR Innovation (2026)** - [Vérifier](https://learn.spuric.com/verify/SPUR-INTRO-40797EF1)

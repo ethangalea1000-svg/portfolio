@@ -1155,6 +1155,14 @@
       box-shadow 1s ease;
   }
 
+<style>
+    .interest-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:18px}
+    .interest-card{height:100%;margin:0;transition:transform .2s ease,box-shadow .2s ease}
+    .interest-card:hover{transform:translateY(-4px)}
+    .interest-icon{display:block;font-size:1.8rem;margin-bottom:8px}
+    .interest-card h3{margin:0 0 8px}
+    .interest-card p{margin:0;line-height:1.55}
+  </style>
 </style>
 </head>
 <body>
@@ -1445,15 +1453,47 @@
 
     <section id="interets">
       <h2>Centres d’intérêt</h2>
-      <div class="tags">
-        <span class="tag">Manga</span>
-        <span class="tag">Japon</span>
-        <span class="tag">Développement durable</span>
-        <span class="tag">IA / informatique</span>
-        <span class="tag">Cybersécurité</span>
-        <span class="tag">Automatisation</span>
-        <span class="tag">Bien-être</span>
-        <span class="tag">Échecs</span>
+      <div class="interest-grid">
+        <div class="card interest-card">
+          <span class="interest-icon">⌨️</span>
+          <h3>Programmation</h3>
+          <p>Créer des sites et des applications, expérimenter avec le code et transformer des idées en projets concrets.</p>
+        </div>
+        <div class="card interest-card">
+          <span class="interest-icon">🛡️</span>
+          <h3>Cybersécurité</h3>
+          <p>Comprendre les systèmes, apprendre la sécurité informatique et progresser avec des plateformes comme Root-Me et TryHackMe.</p>
+        </div>
+        <div class="card interest-card">
+          <span class="interest-icon">🤖</span>
+          <h3>Intelligence artificielle</h3>
+          <p>Découvrir les outils d’IA, tester leurs usages et apprendre à les intégrer dans des projets utiles.</p>
+        </div>
+        <div class="card interest-card">
+          <span class="interest-icon">⚙️</span>
+          <h3>Automatisation</h3>
+          <p>Imaginer des workflows et des outils capables de simplifier des tâches répétitives.</p>
+        </div>
+        <div class="card interest-card">
+          <span class="interest-icon">🇯🇵</span>
+          <h3>Japon</h3>
+          <p>Culture japonaise, langue, découvertes et intérêt pour le pays.</p>
+        </div>
+        <div class="card interest-card">
+          <span class="interest-icon">📚</span>
+          <h3>Mangas</h3>
+          <p>Un univers que j’apprécie pour ses histoires, ses personnages et sa créativité.</p>
+        </div>
+        <div class="card interest-card">
+          <span class="interest-icon">♟️</span>
+          <h3>Échecs</h3>
+          <p>Stratégie, réflexion et recherche de solutions avant d’agir.</p>
+        </div>
+        <div class="card interest-card">
+          <span class="interest-icon">🌱</span>
+          <h3>Développement durable</h3>
+          <p>Intérêt pour les enjeux environnementaux et les solutions numériques responsables.</p>
+        </div>
       </div>
     </section>
 

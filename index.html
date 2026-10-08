@@ -1188,6 +1188,31 @@
   .journey-actions{display:flex;flex-wrap:wrap;gap:15px;margin-top:15px}
   .journey-actions a{font-size:.82rem;font-weight:700}
   @media(max-width:650px){.journey-heading{display:block}.journey-status{margin-top:18px;display:inline-flex}.journey-step{grid-template-columns:48px 1fr;gap:12px}.journey-line{left:23px}.journey-marker{width:42px;height:42px}.journey-card{padding:17px}.journey-top{align-items:flex-start}}
+<style>
+  .goals-header{display:flex;justify-content:space-between;align-items:end;gap:24px;margin-bottom:28px}
+  .goals-header h2{margin:0 0 8px}
+  .goals-header p{margin:0;color:var(--muted);max-width:680px;line-height:1.6}
+  .goal-target{min-width:170px;padding:14px 17px;border:1px solid rgba(56,189,248,.25);border-radius:16px;background:linear-gradient(145deg,rgba(14,116,144,.13),rgba(124,58,237,.10));text-align:right}
+  .goal-target span,.goal-label{display:block;color:#67e8f9;font-size:.67rem;font-weight:900;letter-spacing:.13em}
+  .goal-target strong{display:block;margin-top:5px;font-size:1.05rem}
+  .goals-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:17px}
+  .goal-card{position:relative;overflow:hidden;min-height:235px;padding:24px;border:1px solid rgba(148,163,184,.15);border-radius:20px;background:linear-gradient(145deg,rgba(15,23,42,.92),rgba(15,23,42,.64));transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease}
+  .goal-card:hover{transform:translateY(-5px);border-color:rgba(56,189,248,.4);box-shadow:0 18px 40px rgba(0,0,0,.22)}
+  .goal-main{border-color:rgba(56,189,248,.32);background:radial-gradient(circle at 90% 10%,rgba(56,189,248,.13),transparent 35%),linear-gradient(145deg,rgba(15,23,42,.96),rgba(15,23,42,.72))}
+  .goal-number{position:absolute;top:17px;right:20px;color:rgba(148,163,184,.28);font-size:.75rem;font-weight:900;letter-spacing:.08em}
+  .goal-icon{font-size:1.8rem;margin-bottom:13px}
+  .goal-card h3{margin:7px 0 9px;font-size:1.1rem}
+  .goal-card p{margin:0;color:var(--muted);line-height:1.62}
+  .goal-tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:17px}
+  .goal-tags span{padding:5px 9px;border-radius:999px;background:rgba(51,65,85,.42);border:1px solid rgba(148,163,184,.11);font-size:.71rem;color:#cbd5e1}
+  .goal-route{display:flex;align-items:center;gap:9px;margin-top:20px;flex-wrap:wrap;color:#cbd5e1;font-size:.75rem;font-weight:800}
+  .goal-route span{padding:6px 10px;border-radius:9px;background:rgba(56,189,248,.08);border:1px solid rgba(56,189,248,.16)}
+  .goal-route b{color:#67e8f9}
+  .goal-progress{height:6px;margin-top:19px;border-radius:99px;background:#1e293b;overflow:hidden}
+  .goal-progress span{display:block;width:72%;height:100%;background:linear-gradient(90deg,#38bdf8,#a78bfa);border-radius:inherit}
+  .goal-next small{display:block;margin-top:8px;color:#64748b;font-size:.63rem;letter-spacing:.11em}
+  @media(max-width:700px){.goals-header{display:block}.goal-target{display:inline-block;margin-top:18px;text-align:left}.goals-grid{grid-template-columns:1fr}}
+</style>
 </style>
 </style>
 </style>
@@ -1525,15 +1550,73 @@
     </section>
 
     <section id="objectifs">
-      <h2>Objectifs</h2>
-      <div class="card">
-        <ul>
-          <li>Finir le projet ContentFlow – Bien-être</li>
-          <li>Continuer à coder et publier sur GitHub</li>
-          <li>Progresser sur Root-Me et TryHackMe</li>
-          <li>Approfondir mes connaissances en cybersécurité</li>
-          <li>Devenir consultant en cybersécurité</li>
-        </ul>
+      <div class="goals-header">
+        <div>
+          <span class="section-kicker">CAP SUR LA SUITE</span>
+          <h2>Objectifs</h2>
+          <p>Transformer ma curiosité en compétences solides, puis mes compétences en projets concrets.</p>
+        </div>
+        <div class="goal-target">
+          <span>OBJECTIF LONG TERME</span>
+          <strong>Cybersécurité</strong>
+        </div>
+      </div>
+
+      <div class="goals-grid">
+        <article class="goal-card goal-main">
+          <div class="goal-number">01</div>
+          <div class="goal-icon">🛡️</div>
+          <span class="goal-label">AMBITION</span>
+          <h3>Évoluer vers la cybersécurité</h3>
+          <p>Construire progressivement un profil orienté cybersécurité, avec de vraies bases techniques, de la pratique et un portfolio documenté.</p>
+          <div class="goal-route"><span>Apprendre</span><b>→</b><span>Pratiquer</span><b>→</b><span>Construire</span></div>
+        </article>
+
+        <article class="goal-card">
+          <div class="goal-number">02</div>
+          <div class="goal-icon">💻</div>
+          <span class="goal-label">PROGRESSION</span>
+          <h3>Développer mes compétences</h3>
+          <p>Continuer à programmer, créer des applications web et améliorer la qualité de mes projets GitHub.</p>
+          <div class="goal-tags"><span>Code</span><span>Web</span><span>GitHub</span></div>
+        </article>
+
+        <article class="goal-card">
+          <div class="goal-number">03</div>
+          <div class="goal-icon">🎯</div>
+          <span class="goal-label">PRATIQUE</span>
+          <h3>Progresser en cybersécurité</h3>
+          <p>Approfondir mes connaissances et continuer à apprendre sur Root-Me et TryHackMe dans un cadre légal et pédagogique.</p>
+          <div class="goal-tags"><span>Root-Me</span><span>TryHackMe</span><span>Labs</span></div>
+        </article>
+
+        <article class="goal-card">
+          <div class="goal-number">04</div>
+          <div class="goal-icon">🤖</div>
+          <span class="goal-label">EXPLORATION</span>
+          <h3>Maîtriser davantage l’IA</h3>
+          <p>Comprendre les usages de l’intelligence artificielle et apprendre à l’intégrer intelligemment dans mes projets.</p>
+          <div class="goal-tags"><span>IA</span><span>Automatisation</span><span>Innovation</span></div>
+        </article>
+
+        <article class="goal-card">
+          <div class="goal-number">05</div>
+          <div class="goal-icon">🚀</div>
+          <span class="goal-label">PROJETS</span>
+          <h3>Construire un portfolio toujours plus solide</h3>
+          <p>Créer, améliorer et documenter des projets qui montrent concrètement ce que je sais apprendre et réaliser.</p>
+          <div class="goal-tags"><span>Projets</span><span>Portfolio</span><span>Expérimentation</span></div>
+        </article>
+
+        <article class="goal-card goal-next">
+          <div class="goal-number">06</div>
+          <div class="goal-icon">📚</div>
+          <span class="goal-label">PROCHAINE ÉTAPE</span>
+          <h3>Continuer à apprendre</h3>
+          <p>Rester curieux, tester de nouvelles technologies et transformer chaque nouvelle découverte en occasion de progresser.</p>
+          <div class="goal-progress"><span></span></div>
+          <small>PARCOURS EN CONSTRUCTION</small>
+        </article>
       </div>
     </section>
 

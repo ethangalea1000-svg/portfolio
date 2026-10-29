@@ -10,6 +10,8 @@ Je m'appelle Ethan et je suis en 3e dans le 13 (Bouches-du-Rhône). Je construis
 ## 🚀 Mes projets
 - **CyberLab** : laboratoire personnel regroupant des expériences interactives en cybersécurité, cryptographie, analyse et apprentissage.
 - **CyberAcademy** : espace d'apprentissage interactif intégré au CyberLab.
+- **Wishly** : application de listes de cadeaux — création de listes, partage par lien secret et réservations sans compte. Socle de production en cours (API Cloudflare Worker + base D1).
+- **Screenprint Site Maker** : reproduction d’un site vitrine à partir d’une capture d’écran, générée avec Lovable.
 - **Crypto Messenger** : démonstration locale autour du chiffrement AES-GCM.
 - **Root-Me** : Challenges en cybersécurité. [Profil](https://www.root-me.org/Ethan-1130436?lang=fr)
 - **TryHackMe** : Labs en cybersécurité. [Profil](https://tryhackme.com/p/ethan.galea1000)

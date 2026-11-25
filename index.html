@@ -46,18 +46,33 @@
 
   body {
     font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-    background:
-      radial-gradient(circle at 15% 15%, var(--mood-a), transparent 28%),
-      radial-gradient(circle at 85% 25%, var(--mood-b), transparent 30%),
-      radial-gradient(circle at 45% 85%, var(--accent-soft), transparent 32%),
-      linear-gradient(-45deg, var(--bg), var(--bg2), var(--bg3), var(--bg4));
-    background-size: auto, auto, auto, 400% 400%;
-    animation: gradient 15s ease infinite;
+    background: var(--bg);
     color: var(--text);
     line-height: 1.6;
     overflow-x: hidden;
     position: relative;
     transition: background 1.2s ease, color 0.9s ease;
+  }
+
+
+  /* Fond animé : le dégradé se déplace par transform (composité) au lieu de background-position */
+  .bg-drift {
+    position: fixed; top: 0; left: 0; width: 400vw; height: 100vh; z-index: -4; pointer-events: none;
+    background: linear-gradient(-45deg, var(--bg), var(--bg2), var(--bg3), var(--bg4));
+    will-change: transform;
+    animation: gradient-drift 15s ease infinite;
+  }
+  .bg-glow {
+    position: absolute; inset: 0; z-index: -4; pointer-events: none;
+    background:
+      radial-gradient(circle at 15% 15%, var(--mood-a), transparent 28%),
+      radial-gradient(circle at 85% 25%, var(--mood-b), transparent 30%),
+      radial-gradient(circle at 45% 85%, var(--accent-soft), transparent 32%);
+  }
+  @keyframes gradient-drift {
+    0% { transform: translate3d(0,0,0); }
+    50% { transform: translate3d(-75%,0,0); }
+    100% { transform: translate3d(0,0,0); }
   }
 
   body::before {
@@ -296,6 +311,7 @@
 
   @media (prefers-reduced-motion: reduce) {
     body,
+    .bg-drift,
     body::before,
     body::after,
     .page-effects::before,
@@ -1241,6 +1257,7 @@
 @media(prefers-reduced-motion:reduce){.featured-card{transition:none}}
 </style></head>
 <body>
+<div class="bg-drift" aria-hidden="true"></div><div class="bg-glow" aria-hidden="true"></div>
   <div class="page-effects" aria-hidden="true"></div>
   <div class="scroll-orbit" aria-hidden="true"></div>
   <div class="scroll-flash" aria-hidden="true"></div>
@@ -1248,7 +1265,7 @@
     <header>
       <div style="text-align: center; margin-bottom: 1.5rem;">
         <div style="display: inline-block; background: rgba(56, 189, 248, 0.1); border-radius: 50%; padding: 1.5rem; box-shadow: 0 0 40px rgba(56, 189, 248, 0.2); border: 1px solid rgba(56, 189, 248, 0.3);">
-          <img src="logo.png" alt="Logo Ethan .G" width="200" height="200" class="logo-img" fetchpriority="high" style="filter: drop-shadow(0 0 15px rgba(167, 139, 250, 0.6)) brightness(1.3); display: block;">
+          <img src="data:image/webp;base64,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" alt="Logo Ethan .G" width="200" height="200" class="logo-img" fetchpriority="high" style="filter: drop-shadow(0 0 15px rgba(167, 139, 250, 0.6)) brightness(1.3); display: block;">
         </div>
       </div>
 
@@ -1912,281 +1929,9 @@
   </div>
 
   <!-- Script : calcul automatique des pourcentages selon le contenu -->
-    <script src="emotion-lexicon.js"></script>
+    <script>(()=>{const e={joy:["joie","joyeux","joyeuse","heureux","heureuse","bonheur","content","contente","satisfait","satisfaite","ravi","ravie","enchanté","enchantée","amusé","amusée","épanoui","épanouie","gai","gaie","souriant","souriante"],admiration:["admirable","admiration","magnifique","superbe","incroyable","impressionnant","impressionnante","exceptionnel","exceptionnelle","extraordinaire","bravo","félicitations","felicitation","félicite","féliciter","stylé","stylée","classe","excellent","excellente","parfait","parfaite","génial","géniale","genial"],gratitude:["merci","remerciement","reconnaissant","reconnaissante","gratitude","apprécié","appréciée","apprecie","apprécier"],amusement:["drôle","drole","marrant","marrante","amusant","amusante","humour","mdr","mdrr","lol","haha","hihi","ahah","rigolo","rigolote","mort de rire","fou rire"],love:["amour","aime","aimer","adore","adorer","affection","tendresse","adorable","adoré","adorée","coeur","cœur","sympa","sympathique","chaleureux","chaleureuse"],excitement:["enthousiasme","enthousiaste","excité","excitée","impatient","impatiente","hâte","trop bien","ouf","énorme","enorme","🔥","🎉","👏","😍"],optimism:["espoir","espère","espere","optimiste","positif","positive","prometteur","prometteuse","encourageant","encourageante","confiant","confiante","possible","progression","progrès","progres","amélioration","amelioration"],relief:["soulagement","soulagé","soulagee","rassuré","rassurée","rassurant","rassurante","ouf","enfin","tranquille","serein","sereine"],anger:["colère","colere","énervé","enerve","énervée","enervee","furieux","furieuse","rage","rager","agacé","agace","agacée","agacee","irrité","irrite","irritée","irritee","fâché","fache","fâchée","fachee","scandale","inadmissible","révoltant","revoltant","révolte","revolte","haine","déteste","deteste","détester","detester","🤬","😡","😠"],sadness:["triste","tristesse","malheureux","malheureuse","déprimé","deprime","déprimée","deprimee","pleurer","pleure","larmes","déçu","decu","déçue","decue","déception","deception","désespoir","desespoir","dégoûté","degoute","😢","😭","😞","😔","💔"],disappointment:["déception","deception","décevant","decevant","décevante","decevante","dommage","bof","moyen","moyenne","pas terrible","décevra","déçu","decu","raté","rate","ratée","ratee","regret","regrettable","déplorable","deplorable"],fear:["peur","effrayé","effraye","effrayée","effrayee","angoisse","angoissé","angoisse","inquiet","inquiète","inquiete","panique","paniqué","paniquee","stressé","stresse","terrifiant","terrifiant","terrible","crainte","craindre","😨","😰","😱"],disgust:["dégoût","degout","dégoûtant","degoutant","dégoûtante","degoutante","écœurant","ecoeurant","répugnant","repugnant","sale","beurk","détestable","horrible","🤢","🤮"],frustration:["frustrant","frustré","frustre","frustrée","frustree","pénible","penible","galère","galere","compliqué","complique","bloqué","bloque","bloquée","bloquee","ennuyant","ennuyeux","ennuyeuse","chiant","chiante","relou","marre","ras le bol","ça suffit","ca suffit"],confusion:["confus","confuse","confusion","incompréhensible","incomprehensible","incompréhensible","bizarre","étrange","etrange","perdu","perdue","je comprends pas","je ne comprends pas","je comprends rien","je ne comprends rien","??","???"],boredom:["ennui","ennuie","ennuyé","ennuyée","ennuyee","ennuyeux","ennuyeuse","ennuyant","ennuyante","lassant","lassante","fatigant","fatigante","monotone","m'ennuie","m ennuie"],surprise:["surprise","surprenant","surprenante","étonné","étonnée","etonne","etonnee","étonnement","etonnement","stupéfait","stupéfaite","inattendu","inattendue","wow","waouh","quelle surprise","belle surprise","🎉"],jealousy:["jalousie","jaloux","jalouse","envieux","envieuse","envier","envies","jalousement","jaloux de","jalouse de","je suis jaloux","je suis jalouse","ça me rend jaloux","ca me rend jaloux","ça me rend jalouse","ca me rend jalouse"]},t=["top","cool","super","génial","genial","nickel","excellent","parfait","parfaite","bien","très bien","tres bien","très bon","tres bon","bonne","bon","réussi","reussi","utile","clair","claire","propre","rapide","fluide","facile","simple","j'adore","jadore","j'aime","jaime","bravo","merci","fort","forte","wow","waouh","waou","yes","yesss","yeah","😍","❤️","💙","💚","👍","✨","🔥"],n=["nul","nulle","nuls","nulles","zéro","zero","mauvais","mauvaise","mauvais","horrible","catastrophique","cassé","casse","cassée","cassee","bug","bugs","erreur","erreurs","problème","probleme","problèmes","problemes","lent","lente","inutile","moche","moisi","raté","rate","ratee","décevant","decevant","dommage","pourri","pourrie","honteux","honteuse","faux","fausse","incorrect","incorrecte","impossible","pire","nul !","bof","😡","😠","😢","😭","🤬","👎","💔"],i={positive:{"pas mal":1.1,"pas mauvais":.95,"pas mauvaise":.95,"pas nul":.8,"pas nulle":.8,"sans problème":.7,"sans probleme":.7,"aucun problème":.65,"aucun probleme":.65,"aucune erreur":.55,"rien à redire":.85,"rien a redire":.85,"je recommande":1.15,"je recommande vraiment":1.35,"j'adore":1.35,"j aime":1.15,"ça fonctionne":.65,"ca fonctionne":.65,"ça marche":.65,"ca marche":.65,"très bien":1,"tres bien":1,"super bien":1.2,"trop bien":1.25,"vraiment bien":1.15,"franchement bien":1.1,"merci beaucoup":1.2,"bravo pour":1.1},negative:{"pas bien":-.9,"pas bon":-.75,"pas bonne":-.75,"pas top":-.75,"pas génial":-.7,"pas genial":-.7,"pas super":-.65,"pas terrible":-.75,"pas du tout":-.6,"vraiment mauvais":-1.3,"très mauvais":-1.2,"tres mauvais":-1.2,"très nul":-1.45,"tres nul":-1.45,"complètement nul":-1.55,"completement nul":-1.55,"vraiment nul":-1.4,"aucun intérêt":-.85,"aucun interet":-.85,"aucune utilité":-.75,"aucune utilite":-.75,"ça ne marche pas":-1.05,"ca ne marche pas":-1.05,"ça ne fonctionne pas":-1.05,"ca ne fonctionne pas":-1.05,"je déteste":-1.35,"je deteste":-1.35,"je regrette":-.85,"gros problème":-1.15,"gros probleme":-1.15,"plein de problèmes":-1.2,"plein de problemes":-1.2}},r=new Set(["ne","n","pas","jamais","aucun","aucune","aucuns","aucunes","sans","nullement","guère","guere","personne","rien","ni","point","plus","peu","rarement"]),a=new Set(["pas mal","pas mauvais","pas mauvaise","pas nul","pas nulle","pas terrible","pas trop","pas vraiment"]),s={"très":1.6,tres:1.6,vraiment:1.45,"extrêmement":1.85,extremement:1.85,absolument:1.7,"complètement":1.75,completement:1.75,totalement:1.7,super:1.45,trop:1.35,ultra:1.65,grave:1.3,"particulièrement":1.35,particulierement:1.35,"énormément":1.55,enormement:1.55,tellement:1.45,franchement:1.15,clairement:1.15,vraiment:1.45},o={"un peu":.55,"un peu de":.55,assez:.7,"plutôt":.78,plutot:.78,presque:.65,"légèrement":.55,legerement:.55,"à peine":.45,"a peine":.45,bof:.55,relativement:.75,"quelque peu":.6},u=["mais","cependant","pourtant","toutefois","par contre","en revanche","néanmoins","neanmoins","quoique","même si","meme si"],c=["https://raw.githubusercontent.com/sborms/sentometrics/master/data-raw/lexicons-raw/FEEL_raw.csv","https://raw.githubusercontent.com/sborms/sentometrics/main/data-raw/lexicons-raw/FEEL_raw.csv"],l=["agréable","agreable","amical","amicale","amitié","amitie","apprécier","apprecier","appréciation","appreciation","bienveillant","bienveillante","brillant","brillante","chance","chanceux","chanceuse","confiance","courage","courtois","courtoise","délicieux","delicieux","douceur","émerveillé","emerveille","émerveillée","emerveillee","enthousiasmant","excellent","excellente","fierté","fierte","fier","fière","fiere","formidable","généreux","genereux","généreuse","genereuse","gagnant","gagnante","génialement","genialement","grâce","grace","heureux","heureuse","honneur","joie","joli","jolie","liberté","liberte","magnifique","merveilleux","merveilleuse","optimisme","paix","plaisir","positivement","réussite","reussite","respect","respectueux","respectueuse","sécurité","securite","satisfaisant","satisfaite","sincère","sincere","sourire","succès","succes","sublime","sympa","sympathique","tendre","triomphe","triomphant","triomphante","utile","valorisant","valorisante","victoire","vivant","vivante","volontaire","zen","bien joué","bien joue","bonne idée","bonne idee","bonne nouvelle","c'est bien","c est bien","c'est super","c est super","c'est cool","c est cool"],m=["absurde","agressif","agressive","agression","amer","amère","amere","anxieux","anxieuse","appréhension","apprehension","atroce","autoritaire","blessant","blessante","brusque","colérique","colerique","cruel","cruelle","culpabilité","culpabilite","danger","dangereux","dangereuse","désastre","desastre","désastreux","desastreux","doute","douteux","douteuse","échec","echec","énerver","enerver","épuisé","epuise","épuisée","epuisee","froid","froide","frayeur","haineux","haineuse","hésitation","hesitation","humiliant","humiliante","honte","hostile","inacceptable","indifférent","indifferente","injustice","insupportable","irrespect","méchant","mechant","méchante","mechante","mensonge","menteur","menteuse","menace","menaçant","menacant","misérable","miserable","panique","pessimiste","plainte","pleurnicher","regretter","ridicule","risque","sarcastique","sarcasme","souffrance","tension","terrifié","terrifiée","terrifiant","toxique","trahison","traître","traitre","violent","violente","vulgaire","problématique","problematique","déconseillé","deconseille","négatif","negative","mauvaisement","ça craint","ca craint","ça m'énerve","ça m enerve","ça m'enerve","ras le bol","ras-le-bol","marre de","j'en ai marre","j en ai marre"],p={"tout va bien":1.15,"tout est bien":1,"je suis content":1.15,"je suis contente":1.15,"je suis ravi":1.25,"je suis ravie":1.25,"je suis heureux":1.25,"je suis heureuse":1.25,"j'ai adoré":1.35,"j ai adore":1.35,"j'ai adoré ça":1.45,"j ai adore ca":1.45,"ça me plaît":1.05,"ca me plait":1.05,"ça me fait plaisir":1.2,"ca me fait plaisir":1.2,"bonne surprise":1.15,"super idée":1.2,"super idee":1.2,"très bonne idée":1.45,"tres bonne idee":1.45,"je suis déçu":-1.15,"je suis decu":-1.15,"je suis déçue":-1.15,"je suis decue":-1.15,"je suis énervé":-1.25,"je suis enerve":-1.25,"je suis énervée":-1.25,"je suis enervee":-1.25,"je suis inquiet":-1.1,"je suis inquiète":-1.1,"je suis inquiete":-1.1,"ça m'inquiète":-1.15,"ca m inquiete":-1.15,"ça me déçoit":-1.2,"ca me decoit":-1.2,"ça me déprime":-1.3,"ca me deprime":-1.3,"ça m'énerve":-1.25,"ca m enerve":-1.25,"ça m'énerve beaucoup":-1.55,"ca m enerve beaucoup":-1.55,"c'est une catastrophe":-1.6,"c est une catastrophe":-1.6,"c'est vraiment nul":-1.65,"c est vraiment nul":-1.65,"ça ne sert à rien":-1.1,"ca ne sert a rien":-1.1,"ça sert à rien":-1.1,"ca sert a rien":-1.1,"aucun souci":.8,"aucun soucis":.8,"pas de souci":.8,"pas de soucis":.8,"je m'ennuie":-.95,"je m ennuie":-.95,"je m'ennuie beaucoup":-1.2,"je m ennuie beaucoup":-1.2,"c'est une belle surprise":1.05,"c est une belle surprise":1.05,"quelle surprise":.9,"quelle surprise !":1.05,"ce n'est pas nul":.95,"ce n est pas nul":.95,"ce n'est pas mauvais":.9,"ce n est pas mauvais":.9,"je ne déteste pas":.9,"je ne deteste pas":.9,"je ne suis pas content":-1,"je ne suis pas contente":-1,"je ne suis pas heureux":-1,"je ne suis pas heureuse":-1};l.forEach(t=>e.optimism.push(t)),m.forEach(t=>e.frustration.push(t));const d=new Map,f=[];let g="fallback",b=0,h="";const v={joy:["joy","joie"],surprise:["surprise"],anger:["anger","colere","colère"],disgust:["disgust","degout","dégoût"],sadness:["sadness","tristesse"],fear:["fear","peur"]};function j(e){return String(e||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[’']/g," ").replace(/[\u2010-\u2015]/g,"-").replace(/[^\p{L}\p{N}\s!?.,;:💙💚❤️🔥✨👍👎😡😠😢😭😊😍🤬🤢🤮😨😰😱👏🎉]/gu," ").replace(/\s+/g," ").trim()}function x(e){const t=[];let n=[],i="",r=!1;for(let a=0;a<e.length;a++){const s=e[a];'"'!==s?";"!==s||r?"\n"!==s&&"\r"!==s||r?i+=s:("\r"===s&&"\n"===e[a+1]&&a++,n.push(i),n.some(e=>""!==String(e).trim())&&t.push(n),n=[],i=""):(n.push(i),i=""):r&&'"'===e[a+1]?(i+='"',a++):r=!r}return n.push(i),n.some(e=>""!==String(e).trim())&&t.push(n),t}function y(e,t){const n=t.map(e=>j(e).replace(/ /g,""));return e.findIndex(e=>{const t=j(e).replace(/ /g,"");return n.includes(t)})}function w(e,t,n){const i=j(e);if(!i)return;const r={polarity:t>0?1:-1,emotions:new Set(n)},a=d.get(i);a?(a.polarity!==r.polarity&&(a.polarity=0),r.emotions.forEach(e=>a.emotions.add(e))):d.set(i,r),i.includes(" ")&&f.push([i,r])}async function q(e,t=7e3){const n=new AbortController,i=setTimeout(()=>n.abort(),t);try{const t=await fetch(e,{headers:{Accept:"text/csv,text/plain;q=0.9,*/*;q=0.8"},cache:"no-store",signal:n.signal});if(!t.ok)throw new Error("HTTP "+t.status);return await t.text()}finally{clearTimeout(i)}}function E(e){return["joy","surprise","optimism","admiration","gratitude","amusement","love","excitement","relief"].includes(e)?1:-1}function M(e){return{joy:"sadness",sadness:"joy",anger:"relief",relief:"anger",fear:"confidence",disgust:"admiration",admiration:"disappointment",surprise:"confusion",confusion:"clarity",love:"disappointment",excitement:"boredom",boredom:"excitement",optimism:"disappointment",disappointment:"optimism",gratitude:"frustration",amusement:"sadness"}[e]||e}function S(e,t,n){e[t]=(e[t]||0)+n}function F(i,c,p,f,b){const h=function(e,t){const n=Math.max(0,t-4),i=e.slice(n,t),s=i.join(" ");for(const e of a)if(s.endsWith(j(e)))return!1;const o=i.map((e,t)=>({token:e,i:t})).filter(e=>r.has(e.token)).pop();return!!o&&!i.slice(o.i+1).some(e=>u.includes(e))}(p,c),v=function(e,t){let n=1;const i=Math.max(0,t-2),r=e.slice(i,t).join(" ");for(const[e,t]of Object.entries(s))r.includes(j(e))&&(n=Math.max(n,t));for(const[e,t]of Object.entries(o))r.includes(j(e))&&(n=Math.min(n,t));return n}(p,c),x="ready"===g?d.get(i):null;if(x&&0!==x.polarity){let e=1*x.polarity;h&&(e*=-.95),e*=v,f.score+=e,S(f.emotions,e>=0?"positive":"negative",Math.abs(e));for(const t of x.emotions){let n=E(t)*(.72*Math.abs(e));h?(n*=-1,S(f.emotions,M(t),.65*Math.abs(n))):S(f.emotions,t,n)}return void b.push({word:i,score:Number(e.toFixed(3)),negated:h,source:"FEEL",emotions:Array.from(x.emotions)})}for(const e of t.concat(l)){if(j(e)!==i)continue;let t=.85*v;h&&(t*=-.8),f.score+=t,S(f.emotions,t>=0?"positive":"negative",Math.abs(t)),b.push({word:i,score:Number(t.toFixed(3)),negated:h,source:"local-positive"})}for(const e of n.concat(m)){if(j(e)!==i)continue;let t=-.95*v;h&&(t*=-.75),f.score+=t,S(f.emotions,t>=0?"positive":"negative",Math.abs(t)),b.push({word:i,score:Number(t.toFixed(3)),negated:h,source:"local-negative"})}Object.entries(e).forEach(([e,t])=>{if(!t.some(e=>j(e)===i))return;let n=.78*E(e)*v;h&&(n*=-1),S(f.emotions,e,n),f.score+=.5*n,b.push({word:i,emotion:e,score:Number(n.toFixed(3)),negated:h,source:"local-emotion"})})}function z(e){const t=j(e),n=function(e){return j(e).split(" ").filter(Boolean)}(e),r={score:0,emotions:{joy:0,admiration:0,gratitude:0,amusement:0,love:0,excitement:0,optimism:0,relief:0,anger:0,sadness:0,disappointment:0,fear:0,disgust:0,frustration:0,confusion:0,boredom:0,jealousy:0,surprise:0,positive:0,negative:0}},a=[];!function(e,t,n){const r={"je m'ennuie":"boredom","je m ennuie":"boredom","je m'ennuie beaucoup":"boredom","je m ennuie beaucoup":"boredom","c'est une belle surprise":"surprise","c est une belle surprise":"surprise","quelle surprise":"surprise"},a=[i.positive,i.negative,p];for(const i of a)for(const[a,s]of Object.entries(i)){const i=j(a);if(!i||!e.includes(i))continue;t.score+=s,s>=0?S(t.emotions,"positive",s):S(t.emotions,"negative",Math.abs(s));const o=r[i];o&&S(t.emotions,o,1.35*Math.abs(s)),n.push({phrase:a,score:Number(s.toFixed(3)),source:"phrase"})}if("ready"===g)for(const[i,r]of f){if(!e.includes(i))continue;const a=r.polarity||0;if(a){t.score+=.85*a,S(t.emotions,a>0?"positive":"negative",.85);for(const e of r.emotions){const n=E(e)*Math.abs(a)*.55;S(t.emotions,e,n)}n.push({phrase:i,score:Number((.85*a).toFixed(3)),source:"FEEL"})}}}(t,r,a),n.forEach((e,t)=>{F(e,t,n,r,a)});const s=(String(e).match(/!/g)||[]).length,o=(String(e).match(/\?/g)||[]).length;s>=2&&(r.score*=1.08),o>=2&&Math.abs(r.score)<.8&&S(r.emotions,"confusion",.45);return(String(e).match(/\b[A-ZÀÂÄÇÉÈÊËÎÏÔÖÙÛÜŸ]{3,}\b/g)||[]).length&&(r.score*=1.08),{...r,matched:a}}function N(e,t=0){return{joy:"joy",love:"love",excitement:"excitement",admiration:"admiration",gratitude:"gratitude",optimism:"optimism",relief:"relief",sadness:"sadness",jealousy:"jealousy",anger:"anger",fear:"fear",disgust:"disgust",frustration:"frustration",confusion:"confusion",boredom:"boredom",disappointment:"disappointment",surprise:"surprise",positive:"positive",negative:"negative",neutral:"neutral"}[e]||(t>0?"positive":t<0?"negative":"neutral")}function L(e){const t=String(e||""),n=j(t);if(!n)return{polarity:0,score:0,mood:"neutral",dominantEmotion:"neutral",confidence:0,matched:[],original:t,lexiconSource:g};const i=/\bmais\b|\bcependant\b|\bpourtant\b|\btoutefois\b|\ben revanche\b|\bpar contre\b|\bnéanmoins\b/g.exec(n);let r;if(i){const e=n.slice(0,i.index),t=n.slice(i.index+i[0].length),a=z(e),s=z(t);r={score:.55*a.score+1.35*s.score,emotions:{joy:0,admiration:0,gratitude:0,amusement:0,love:0,excitement:0,optimism:0,relief:0,anger:0,sadness:0,disappointment:0,fear:0,disgust:0,frustration:0,confusion:0,boredom:0,jealousy:0,surprise:0,positive:0,negative:0},matched:a.matched.concat(s.matched)},Object.entries(a.emotions).forEach(([e,t])=>{r.emotions[e]+=.55*t}),Object.entries(s.emotions).forEach(([e,t])=>{r.emotions[e]+=1.35*t})}else r=z(t);let a="neutral";r.score>=.3&&(a="positive"),r.score<=-.3&&(a="negative");const s=Object.entries(r.emotions).filter(([e])=>!["positive","negative"].includes(e));let o="neutral";if("positive"===a){const e=s.filter(([e])=>E(e)>0).sort((e,t)=>Math.abs(t[1])-Math.abs(e[1]));o=e[0]?.[0]||"positive"}else if("negative"===a){const e=s.filter(([e])=>E(e)<0).sort((e,t)=>Math.abs(t[1])-Math.abs(e[1]));o=e[0]?.[0]||"negative"}const u=Math.max(...s.map(([,e])=>Math.abs(e)),0),c=N(o,r.score),l=Math.min(1,Math.abs(r.score)/3.5+u/7+Math.min(r.matched.length,8)/40);return{polarity:Number(r.score.toFixed(3)),score:Number(r.score.toFixed(3)),mood:c,polarityMood:a,dominantEmotion:o,confidence:Number(l.toFixed(3)),matched:r.matched.slice(0,60),original:t,lexiconSource:g,lexiconSize:b}}let O=null;const A={then:(e,t)=>(O=O||async function(){g="loading";for(const e of c)try{const t=x(await q(e));if(t.length<2)throw new Error("CSV vide ou incomplet");const n=t[0],i=y(n,["word","mot"]),r=y(n,["polarity","polarité","polarity"]);if(i<0||r<0)throw new Error("Colonnes FEEL introuvables");const a=Object.entries(v).map(([e,t])=>[e,y(n,t)]).filter(([,e])=>e>=0);for(let e=1;e<t.length;e++){const n=t[e],s=n[i],o=j(n[r]);let u=0;("positive"!==o&&"positif"!==o||(u=1),"negative"!==o&&"negatif"!==o||(u=-1),u)&&w(s,u,a.filter(([,e])=>{const t=String(n[e]??"").trim().toLowerCase();return"1"===t||"1.0"===t||"true"===t||"oui"===t}).map(([e])=>e))}if(b=d.size,b<1e3)throw new Error("Lexique chargé mais trop petit");return g="ready",h="",!0}catch(e){h=e?.message||"Erreur de chargement"}return g="fallback",!1}(),O.then(e,t)),catch(e){return this.then(void 0,e)},finally(e){return this.then(t=>(e?.(),t),t=>{throw e?.(),t})}};window.EmotionLexicon={analyzeText:L,analyzeMany:function(e){const t=(Array.isArray(e)?e:[]).filter(e=>e&&String(e.body??"").trim()).slice(0,10);if(!t.length)return{mood:"neutral",score:0,confidence:0,dominantEmotion:"neutral",analyzed:0,results:[],lexiconSource:g,lexiconSize:b};const n=t.map((e,n)=>({...L(e.body||""),weight:1+.08*(t.length-n-1),author:e.user?.login||"visiteur",createdAt:e.created_at||""})),i=n.reduce((e,t)=>e+t.weight,0),r=n.reduce((e,t)=>e+t.score*t.weight,0)/i;let a="neutral";r>=.4&&(a="positive"),r<=-.4&&(a="negative");const s={};n.forEach(e=>{const t=e.dominantEmotion||"neutral";s[t]=(s[t]||0)+Math.max(.1,e.confidence)*e.weight});const o=Object.entries(s).sort((e,t)=>t[1]-e[1])[0]?.[0]||"neutral",u=N(o,r),c=n.reduce((e,t)=>e+t.confidence*t.weight,0)/i;return{mood:u,polarityMood:a,score:Number(r.toFixed(3)),confidence:Number(c.toFixed(3)),dominantEmotion:o,analyzed:n.length,results:n,lexiconSource:g,lexiconSize:b,lexiconError:h||null}},analyzeSimple:function(e){return z(e).score},getStatus:function(){return{state:g,size:b,error:h||null,source:c[0]}},ready:A,lexicon:{emotions:e,positive:t.concat(l),negative:n.concat(m),phrases:Object.assign({},i.positive,i.negative,p),negations:Array.from(r),intensifiers:s,diminishers:o,contrast:u}}})();</script>
 
 
-  <script>
-  function calculerPourcentages() {
-    // Indicateurs de progression affichés sur le portfolio.
-    // Ils servent de repères visuels et ne constituent pas une évaluation scolaire.
-    const niveaux = {
-      cyber: 60,
-      ia: 72,
-      code: 80
-    };
-
-    const values = [
-      ['cyber', niveaux.cyber],
-      ['ia', niveaux.ia],
-      ['code', niveaux.code]
-    ];
-
-    values.forEach(([key, value]) => {
-      const percent = document.getElementById(key + '-percent');
-      const bar = document.getElementById(key + '-bar');
-      if (percent) percent.textContent = value + '%';
-      if (bar) {
-        bar.style.width = value + '%';
-        bar.parentElement.setAttribute('aria-label', key + ' : ' + value + ' pour cent');
-      }
-    });
-  }
-
-  window.addEventListener('DOMContentLoaded', () => {
-    const sharedCommentsList = document.getElementById('shared-comments-list');
-
-    async function loadSharedComments() {
-      try {
-        const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 7000);
-
-        const response = await fetch(
-          'https://api.github.com/repos/ethangalea1000-svg/portfolio/issues/1/comments?per_page=30&sort=created&direction=desc',
-          {
-            headers: {
-              'Accept': 'application/vnd.github+json'
-            },
-            cache: 'no-store',
-            signal: controller.signal
-          }
-        );
-
-        clearTimeout(timeout);
-
-        if (!response.ok) {
-          let detail = 'GitHub API indisponible';
-          try {
-            const apiError = await response.json();
-            if (apiError?.message) detail += ' : ' + apiError.message;
-          } catch {}
-          throw new Error(detail);
-        }
-
-        const comments = await response.json();
-        sharedCommentsList.innerHTML = '';
-
-        if (!comments.length) {
-          sharedCommentsList.innerHTML = `
-            <div class="comments-status">
-              Aucun commentaire pour le moment.<br>
-              <a class="comments-action" href="https://github.com/ethangalea1000-svg/portfolio/issues/1" target="_blank" rel="noopener">
-                Laisser le premier commentaire →
-              </a>
-            </div>`;
-          applyMood(comments);
-          return;
-        }
-
-        comments.forEach(comment => {
-          const card = document.createElement('article');
-          card.className = 'shared-comment';
-
-          const top = document.createElement('div');
-          top.className = 'shared-comment-top';
-
-          const author = document.createElement('span');
-          author.className = 'shared-comment-author';
-          author.textContent = '@' + (comment.user?.login || 'visiteur');
-
-          const date = document.createElement('span');
-          date.className = 'shared-comment-date';
-          date.textContent = new Date(comment.created_at).toLocaleDateString('fr-FR', {
-            day: '2-digit',
-            month: 'short',
-            year: 'numeric'
-          });
-
-          const body = document.createElement('div');
-          body.className = 'shared-comment-body';
-          body.textContent = comment.body || '';
-
-          top.append(author, date);
-          card.append(top, body);
-          sharedCommentsList.appendChild(card);
-        });
-
-        applyMood(comments).catch(() => {});
-      } catch (error) {
-        const message = error?.name === 'AbortError'
-          ? 'Le chargement a pris trop de temps.'
-          : (error?.message || 'Erreur inconnue.');
-
-        sharedCommentsList.innerHTML = `
-          <div class="comments-status">
-            Impossible de charger les commentaires automatiquement.<br>
-            <span style="display:block;margin-top:.45rem;font-size:.78rem;">${message}</span>
-            <a class="comments-action" href="https://github.com/ethangalea1000-svg/portfolio/issues/1" target="_blank" rel="noopener">
-              Voir les commentaires publics →
-            </a>
-          </div>`;
-      }
-    }
-
-    async function applyMood(comments) {
-      const label = document.getElementById('mood-label');
-      const detail = document.getElementById('mood-detail');
-      const dot = document.getElementById('mood-dot');
-      const badge = document.getElementById('mood-ai-badge');
-
-      if (!comments.length) {
-        document.body.dataset.mood = 'neutral';
-        dot.className = 'mood-dot neutral';
-        label.textContent = 'Ambiance neutre';
-        detail.textContent = 'Pas encore assez de commentaires pour analyser une émotion.';
-        badge.textContent = 'Analyse locale · en attente';
-        return;
-      }
-
-      try {
-        badge.textContent = 'Analyse locale · chargement du lexique FEEL…';
-        if (window.EmotionLexicon?.ready) {
-          await window.EmotionLexicon.ready;
-        }
-
-        const result = window.EmotionLexicon.analyzeMany(comments);
-
-        document.body.dataset.mood = result.mood;
-        dot.className = 'mood-dot ' + result.mood;
-
-        const labels = {
-          positive: 'Ambiance positive',
-          neutral: 'Ambiance neutre',
-          joy: 'Ambiance joyeuse',
-          love: 'Ambiance affectueuse',
-          excitement: 'Ambiance enthousiaste',
-          admiration: 'Ambiance admirative',
-          gratitude: 'Ambiance reconnaissante',
-          optimism: 'Ambiance optimiste',
-          relief: 'Ambiance soulagée',
-          sadness: 'Ambiance triste',
-          jealousy: 'Ambiance jalouse',
-          anger: 'Ambiance en colère',
-          fear: 'Ambiance anxieuse',
-          disgust: 'Ambiance dégoûtée',
-          frustration: 'Ambiance frustrée',
-          confusion: 'Ambiance confuse',
-          boredom: 'Ambiance ennuyée',
-          disappointment: 'Ambiance déçue',
-          surprise: 'Ambiance surprise',
-          negative: 'Ambiance critique'
-        };
-        label.textContent = labels[result.mood];
-
-        const emotionNames = {
-          joy: 'Joie',
-          admiration: 'Admiration',
-          gratitude: 'Gratitude',
-          amusement: 'Amusement',
-          love: 'Affection',
-          excitement: 'Enthousiasme',
-          optimism: 'Optimisme',
-          relief: 'Soulagement',
-          anger: 'Colère',
-          sadness: 'Tristesse',
-          disappointment: 'Déception',
-          fear: 'Peur',
-          disgust: 'Dégoût',
-          frustration: 'Frustration',
-          confusion: 'Confusion',
-          boredom: 'Ennui',
-          surprise: 'Surprise',
-          positive: 'Positif',
-          negative: 'Négatif',
-          neutral: 'Neutre'
-        };
-
-        const emotion = emotionNames[result.dominantEmotion] || result.dominantEmotion;
-        const sourceLabel = result.lexiconSource === 'ready'
-          ? 'FEEL + règles locales'
-          : 'règles locales de secours';
-
-        const sizeLabel = result.lexiconSize > 0
-          ? ' · ' + result.lexiconSize.toLocaleString('fr-FR') + ' entrées FEEL'
-          : '';
-
-        detail.textContent =
-          result.analyzed + ' commentaire' + (result.analyzed > 1 ? 's' : '') +
-          ' analysé' + (result.analyzed > 1 ? 's' : '') +
-          ' · émotion dominante : ' + emotion +
-          ' · confiance : ' + Math.round(result.confidence * 100) + '%' +
-          ' · ambiance : ' + (labels[result.mood] || result.mood) +
-          ' · ' + sourceLabel + sizeLabel + '.';
-
-        badge.textContent = result.lexiconSource === 'ready'
-          ? 'Analyse locale · FEEL + contexte + négation · thème ' + emotion
-          : 'Analyse locale · moteur de secours · thème ' + emotion;
-      } catch (error) {
-        document.body.dataset.mood = 'neutral';
-        dot.className = 'mood-dot neutral';
-        label.textContent = 'Ambiance neutre';
-        detail.textContent = 'Analyse locale indisponible pour le moment.';
-        badge.textContent = 'Analyse locale · secours';
-      }
-    }
-
-
-
-
-
-
-    calculerPourcentages();
-
-    const sections = document.querySelectorAll('section, header, footer');
-    sections.forEach((section, index) => {
-      section.classList.add('scroll-reveal');
-      section.style.transitionDelay = Math.min(index * 35, 180) + 'ms';
-    });
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) entry.target.classList.add('is-visible');
-      });
-    }, { threshold: 0.08 });
-
-    document.querySelectorAll('.scroll-reveal').forEach(el => observer.observe(el));
-
-    let lastY = window.scrollY;
-    let ticking = false;
-    let directionTimer;
-
-    function updateScrollDirection() {
-      const y = window.scrollY;
-      const delta = y - lastY;
-
-      if (Math.abs(delta) < 2) {
-        ticking = false;
-        return;
-      }
-
-      document.body.classList.remove('scroll-up', 'scroll-down');
-      document.body.classList.add(delta > 0 ? 'scroll-down' : 'scroll-up');
-
-      clearTimeout(directionTimer);
-      directionTimer = setTimeout(() => {
-        document.body.classList.remove('scroll-up', 'scroll-down');
-      }, 1100);
-
-      lastY = y;
-      ticking = false;
-    }
-
-    window.addEventListener('scroll', () => {
-      if (!ticking) {
-        requestAnimationFrame(updateScrollDirection);
-        ticking = true;
-      }
-    }, { passive: true });
-  });
-  </script>
+  <script>function calculerPourcentages(){[["cyber",60],["ia",72],["code",80]].forEach(([e,t])=>{const o=document.getElementById(e+"-percent"),s=document.getElementById(e+"-bar");o&&(o.textContent=t+"%"),s&&(s.style.width=t+"%",s.parentElement.setAttribute("aria-label",e+" : "+t+" pour cent"))})}window.addEventListener("DOMContentLoaded",()=>{document.getElementById("shared-comments-list");calculerPourcentages();document.querySelectorAll("section, header, footer").forEach((e,t)=>{e.classList.add("scroll-reveal"),e.style.transitionDelay=Math.min(35*t,180)+"ms"});const e=new IntersectionObserver(e=>{e.forEach(e=>{e.isIntersecting&&e.target.classList.add("is-visible")})},{threshold:.08});document.querySelectorAll(".scroll-reveal").forEach(t=>e.observe(t));let t,o=null,s=!1;function l(){const e=window.scrollY;if(null===o){o=e;s=!1;return}const l=e-o;Math.abs(l)<2||(document.body.classList.remove("scroll-up","scroll-down"),document.body.classList.add(l>0?"scroll-down":"scroll-up"),clearTimeout(t),t=setTimeout(()=>{document.body.classList.remove("scroll-up","scroll-down")},1100),o=e),s=!1}window.addEventListener("scroll",()=>{s||(requestAnimationFrame(l),s=!0)},{passive:!0})});</script>
 </body>
 </html>

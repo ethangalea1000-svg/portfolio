@@ -961,7 +961,17 @@
     };
   }
 
-  const ready = loadFeelLexicon();
+  // Le lexique FEEL est téléchargé à la première utilisation (await EmotionLexicon.ready),
+  // pas au chargement de la page : il ne concurrence plus l'affichage initial.
+  let feelPromise = null;
+  const ready = {
+    then(onFulfilled, onRejected) {
+      feelPromise = feelPromise || loadFeelLexicon();
+      return feelPromise.then(onFulfilled, onRejected);
+    },
+    catch(onRejected) { return this.then(undefined, onRejected); },
+    finally(onFinally) { return this.then(v => { onFinally?.(); return v; }, e => { onFinally?.(); throw e; }); }
+  };
 
   window.EmotionLexicon = {
     analyzeText,
